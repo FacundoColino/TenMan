@@ -9,7 +9,7 @@ namespace TenMan.Web.Data
         {
 
         }
-
+        //Los DbSet son para poder llamar a _context.<Database>
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Committee> Committees { get; set; }
         public DbSet<Owner> Owners { get; set; }
@@ -20,6 +20,8 @@ namespace TenMan.Web.Data
         public DbSet<RequestImage> RequestImages { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<Status> Statuses { get; set; }
+
+        public DbSet<StatusType> StatusTypes { get; set; }
 
         public DbSet<Tenant> Tenants { get; set; }
 
