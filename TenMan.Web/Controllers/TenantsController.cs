@@ -54,7 +54,7 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Document,FirstName,LastName,FixedPhone,CellPhone,Address")] Tenant tenant)
+        public async Task<IActionResult> Create([Bind("Id")] Tenant tenant)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Document,FirstName,LastName,FixedPhone,CellPhone,Address")] Tenant tenant)
+        public async Task<IActionResult> Edit(int id, [Bind("Id")] Tenant tenant)
         {
             if (id != tenant.Id)
             {

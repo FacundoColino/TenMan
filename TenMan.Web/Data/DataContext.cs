@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data.Entities;
 
 namespace TenMan.Web.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -12,8 +13,6 @@ namespace TenMan.Web.Data
         //Los DbSet son para poder llamar a _context.<Database>
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Committee> Committees { get; set; }
-        public DbSet<Owner> Owners { get; set; }
-
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Request> Requests { get; set; }
@@ -22,6 +21,7 @@ namespace TenMan.Web.Data
         public DbSet<Status> Statuses { get; set; }
 
         public DbSet<StatusType> StatusTypes { get; set; }
+        public DbSet<SuperAdmin> SuperAdmins { get; set; }
 
         public DbSet<Tenant> Tenants { get; set; }
 
