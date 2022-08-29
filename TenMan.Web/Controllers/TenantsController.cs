@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Helpers;
+using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
@@ -15,17 +15,19 @@ namespace TenMan.Web.Controllers
     public class TenantsController : Controller
     {
         private readonly DataContext _context;
+        private readonly IUserHelper _userHelper;
 
-        public TenantsController(DataContext context)
+        public TenantsController(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         // GET: Tenants
         public IActionResult Index()
         {
             return View(_context.Tenants
-                .Include(t =>  t.User)
+                .Include(t => t.User)
                 .Include(t => t.Units)
                 .Include(t => t.Requests)
                 .Include(t => t.Payments));
@@ -65,15 +67,48 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Tenant tenant)
+        public async Task<IActionResult> Create(AddUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tenant);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var user = await CreateUserAsync(model);
+                if (user != null)
+                {
+                    var tenant = new Tenant
+                    {
+                        Units = new List<Unit>(),
+                        Requests = new List<Request>(),
+                        Payments = new List<Payment>(),
+                        User = user
+                    };
+                    _context.Tenants.Add(tenant);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
+                }
+                ModelState.AddModelError(string.Empty, "Ya existe un usuario con ésta dirección de email");
             }
-            return View(tenant);
+            return View(model);
+        }
+        private async Task<User> CreateUserAsync(AddUserViewModel model)
+        {
+            var user = new User
+            {
+                Document = model.Document,
+                Address = model.Address,
+                Email = model.Username,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                UserName = model.Username
+            };
+            var result = await _userHelper.AddUserAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                user = await _userHelper.GetUserByEmailAsync(model.Username);
+                await _userHelper.AddUserToRoleAsync(user, "Tenant");
+                return user;
+            }
+            return null;
         }
 
         // GET: Tenants/Edit/5
