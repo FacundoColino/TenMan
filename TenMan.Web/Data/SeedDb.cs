@@ -28,6 +28,7 @@ namespace TenMan.Web.Data
             await CheckAdministratorsAsync(admin);
 
             await CheckCommitteesAsync();
+            await CheckSpecialtiesAsync();
             await CheckStatusTypesAsync();
             await CheckSuperAdminsAsync(sa);
 
@@ -83,6 +84,17 @@ namespace TenMan.Web.Data
             {
                 _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales", Price = 200M, Administrator = admin });
 
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task CheckSpecialtiesAsync()
+        {
+            if (!_context.Specialties.Any())
+            {
+                _context.Specialties.Add(new Entities.Specialty { Name = "Plomería" });
+                _context.Specialties.Add(new Entities.Specialty { Name = "Gas" });
+                _context.Specialties.Add(new Entities.Specialty { Name = "Electricidad" });
                 await _context.SaveChangesAsync();
             }
         }

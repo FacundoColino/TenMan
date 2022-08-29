@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TenMan.Web</title>
+    <title>@ViewData["Title"] - TenMan</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -17,7 +17,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-fixed-top bg-violet">
+    <nav class="navbar navbar-fixed-top bg-navbar">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -26,15 +26,32 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">TenMan.Web</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">TenMan</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contacto</a></li>
-                    <li><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
+
+                    @if (this.User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+                    {
+                        <li><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
+                        <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
+                    }
                 </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (this.User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                    }
+                </ul>
+
             </div>
         </div>
     </nav>

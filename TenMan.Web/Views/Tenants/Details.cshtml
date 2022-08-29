@@ -1,18 +1,105 @@
 ﻿@model TenMan.Web.Data.Entities.Tenant
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h2>Details</h2>
+<h2>Detalles</h2>
 
 <div>
-    <h4>Tenant</h4>
+    <h4>Locatario</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Document)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Document)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Address)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.Address)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.User.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.User.PhoneNumber)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a> |
+    <a asp-action="AddUnit" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Unidad</a> |
+    <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
 </div>
+@if (Model.Units.Count == 0)
+{
+    <h5>Locatario no asignado a ninguna unidad</h5>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Floor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Apartment)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Number)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().SquareMeters)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Units)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Floor)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Apartment)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SquareMeters)
+                    </td>
+                    <td>
+                        <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-info">Editar</a> |
+                        <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-warning">Detalles</a> |
+                        <a asp-action="DeleteUnit" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

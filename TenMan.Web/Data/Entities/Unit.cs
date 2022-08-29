@@ -15,7 +15,7 @@ namespace TenMan.Web.Data.Entities
         public int Number { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]
-        [Display(Name = "Unidad")]
+        [Display(Name = "Piso")]
         public int Floor { get; set; }
 
         [Required(ErrorMessage = "The field {0} is mandatory.")]

@@ -35,6 +35,22 @@ body {
         display: none;
     }
 }
-.bg-violet {
-    background: #b200ff;
+/* Agregado para TenMan */
+:root {
+    --color-navbar: #b200ff;
+    --color-navbar-text: white;
+}
+
+.bg-navbar {
+    background: var(--color-navbar);
+    color: var(--color-navbar-text);
+}
+.nav.navbar-nav.navbar-right li a {
+    color: var(--color-navbar-text);
+}
+.nav.navbar-nav li a {
+    color: var(--color-navbar-text);
+}
+.navbar-brand {
+    color: var(--color-navbar-text);
 }

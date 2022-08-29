@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Models;
 
 namespace TenMan.Web.Helpers
 {
@@ -18,6 +19,11 @@ namespace TenMan.Web.Helpers
         Task AddUserToRoleAsync(User user, string roleName);
 
         Task<bool> IsUserInRoleAsync(User user, string roleName);
+
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+
+        Task LogoutAsync();
+
 
     }
 }

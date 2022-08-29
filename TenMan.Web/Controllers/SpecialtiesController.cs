@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,27 +10,22 @@ using TenMan.Web.Data.Entities;
 
 namespace TenMan.Web.Controllers
 {
-    [Authorize(Roles = "Administrator")]
-    public class TenantsController : Controller
+    public class SpecialtiesController : Controller
     {
         private readonly DataContext _context;
 
-        public TenantsController(DataContext context)
+        public SpecialtiesController(DataContext context)
         {
             _context = context;
         }
 
-        // GET: Tenants
-        public IActionResult Index()
+        // GET: Specialties
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Tenants
-                .Include(t =>  t.User)
-                .Include(t => t.Units)
-                .Include(t => t.Requests)
-                .Include(t => t.Payments));
+            return View(await _context.Specialties.ToListAsync());
         }
 
-        // GET: Tenants/Details/5
+        // GET: Specialties/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,44 +33,39 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants
-                .Include(o => o.User)
-                .Include(o => o.Units)
-                .Include(o => o.Requests)
-                .Include(o => o.Payments)
-                //.ThenInclude(p => p.Receipt)
-                .FirstOrDefaultAsync(t => t.Id == id);
-            if (tenant == null)
+            var specialty = await _context.Specialties
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (specialty == null)
             {
                 return NotFound();
             }
 
-            return View(tenant);
+            return View(specialty);
         }
 
-        // GET: Tenants/Create
+        // GET: Specialties/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Tenants/Create
+        // POST: Specialties/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Tenant tenant)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Specialty specialty)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tenant);
+                _context.Add(specialty);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenant);
+            return View(specialty);
         }
 
-        // GET: Tenants/Edit/5
+        // GET: Specialties/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,22 +73,22 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants.FindAsync(id);
-            if (tenant == null)
+            var specialty = await _context.Specialties.FindAsync(id);
+            if (specialty == null)
             {
                 return NotFound();
             }
-            return View(tenant);
+            return View(specialty);
         }
 
-        // POST: Tenants/Edit/5
+        // POST: Specialties/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Tenant tenant)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Specialty specialty)
         {
-            if (id != tenant.Id)
+            if (id != specialty.Id)
             {
                 return NotFound();
             }
@@ -108,12 +97,12 @@ namespace TenMan.Web.Controllers
             {
                 try
                 {
-                    _context.Update(tenant);
+                    _context.Update(specialty);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TenantExists(tenant.Id))
+                    if (!SpecialtyExists(specialty.Id))
                     {
                         return NotFound();
                     }
@@ -124,10 +113,10 @@ namespace TenMan.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenant);
+            return View(specialty);
         }
 
-        // GET: Tenants/Delete/5
+        // GET: Specialties/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -135,30 +124,30 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants
+            var specialty = await _context.Specialties
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tenant == null)
+            if (specialty == null)
             {
                 return NotFound();
             }
 
-            return View(tenant);
+            return View(specialty);
         }
 
-        // POST: Tenants/Delete/5
+        // POST: Specialties/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tenant = await _context.Tenants.FindAsync(id);
-            _context.Tenants.Remove(tenant);
+            var specialty = await _context.Specialties.FindAsync(id);
+            _context.Specialties.Remove(specialty);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TenantExists(int id)
+        private bool SpecialtyExists(int id)
         {
-            return _context.Tenants.Any(e => e.Id == id);
+            return _context.Specialties.Any(e => e.Id == id);
         }
     }
 }
