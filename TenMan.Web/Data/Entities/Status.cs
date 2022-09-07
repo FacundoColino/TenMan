@@ -20,7 +20,7 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime DateLocal => Date.ToLocalTime();
 
-        public Request Request { get; set; }
+        public ICollection<Request> Requests { get; set; }
 
         public StatusType StatusType { get; set; }
     }

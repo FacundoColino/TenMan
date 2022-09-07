@@ -1,0 +1,42 @@
+﻿@model TenMan.Web.Data.Entities.Unit
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Unit</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Floor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Floor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Apartment)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Apartment)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SquareMeters)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SquareMeters)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

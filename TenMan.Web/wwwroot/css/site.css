@@ -37,8 +37,9 @@ body {
 }
 /* Agregado para TenMan */
 :root {
-    --color-navbar: #b200ff;
-    --color-navbar-text: white;
+    /*--color-navbar: #b200ff;*/
+    --color-navbar: #070101;
+    --color-navbar-text: pink;
 }
 
 .bg-navbar {

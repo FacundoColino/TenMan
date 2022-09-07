@@ -30,6 +30,10 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDateLocal => EndDate.ToLocalTime();
 
+        //[Display(Name = "Observaciones")]
+        //public string Remarks { get; set; }
+
+        [Display(Name = "Especialidad")]
         public Specialty Speciality { get; set; }
 
         public ICollection<RequestImage> Images { get; set; }
@@ -38,7 +42,7 @@ namespace TenMan.Web.Data.Entities
 
         public Worker Worker { get; set; }
 
-        public ICollection<Status> Statuses { get; set; }
+        public Status Status { get; set; }
 
     }
 }

@@ -16,11 +16,69 @@ namespace TenMan.Web.Controllers
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly ICombosHelper _combosHelper;
+        private readonly IConverterHelper _converterHelper;
+        private readonly IImageHelper _imageHelper;
 
-        public TenantsController(DataContext context, IUserHelper userHelper)
+        public TenantsController(
+            DataContext context, 
+            IUserHelper userHelper, 
+            ICombosHelper combosHelper, 
+            IConverterHelper converterHelper,
+            IImageHelper imageHelper
+            )
         {
             _context = context;
             _userHelper = userHelper;
+            _combosHelper = combosHelper;
+            _converterHelper = converterHelper;
+            _imageHelper = imageHelper;
+        }
+        public async Task<IActionResult> AddImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var request = await _context.Requests.FindAsync(id.Value);
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            var model = new RequestImageViewModel
+            {
+                Id = request.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(RequestImageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var requestImage = new RequestImage
+                {
+                    ImageUrl = path,
+                    Request = await _context.Requests.FindAsync(model.Id)
+                };
+
+                _context.RequestImages.Add(requestImage);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsRequest)}/{model.Id}");
+            }
+
+            return View(model);
         }
 
         // GET: Tenants
@@ -194,6 +252,93 @@ namespace TenMan.Web.Controllers
         private bool TenantExists(int id)
         {
             return _context.Tenants.Any(e => e.Id == id);
+        }
+        //TODO: agregar lo mismo para AddUnit (usar el Create?)
+        public async Task<IActionResult> AddRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var tenant = await _context.Tenants.FindAsync(id);
+
+            if (tenant == null)
+                return NotFound();
+
+            var model = new RequestViewModel
+            {
+                TenantId = tenant.Id,
+                Specialties = _combosHelper.GetComboSpecialties()
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddRequest(RequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = await _converterHelper.ToRequestAsync(model, true);
+                _context.Requests.Add(request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.TenantId}");
+            }
+            return View(model);
+        }
+        public async Task<IActionResult> EditRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var request = await _context.Requests
+                .Include(r => r.Tenant)
+                .Include(r => r.Worker)
+                .Include(r => r.Speciality)
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (request == null)
+                return NotFound();
+
+            var model = _converterHelper.ToRequestViewModel(request);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Editequest(RequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = await _converterHelper.ToRequestAsync(model, false);
+                _context.Requests.Update(request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.TenantId}");
+            }
+            return View(model);
+        }
+        public async Task<IActionResult> DetailsRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var request = await _context.Requests
+            .FirstOrDefaultAsync(m => m.Id == id);
+            /*
+            var request = await _context.Requests
+                //.Include(t => t.Tenant)
+                //.ThenInclude(t => t.User)
+                //.Include(r => r.Worker)
+                //.ThenInclude(w => w.User)
+                .Include(r => r.StartDate)
+                //.Include(r => r.EndDate)
+                //.Include(r => r.Speciality)
+                .Include(r => r.Status)
+                //.Include(i => i.Images)
+                .FirstOrDefaultAsync(m => m.Id == id);*/
+
+            if (request == null)
+                return NotFound();
+
+            return View(request);
         }
     }
 }
