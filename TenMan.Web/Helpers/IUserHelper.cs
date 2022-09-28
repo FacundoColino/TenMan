@@ -22,8 +22,8 @@ namespace TenMan.Web.Helpers
 
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
+        Task<IdentityResult> UpdateUserAsync(User user);
+
         Task LogoutAsync();
-
-
     }
 }

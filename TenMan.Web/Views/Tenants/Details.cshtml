@@ -107,8 +107,8 @@ else
                     @Html.DisplayFor(modelItem => item.Images.Count)
                 </td>
                 <td>
-                    <a asp-action="EditRequest" asp-route-id="@item.Id" class="btn btn-info">Editar</a> |
-                    <a asp-action="DetailsRequest" asp-route-id="@item.Id" class="btn btn-warning">Detalles</a> |
+                    <a asp-action="EditRequest" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                    <a asp-action="DetailsRequest" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
                     <a asp-action="DeleteRequest" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
                 </td>
             </tr>

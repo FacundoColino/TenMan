@@ -177,12 +177,29 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var tenant = await _context.Tenants.FindAsync(id);
+            var tenant = await _context.Tenants
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.Id == id.Value);
+
             if (tenant == null)
             {
                 return NotFound();
             }
-            return View(tenant);
+
+            var model = new EditUserViewModel
+            {
+                Address = tenant.User.Address,
+                Document = tenant.User.Document,
+                FirstName = tenant.User.FirstName,
+                Id = tenant.Id,
+                LastName = tenant.User.LastName,
+                PhoneNumber = tenant.User.PhoneNumber,
+                Username = tenant.User.Email
+
+            };
+
+            return View(model);
+
         }
 
         // POST: Tenants/Edit/5
@@ -190,34 +207,27 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] Tenant tenant)
+        public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            if (id != tenant.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(tenant);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TenantExists(tenant.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var tenant = await _context.Tenants
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.Id == model.Id);
+
+                tenant.User.Document = model.Document;
+                tenant.User.FirstName = model.FirstName;
+                tenant.User.LastName = model.LastName;
+                tenant.User.Address = model.Address;
+                tenant.User.PhoneNumber = model.PhoneNumber;
+                tenant.User.UserName = model.Username;
+
+                await _userHelper.UpdateUserAsync(tenant.User);
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenant);
+
+            return View(model);
+
         }
 
         // GET: Tenants/Delete/5
@@ -321,6 +331,9 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
             var request = await _context.Requests
+            .Include(t => t.Tenant)
+            .ThenInclude(t => t.User)
+            .Include(i => i.Images)
             .FirstOrDefaultAsync(m => m.Id == id);
             /*
             var request = await _context.Requests

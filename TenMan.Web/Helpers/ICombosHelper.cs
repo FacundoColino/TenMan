@@ -6,5 +6,6 @@ namespace TenMan.Web.Helpers
     public interface ICombosHelper
     {
         IEnumerable<SelectListItem> GetComboSpecialties();
+        IEnumerable<SelectListItem> GetComboTenants();
     }
 }

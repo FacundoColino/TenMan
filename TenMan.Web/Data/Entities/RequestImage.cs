@@ -11,11 +11,12 @@ namespace TenMan.Web.Data.Entities
         public int Id { get; set; }
 
         [Display(Name = "Imagen")]
-        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
         public string ImageUrl { get; set; }
 
         // TODO: Change the path when publish
-        public string ImageFullPath => $"https://TBD.azurewebsites.net{ImageUrl.Substring(1)}";
+        public string ImageFullPath => string.IsNullOrEmpty(ImageUrl) 
+            ? null 
+            : $"https://TBD.azurewebsites.net{ImageUrl.Substring(1)}";
 
         public Request Request { get; set; }
     }

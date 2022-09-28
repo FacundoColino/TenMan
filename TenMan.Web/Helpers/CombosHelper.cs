@@ -15,6 +15,7 @@ namespace TenMan.Web.Helpers
         {
             _context = context;
         }
+       
         public IEnumerable<SelectListItem> GetComboSpecialties()
         {
             var list = _context.Specialties.Select(sp => new SelectListItem
@@ -27,6 +28,23 @@ namespace TenMan.Web.Helpers
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione la especialidad del arreglo",
+                Value = "0"
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboTenants()
+        {
+            var list = _context.Tenants.Select(ten => new SelectListItem
+            {
+                Text = ten.User.FullName,
+                Value = $"{ ten.Id }" // Convierte a string
+            }).OrderBy(ten => ten.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione el locatario",
                 Value = "0"
             });
 

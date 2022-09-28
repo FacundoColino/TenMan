@@ -7,29 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
-using TenMan.Web.Helpers;
-using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
-    public class UnitsController : Controller
+    public class CommitteesController : Controller
     {
         private readonly DataContext _context;
-        private readonly ICombosHelper _combosHelper;
 
-        public UnitsController(DataContext context, ICombosHelper combosHelper)
+        public CommitteesController(DataContext context)
         {
             _context = context;
-            _combosHelper = combosHelper;
         }
 
-        // GET: Units
+        // GET: Committees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Units.ToListAsync());
+            return View(await _context.Committees.ToListAsync());
         }
 
-        // GET: Units/Details/5
+        // GET: Committees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,43 +33,39 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units
+            var committee = await _context.Committees
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (unit == null)
+            if (committee == null)
             {
                 return NotFound();
             }
 
-            return View(unit);
+            return View(committee);
         }
 
-        // GET: Units/Create
+        // GET: Committees/Create
         public IActionResult Create()
         {
-            var model = new UnitViewModel
-            {
-                Tenants = _combosHelper.GetComboTenants()
-            };
-            return View(model);
+            return View();
         }
 
-        // POST: Units/Create
+        // POST: Committees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Number,Floor,Apartment,SquareMeters")] Unit unit)
+        public async Task<IActionResult> Create([Bind("Id,Description,Neighborhood,Address,Price")] Committee committee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(unit);
+                _context.Add(committee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(unit);
+            return View(committee);
         }
 
-        // GET: Units/Edit/5
+        // GET: Committees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,22 +73,22 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units.FindAsync(id);
-            if (unit == null)
+            var committee = await _context.Committees.FindAsync(id);
+            if (committee == null)
             {
                 return NotFound();
             }
-            return View(unit);
+            return View(committee);
         }
 
-        // POST: Units/Edit/5
+        // POST: Committees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Floor,Apartment,SquareMeters")] Unit unit)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Neighborhood,Address,Price")] Committee committee)
         {
-            if (id != unit.Id)
+            if (id != committee.Id)
             {
                 return NotFound();
             }
@@ -105,12 +97,12 @@ namespace TenMan.Web.Controllers
             {
                 try
                 {
-                    _context.Update(unit);
+                    _context.Update(committee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UnitExists(unit.Id))
+                    if (!CommitteeExists(committee.Id))
                     {
                         return NotFound();
                     }
@@ -121,10 +113,10 @@ namespace TenMan.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(unit);
+            return View(committee);
         }
 
-        // GET: Units/Delete/5
+        // GET: Committees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,30 +124,30 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var unit = await _context.Units
+            var committee = await _context.Committees
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (unit == null)
+            if (committee == null)
             {
                 return NotFound();
             }
 
-            return View(unit);
+            return View(committee);
         }
 
-        // POST: Units/Delete/5
+        // POST: Committees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var unit = await _context.Units.FindAsync(id);
-            _context.Units.Remove(unit);
+            var committee = await _context.Committees.FindAsync(id);
+            _context.Committees.Remove(committee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UnitExists(int id)
+        private bool CommitteeExists(int id)
         {
-            return _context.Units.Any(e => e.Id == id);
+            return _context.Committees.Any(e => e.Id == id);
         }
     }
 }

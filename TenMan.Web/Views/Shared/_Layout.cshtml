@@ -37,8 +37,10 @@
                     @if (this.User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
                     {
                         <li><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
+                        <li><a asp-area="" asp-controller="Units" asp-action="Index">Unidades</a></li>
                         <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
                         <li><a asp-area="" asp-controller="StatusTypes" asp-action="Index">Tipos de Estado</a></li>
+                        <li><a asp-area="" asp-controller="Committees" asp-action="Index">Consorcios</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
