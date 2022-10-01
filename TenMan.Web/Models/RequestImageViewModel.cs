@@ -10,7 +10,7 @@ namespace TenMan.Web.Models
 {
         public class RequestImageViewModel : RequestImage
         {
-            [Display(Name = "Image")]
+            [Display(Name = "Imagen")]
             public IFormFile ImageFile { get; set; }
         }
 }

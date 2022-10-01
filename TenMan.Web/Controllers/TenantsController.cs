@@ -11,7 +11,7 @@ using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator")]
     public class TenantsController : Controller
     {
         private readonly DataContext _context;
@@ -193,9 +193,8 @@ namespace TenMan.Web.Controllers
                 FirstName = tenant.User.FirstName,
                 Id = tenant.Id,
                 LastName = tenant.User.LastName,
-                PhoneNumber = tenant.User.PhoneNumber,
-                Username = tenant.User.Email
-
+                PhoneNumber = tenant.User.PhoneNumber
+                //Username = tenant.User.Email
             };
 
             return View(model);
@@ -220,7 +219,7 @@ namespace TenMan.Web.Controllers
                 tenant.User.LastName = model.LastName;
                 tenant.User.Address = model.Address;
                 tenant.User.PhoneNumber = model.PhoneNumber;
-                tenant.User.UserName = model.Username;
+                //tenant.User.UserName = model.Username;
 
                 await _userHelper.UpdateUserAsync(tenant.User);
                 return RedirectToAction(nameof(Index));
@@ -352,6 +351,35 @@ namespace TenMan.Web.Controllers
                 return NotFound();
 
             return View(request);
+        }
+
+        //[Authorize(Roles ="Tenant")]
+        // GET: Payments/Create
+        public IActionResult AddPayment()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPayment(Payment payment)
+        {
+            if (ModelState.IsValid)
+            {
+                var tenant = _context.Tenants.FirstOrDefault(t => t.User.Email == User.Identity.Name);
+                payment.Tenant = tenant;
+                payment.Status = "Pendiente";
+
+                _context.Payments.Add(payment);
+                await _context.SaveChangesAsync();
+                //return RedirectToAction($"{nameof(IndexPayments)}/{payment.Tenant.Id}");
+                return RedirectToAction("IndexPayments");
+            }
+            return View(payment);
+        }
+        public IActionResult IndexPayments()
+        {
+            var tenant = _context.Tenants.FirstOrDefault(t => t.User.Email == User.Identity.Name);
+            return View(tenant.Payments);
         }
     }
 }

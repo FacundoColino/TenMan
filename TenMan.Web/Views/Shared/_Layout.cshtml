@@ -41,6 +41,14 @@
                         <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
                         <li><a asp-area="" asp-controller="StatusTypes" asp-action="Index">Tipos de Estado</a></li>
                         <li><a asp-area="" asp-controller="Committees" asp-action="Index">Consorcios</a></li>
+                        <li><a asp-area="" asp-controller="Payments" asp-action="Index">Pagos</a></li>
+                    }
+                    @if (this.User.Identity.IsAuthenticated && User.IsInRole("Tenant"))
+                    {
+                        <li><a asp-area="" asp-controller="Requests" asp-action="Index">Solicitudes</a></li>
+                        <li><a asp-area="" asp-controller="Reports" asp-action="Index">Ver Expensas</a></li>
+                        <li><a asp-area="" asp-controller="Tenants" asp-action="IndexPayments">Mis Pagos</a></li>
+                        <li><a asp-area="" asp-controller="Tenants" asp-action="AddPayment">Informar Pago</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

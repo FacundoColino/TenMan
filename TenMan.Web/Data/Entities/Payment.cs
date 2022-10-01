@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace TenMan.Web.Data.Entities
 {
@@ -19,6 +17,22 @@ namespace TenMan.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} is obligatorio.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime DateLocal => Date.ToLocalTime();
+
+        [Display(Name = "Importe")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal Amount { get; set; }
+
+        [Display(Name = "Estado")]
+        public string Status { get; set; }
+
+        [Display(Name = "Comprobante")]
+        public string PdfFile { get; set; }
+
+        // TODO: Change the path when publish
+        public string PdfFullPath => string.IsNullOrEmpty(PdfFile)
+            ? null
+            : $"https://TBD.azurewebsites.net{PdfFile.Substring(1)}";
 
         public Receipt Receipt { get; set; }
 

@@ -27,7 +27,7 @@ namespace TenMan.Web.Data.Entities
         
         //Utilizado para calcular expensas
         [Display(Name = "Precio por Metro Cuadrado")]
-        [Required(ErrorMessage = "The field {0} is mandatory.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
