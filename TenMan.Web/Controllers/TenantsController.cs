@@ -19,13 +19,15 @@ namespace TenMan.Web.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
+        private readonly IIFileHelper _fileHelper;
 
         public TenantsController(
             DataContext context, 
             IUserHelper userHelper, 
             ICombosHelper combosHelper, 
             IConverterHelper converterHelper,
-            IImageHelper imageHelper
+            IImageHelper imageHelper,
+            IIFileHelper fileHelper
             )
         {
             _context = context;
@@ -33,6 +35,8 @@ namespace TenMan.Web.Controllers
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
+            _fileHelper = fileHelper;
+
         }
         public async Task<IActionResult> AddImage(int? id)
         {
@@ -113,7 +117,25 @@ namespace TenMan.Web.Controllers
 
             return View(tenant);
         }
+        public async Task<IActionResult> DetailsPayment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var payment = await _context.Payments
+                .Include(t => t.Tenant)
+                .ThenInclude(t => t.User)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (payment == null)
+            {
+                return NotFound();
+            }
+
+            return View(payment);
+        }
         // GET: Tenants/Create
         public IActionResult Create()
         {
@@ -361,13 +383,19 @@ namespace TenMan.Web.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddPayment(Payment payment)
+        public async Task<IActionResult> AddPayment(PaymentViewModel payment)
         {
             if (ModelState.IsValid)
             {
                 var tenant = _context.Tenants.FirstOrDefault(t => t.User.Email == User.Identity.Name);
                 payment.Tenant = tenant;
                 payment.Status = "Pendiente";
+
+                if (payment.PdfFormFile != null)
+                {
+                    var path = await _fileHelper.UploadFileAsync(payment.PdfFormFile);
+                    payment.PdfFile = path;
+                }
 
                 _context.Payments.Add(payment);
                 await _context.SaveChangesAsync();
@@ -378,7 +406,17 @@ namespace TenMan.Web.Controllers
         }
         public IActionResult IndexPayments()
         {
-            var tenant = _context.Tenants.FirstOrDefault(t => t.User.Email == User.Identity.Name);
+            string email = User.Identity.Name;
+
+            var tenant = _context.Tenants
+                .Include(t => t.User)
+                .Include(t => t.Payments)
+                .FirstOrDefault(t => t.User.Email == User.Identity.Name);
+
+            if (tenant == null)
+            {
+                return NotFound();
+            }
             return View(tenant.Payments);
         }
     }

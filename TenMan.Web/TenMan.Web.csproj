@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\Receipts\" />
     <Folder Include="wwwroot\images\Requests\" />
     <Folder Include="wwwroot\FileUpload\" />
   </ItemGroup>

@@ -19,14 +19,11 @@ namespace TenMan.Web.Data
         public DbSet<RequestImage> RequestImages { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<Status> Statuses { get; set; }
-
         public DbSet<StatusType> StatusTypes { get; set; }
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
-
         public DbSet<Tenant> Tenants { get; set; }
-
         public DbSet<Unit> Units { get; set; }
-
+        public DbSet<CheckingAccount> CheckingAccounts { get; set; }
         public DbSet<Worker> Workers { get; set; }
 
     }

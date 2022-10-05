@@ -40,12 +40,16 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PdfFile)
+                @{ 
+                    string pdfLink = "~/Receipts/" + item.PdfFile;
+                }
+                <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
+                @*@Html.DisplayFor(modelItem => item.PdfFile)*@
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detalles</a> |
+                @*<a asp-action="Delete" asp-route-id="@item.Id"></a>*@
             </td>
         </tr>
 }

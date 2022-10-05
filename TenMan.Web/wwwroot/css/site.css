@@ -1,7 +1,7 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification\ 
 for details on configuring this project to bundle and minify static web assets. */
 body {
-    padding-top: 50px;
+/*    padding-top: 50px;*/
     padding-bottom: 20px;
 }
 
@@ -35,14 +35,25 @@ body {
         display: none;
     }
 }
-/* Agregado para TenMan */
-:root {
-    /*--color-navbar: #b200ff;*/
-    --color-navbar: #070101;
-    --color-navbar-text: pink;
-}
+/*If you want the image to take up entire carousel then*/
+/*.imgCarousel {
+    width: 100%;
+    height: auto;
+}*/
 
-.bg-navbar {
+/*If you dont want the image to stretch 100 %, then set your desired width(or dont, just specify margin) and margin auto:*/
+.imgCarousel {
+    width: 75%;
+    margin: auto;
+}
+/* Agregado para TenMan */
+/*:root {*/
+    /*--color-navbar: #b200ff;*/
+    /*--color-navbar: #070101;
+    --color-navbar-text: pink;
+}*/
+
+/*.bg-navbar {
     background: var(--color-navbar);
     color: var(--color-navbar-text);
 }
@@ -54,4 +65,4 @@ body {
 }
 .navbar-brand {
     color: var(--color-navbar-text);
-}
+}*/

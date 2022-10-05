@@ -28,6 +28,8 @@ namespace TenMan.Web.Data.Entities
 
         public Committee Committee { get; set; }
 
+        public CheckingAccount CheckingAccount { get; set; }
+
         public  Tenant Tenant { get; set; }
     }
 }
