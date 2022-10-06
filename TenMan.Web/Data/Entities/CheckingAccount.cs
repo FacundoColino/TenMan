@@ -12,7 +12,7 @@ namespace TenMan.Web.Data.Entities
 
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [Display(Name = "Número")]
-        public int Number { get; set; }
+        public string Number { get; set; }
 
         [Display(Name = "Saldo")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -23,5 +23,9 @@ namespace TenMan.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal PreviousBalance { get; set; }
+
+        [Display(Name = "Total")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal Total => Balance + PreviousBalance;
     }
 }

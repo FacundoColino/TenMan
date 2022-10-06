@@ -10,7 +10,7 @@ namespace TenMan.Web.Helpers
         public async Task<string> UploadFileAsync(IFormFile pdfFile)
         {
             var guid = Guid.NewGuid().ToString();
-            var file = $"{guid}.jpg";
+            var file = $"{guid}.pdf";
             var path = Path.Combine(
                 Directory.GetCurrentDirectory(),
                 "wwwroot\\Receipts",

@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Helpers;
+using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
     public class PaymentsController : Controller
     {
         private readonly DataContext _context;
+        private readonly ICombosHelper _combosHelper;
 
-        public PaymentsController(DataContext context)
+        public PaymentsController(DataContext context, ICombosHelper combosHelper)
         {
             _context = context;
+            _combosHelper = combosHelper;
         }
 
         // GET: Payments
@@ -72,13 +76,31 @@ namespace TenMan.Web.Controllers
             {
                 return NotFound();
             }
+            var payment = await _context.Payments
+                .Include(p => p.Tenant)
+                .ThenInclude(t => t.User)
+                .Include(p => p.Receipt)
+                .Include(p => p.Unit)
+                .ThenInclude(u => u.CheckingAccount)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            var payment = await _context.Payments.FindAsync(id);
             if (payment == null)
             {
                 return NotFound();
             }
-            return View(payment);
+            var model = new PaymentViewModel
+            {
+                Units = _combosHelper.GetComboUnits(payment.Tenant.Id),
+                Amount = payment.Amount,
+                Id = payment.Id,
+                Date = payment.Date,
+                PdfFile = payment.PdfFile,
+                Receipt = payment.Receipt,
+                Status = payment.Status,
+                Tenant = payment.Tenant,
+                Unit = payment.Unit
+            };
+            return View(model);
         }
 
         // POST: Payments/Edit/5
@@ -86,7 +108,7 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Amount,Status,PdfFile")] Payment payment)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Amount,Status,PdfFile")] PaymentViewModel payment)
         {
             if (id != payment.Id)
             {
@@ -97,6 +119,19 @@ namespace TenMan.Web.Controllers
             {
                 try
                 {
+                    if (payment.Status == "Aprobado")
+                    {
+                        decimal balance = payment.Unit.CheckingAccount.Balance;
+                        decimal previousBalance = payment.Unit.CheckingAccount.PreviousBalance;
+                        decimal total = payment.Unit.CheckingAccount.Total;
+
+                        total = total - payment.Amount;
+                        previousBalance = previousBalance + total;
+                        balance = total;
+
+                        payment.Unit.CheckingAccount.Balance = balance;
+                        payment.Unit.CheckingAccount.PreviousBalance = previousBalance;
+                    }
                     _context.Update(payment);
                     await _context.SaveChangesAsync();
                 }

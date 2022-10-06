@@ -38,13 +38,43 @@ namespace TenMan.Web.Helpers
             var list = _context.Tenants.Select(ten => new SelectListItem
             {
                 Text = ten.User.FullName,
-                Value = $"{ ten.Id }" // Convierte a string
+                Value = ten.Id.ToString()
+                //Value = $"{ ten.Id }" // Convierte a string
             }).OrderBy(ten => ten.Text)
                 .ToList();
 
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione el locatario",
+                Value = "0"
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboUnits(int id)
+        {
+            _context.Units.Where(unit => unit.Tenant.Id == id);
+            var query = from u in _context.Units
+                        where u.Tenant.Id == id
+                        select new SelectListItem
+                        {
+                            Text = u.Number.ToString() + "(" + u.Floor + u.Apartment + ")",
+                            Value = u.Id.ToString()
+                        };
+
+            var list = query.ToList();
+
+            //var list = _context.Units.Select(unit => new SelectListItem
+            //{
+            //    Text = unit.Number.ToString() + "(" + unit.Floor + unit.Apartment + ")",
+            //    Value = unit.Id.ToString()
+            //    //Value = $"{ ten.Id }" // Convierte a string
+            //}).OrderBy(unit => unit.Text)
+            //    .ToList(); FUNCIONA
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione la unidad",
                 Value = "0"
             });
 

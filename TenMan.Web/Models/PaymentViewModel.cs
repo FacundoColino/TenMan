@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -12,5 +13,10 @@ namespace TenMan.Web.Models
     {
         [Display(Name = "Comprobante")]
         public IFormFile PdfFormFile { get; set; }
+        public int TenantId { get; set; }
+
+        [Display(Name = "Unidad Funcional")]
+        public int UnitId { get; set; }
+        public IEnumerable<SelectListItem> Units { get; set; }
     }
 }

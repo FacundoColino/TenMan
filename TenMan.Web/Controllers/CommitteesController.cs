@@ -7,18 +7,69 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Helpers;
+using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
     public class CommitteesController : Controller
     {
         private readonly DataContext _context;
+        private readonly ICombosHelper _combosHelper;
 
-        public CommitteesController(DataContext context)
+        public CommitteesController(DataContext context, ICombosHelper combosHelper)
         {
             _context = context;
+            _combosHelper = combosHelper;
         }
+        public async Task<IActionResult> AddUnit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var committee = await _context.Committees.FindAsync(id);
 
+            if (committee == null)
+                return NotFound();
+
+            var model = new UnitViewModel
+            {
+                CommitteeId = committee.Id,
+                Tenants = _combosHelper.GetComboTenants()
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddUnit(UnitViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                CheckingAccount account = new CheckingAccount
+                {
+                    Number = model.CommitteeId + model.Id + "000" + model.Number,
+                    PreviousBalance = 0,
+                    Balance = 0
+                };
+                _context.CheckingAccounts.Add(account);
+                var unit = new Unit
+                {
+                    Number = model.Number,
+                    Floor = model.Floor,
+                    Apartment = model.Apartment,
+                    SquareMeters = model.SquareMeters,
+                    CheckingAccount = account,
+                    Committee = _context.Committees.FindAsync(model.CommitteeId).Result,
+                    Tenant = _context.Tenants.FindAsync(model.TenantId).Result
+                };
+                _context.Add(unit);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.CommitteeId}");
+            }
+            return View(model);
+        }
+     
         // GET: Committees
         public async Task<IActionResult> Index()
         {
@@ -34,7 +85,9 @@ namespace TenMan.Web.Controllers
             }
 
             var committee = await _context.Committees
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(c => c.Units)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (committee == null)
             {
                 return NotFound();
@@ -149,5 +202,54 @@ namespace TenMan.Web.Controllers
         {
             return _context.Committees.Any(e => e.Id == id);
         }
+        public void CalculateCosts(int? id)
+        {
+            if (id == null)
+            {
+                return;
+            }
+            var committee = _context.Committees
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
+                .FirstOrDefault();
+
+            if (committee != null)
+            {
+                foreach (Unit unit in committee.Units)
+                {
+                    decimal balance = unit.SquareMeters * committee.Price;
+                    decimal prev = unit.CheckingAccount.PreviousBalance;
+
+                    unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+                    unit.CheckingAccount.Balance = balance;
+                }
+                _context.Committees.Update(committee);
+                _context.SaveChanges();
+                RedirectToAction($"Details/{id}");
+            }
+        }
+        //private async Task<IActionResult> CalculateCosts(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var committee = await _context.Committees.Find(id);
+
+        //    if (committee != null)
+        //    {
+        //        foreach (Unit unit in committee.Units)
+        //        {
+        //            decimal balance = unit.SquareMeters * committee.Price;
+        //            decimal prev = unit.CheckingAccount.PreviousBalance;
+
+        //            unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+        //            unit.CheckingAccount.Balance = balance;
+        //        }
+        //        _context.Committees.Update(committee);
+        //        _context.SaveChanges();
+        //        //RedirectToAction($"Details/{id}");
+        //    }
+        //}
     }
 }

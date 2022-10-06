@@ -1,17 +1,20 @@
 ﻿@model IEnumerable<TenMan.Web.Data.Entities.Payment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Pagos";
 }
 
-<h2>Index</h2>
+<h2>Pagos</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-info">Agregar</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                Estado
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Date)
             </th>
@@ -24,12 +27,31 @@
             <th>
                 @Html.DisplayNameFor(model => model.PdfFile)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit.UnitFullName)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @{
+                    string icono = "~/images/amarillo.png";
+
+                    if (item.Status == "Rechazado")
+                    {
+                        icono = "~/images/rojo.png";
+                    }
+                    else if (item.Status == "Aprobado")
+                    {
+                        icono = "~/images/verde.png";
+                    }
+                }
+                @*<img src=@icono alt="" height='18' width='18'>*@
+                <img src="~/images/amarillo.png" height='18' width='18' />
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
@@ -40,14 +62,17 @@
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                @{ 
+                @{
                     string pdfLink = "~/Receipts/" + item.PdfFile;
                 }
                 <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
                 @*@Html.DisplayFor(modelItem => item.PdfFile)*@
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                @Html.DisplayFor(modelItem => item.Unit.UnitFullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Revisar</a> |
                 <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Detalles</a> |
                 @*<a asp-action="Delete" asp-route-id="@item.Id"></a>*@
             </td>

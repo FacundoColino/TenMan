@@ -36,6 +36,8 @@ namespace TenMan.Web.Data.Entities
 
         public Receipt Receipt { get; set; }
 
+        [Display(Name = "Unidad")]
+        public Unit Unit { get; set; }
         public Tenant Tenant { get; set; }
     }
 }

@@ -21,31 +21,37 @@
             <th>
                 @Html.DisplayNameFor(model => model.PdfFile)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Unit.UnitFullName)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Amount)
-                </td>
-                <td>
-                    @{
-                        string pdfLink = item.PdfFile;
-                    }
-                    <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
-                    @*@Html.DisplayFor(modelItem => item.PdfFile)*@
-                </td>
-                <td>
-                    <a asp-action="EditPayment" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                    <a asp-action="DetailsPayment" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @{
+                    string pdfLink = item.PdfFile;
+                }
+                <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
+                @*@Html.DisplayFor(modelItem => item.PdfFile)*@
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unit.UnitFullName);
+            </td>
+            <td>
+                <a asp-action="EditPayment" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                <a asp-action="DetailsPayment" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
+            </td>
+        </tr>
         }
     </tbody>
 </table>

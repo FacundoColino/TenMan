@@ -7,20 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
-using TenMan.Web.Helpers;
-using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
     public class UnitsController : Controller
     {
         private readonly DataContext _context;
-        private readonly ICombosHelper _combosHelper;
 
-        public UnitsController(DataContext context, ICombosHelper combosHelper)
+        public UnitsController(DataContext context)
         {
             _context = context;
-            _combosHelper = combosHelper;
         }
 
         // GET: Units
@@ -50,11 +46,7 @@ namespace TenMan.Web.Controllers
         // GET: Units/Create
         public IActionResult Create()
         {
-            var model = new UnitViewModel
-            {
-                Tenants = _combosHelper.GetComboTenants()
-            };
-            return View(model);
+            return View();
         }
 
         // POST: Units/Create

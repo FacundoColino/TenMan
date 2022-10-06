@@ -7,5 +7,7 @@ namespace TenMan.Web.Helpers
     {
         IEnumerable<SelectListItem> GetComboSpecialties();
         IEnumerable<SelectListItem> GetComboTenants();
+
+        IEnumerable<SelectListItem> GetComboUnits(int id);
     }
 }

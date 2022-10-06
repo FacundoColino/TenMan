@@ -10,10 +10,11 @@ namespace TenMan.Web.Models
 {
     public class UnitViewModel : Unit
     {
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Required]
         [Display(Name = "Locatario")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un locatario.")]
         public int TenantId { get; set; }
+        public int CommitteeId { get; set; }
         public IEnumerable<SelectListItem> Tenants { get; set; }
     }
 }

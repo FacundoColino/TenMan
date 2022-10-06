@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221005034930_units2")]
+    partial class units2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,8 +213,7 @@ namespace TenMan.Web.Migrations
 
                     b.Property<decimal>("Balance");
 
-                    b.Property<string>("Number")
-                        .IsRequired();
+                    b.Property<int>("Number");
 
                     b.Property<decimal>("PreviousBalance");
 
@@ -268,15 +269,11 @@ namespace TenMan.Web.Migrations
 
                     b.Property<int?>("TenantId");
 
-                    b.Property<int?>("UnitId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReceiptId");
 
                     b.HasIndex("TenantId");
-
-                    b.HasIndex("UnitId");
 
                     b.ToTable("Payments");
                 });
@@ -565,10 +562,6 @@ namespace TenMan.Web.Migrations
                     b.HasOne("TenMan.Web.Data.Entities.Tenant", "Tenant")
                         .WithMany("Payments")
                         .HasForeignKey("TenantId");
-
-                    b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
-                        .WithMany()
-                        .HasForeignKey("UnitId");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Request", b =>
