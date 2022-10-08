@@ -26,7 +26,9 @@ namespace TenMan.Web.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Payments.ToListAsync());
+            return View(await _context.Payments
+                .Include(p => p.Unit)
+                .ToListAsync());
         }
 
         // GET: Payments/Details/5
@@ -79,7 +81,7 @@ namespace TenMan.Web.Controllers
             var payment = await _context.Payments
                 .Include(p => p.Tenant)
                 .ThenInclude(t => t.User)
-                .Include(p => p.Receipt)
+                //.Include(p => p.Receipt)
                 .Include(p => p.Unit)
                 .ThenInclude(u => u.CheckingAccount)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -95,10 +97,13 @@ namespace TenMan.Web.Controllers
                 Id = payment.Id,
                 Date = payment.Date,
                 PdfFile = payment.PdfFile,
-                Receipt = payment.Receipt,
+                //Receipt = payment.Receipt,
                 Status = payment.Status,
                 Tenant = payment.Tenant,
-                Unit = payment.Unit
+                Unit = payment.Unit,
+                UnitId = payment.Unit.Id,
+                TenantId = payment.Tenant.Id,
+                CheckingAccountId = payment.Unit.CheckingAccount.Id
             };
             return View(model);
         }
@@ -108,17 +113,28 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Amount,Status,PdfFile")] PaymentViewModel payment)
+        public async Task<IActionResult> Edit(int id, PaymentViewModel model)
         {
-            if (id != payment.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
                 {
+                    Payment payment = new Payment
+                    {
+                        Id = model.Id,
+                        PdfFile = model.PdfFile,
+                        Amount = model.Amount,
+                        Date = model.Date,
+                        Unit = await _context.Units
+                        .Include(u => u.CheckingAccount)
+                        .FirstOrDefaultAsync(u => u.Id == model.UnitId),
+                        Tenant = await _context.Tenants.FindAsync(model.TenantId),
+                        Status = model.Status
+                    };
                     if (payment.Status == "Aprobado")
                     {
                         decimal balance = payment.Unit.CheckingAccount.Balance;
@@ -132,12 +148,12 @@ namespace TenMan.Web.Controllers
                         payment.Unit.CheckingAccount.Balance = balance;
                         payment.Unit.CheckingAccount.PreviousBalance = previousBalance;
                     }
-                    _context.Update(payment);
+                    _context.Payments.Update(payment);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PaymentExists(payment.Id))
+                    if (!PaymentExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -148,7 +164,7 @@ namespace TenMan.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(payment);
+            return View(model);
         }
 
         // GET: Payments/Delete/5

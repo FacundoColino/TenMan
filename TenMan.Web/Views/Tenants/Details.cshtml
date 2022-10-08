@@ -63,9 +63,9 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Status)
-                </th>
+                @*<th>
+                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Statuses)
+                </th>*@
                 <th>
                     @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Speciality)
                 </th>
@@ -88,9 +88,9 @@ else
             @foreach (var item in Model.Requests)
             {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Status)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Speciality)
                 </td>

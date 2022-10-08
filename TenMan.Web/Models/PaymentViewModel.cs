@@ -17,6 +17,9 @@ namespace TenMan.Web.Models
 
         [Display(Name = "Unidad Funcional")]
         public int UnitId { get; set; }
+
+        public int CheckingAccountId { get; set; }
+
         public IEnumerable<SelectListItem> Units { get; set; }
     }
 }

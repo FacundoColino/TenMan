@@ -28,7 +28,7 @@ namespace TenMan.Web.Helpers
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
                 Speciality = await _context.Specialties.FindAsync(model.SpecialtyId),
-                Status = model.Status,
+                Statuses = model.Statuses,
                 Worker = model.Worker, // Poner WorkerID?
                 Images = isNew ? new List<RequestImage>() : model.Images,
                 Tenant = await _context.Tenants.FindAsync(model.TenantId)
@@ -43,7 +43,7 @@ namespace TenMan.Web.Helpers
                     StartDate = request.StartDate,
                     EndDate = request.EndDate,
                     //Speciality = request.Speciality,
-                    Status = request.Status,
+                    Statuses = request.Statuses,
                     Worker = request.Worker, // Poner WorkerID?
                     Images = request.Images,
                     Tenant = request.Tenant,

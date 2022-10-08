@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221006184127_PaymentFix")]
+    partial class PaymentFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -299,11 +301,11 @@ namespace TenMan.Web.Migrations
 
                     b.Property<DateTime>("EndDate");
 
-                    b.Property<string>("Remarks");
-
                     b.Property<int?>("SpecialityId");
 
                     b.Property<DateTime>("StartDate");
+
+                    b.Property<int?>("StatusId");
 
                     b.Property<int?>("TenantId");
 
@@ -312,6 +314,8 @@ namespace TenMan.Web.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SpecialityId");
+
+                    b.HasIndex("StatusId");
 
                     b.HasIndex("TenantId");
 
@@ -360,13 +364,9 @@ namespace TenMan.Web.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int?>("RequestId");
-
                     b.Property<int?>("StatusTypeId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RequestId");
 
                     b.HasIndex("StatusTypeId");
 
@@ -571,6 +571,10 @@ namespace TenMan.Web.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SpecialityId");
 
+                    b.HasOne("TenMan.Web.Data.Entities.Status", "Status")
+                        .WithMany("Requests")
+                        .HasForeignKey("StatusId");
+
                     b.HasOne("TenMan.Web.Data.Entities.Tenant", "Tenant")
                         .WithMany("Requests")
                         .HasForeignKey("TenantId");
@@ -589,10 +593,6 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Status", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Request", "Request")
-                        .WithMany("Statuses")
-                        .HasForeignKey("RequestId");
-
                     b.HasOne("TenMan.Web.Data.Entities.StatusType", "StatusType")
                         .WithMany()
                         .HasForeignKey("StatusTypeId");

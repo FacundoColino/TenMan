@@ -34,8 +34,6 @@ namespace TenMan.Web.Data.Entities
             ? null
             : $"https://TBD.azurewebsites.net{PdfFile.Substring(1)}";
 
-        public Receipt Receipt { get; set; }
-
         [Display(Name = "Unidad")]
         public Unit Unit { get; set; }
         public Tenant Tenant { get; set; }

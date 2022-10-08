@@ -34,5 +34,7 @@ namespace TenMan.Web.Data.Entities
         public CheckingAccount CheckingAccount { get; set; }
 
         public  Tenant Tenant { get; set; }
+
+        public ICollection<Request> Requests { get; set; }
     }
 }

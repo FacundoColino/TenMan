@@ -12,7 +12,5 @@ namespace TenMan.Web.Data.Entities
         public ICollection<Unit> Units { get; set; }
 
         public ICollection<Payment> Payments { get; set; }
-
-        public ICollection<Request> Requests { get; set; }
     }
 }

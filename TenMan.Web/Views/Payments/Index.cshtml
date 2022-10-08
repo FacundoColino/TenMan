@@ -49,8 +49,7 @@
                         icono = "~/images/verde.png";
                     }
                 }
-                @*<img src=@icono alt="" height='18' width='18'>*@
-                <img src="~/images/amarillo.png" height='18' width='18' />
+                <img src="@Url.Content(icono)" alt="" height='18' width='18'>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -63,7 +62,7 @@
             </td>
             <td>
                 @{
-                    string pdfLink = "~/Receipts/" + item.PdfFile;
+                    string pdfLink = item.PdfFile;
                 }
                 <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
                 @*@Html.DisplayFor(modelItem => item.PdfFile)*@

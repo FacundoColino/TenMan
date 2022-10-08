@@ -37,9 +37,9 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" class="btn btn-danger" asp-route-id="@Model.Id">Editar</a> |
+    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model.Id">Editar</a> |
     <a asp-controller="Committees" asp-action="AddUnit" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Unidad</a> |
-    <a asp-controller="Committees" asp-action="CalculateCosts" class="btn btn-dark" asp-route-id="@Model.Id">Calcular Expensas</a> |
+    <a asp-controller="Committees" asp-action="CalculateCosts" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a> |
     <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
 </div>
 @if (Model.Units.Count == 0)
@@ -83,8 +83,8 @@ else
                         @Html.DisplayFor(modelItem => item.SquareMeters)
                     </td>
                     <td>
-                        <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-info">Editar</a> |
-                        <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-warning">Detalles</a> |
+                        <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                        <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
                         <a asp-action="DeleteUnit" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
                     </td>
                 </tr>

@@ -90,7 +90,6 @@ namespace TenMan.Web.Controllers
             return View(_context.Tenants
                 .Include(t => t.User)
                 .Include(t => t.Units)
-                .Include(t => t.Requests)
                 .Include(t => t.Payments));
         }
 
@@ -105,7 +104,6 @@ namespace TenMan.Web.Controllers
             var tenant = await _context.Tenants
                 .Include(o => o.User)
                 .Include(o => o.Units)
-                .Include(o => o.Requests)
                 .Include(o => o.Payments)
                 //.ThenInclude(p => p.Receipt)
                 .FirstOrDefaultAsync(t => t.Id == id);
@@ -156,7 +154,6 @@ namespace TenMan.Web.Controllers
                     var tenant = new Tenant
                     {
                         Units = new List<Unit>(),
-                        Requests = new List<Request>(),
                         Payments = new List<Payment>(),
                         User = user
                     };

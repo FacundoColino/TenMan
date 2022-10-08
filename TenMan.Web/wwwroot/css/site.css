@@ -4,14 +4,15 @@ body {
 /*    padding-top: 50px;*/
     padding-bottom: 20px;
 }
-.navbar a {
+/* Navbar Color */
+/*.navbar a {
     color: white; !important
 }
     .navbar a:hover {
         color: black;
         background-color: #e8c39e !important;
     }
-
+*/
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
