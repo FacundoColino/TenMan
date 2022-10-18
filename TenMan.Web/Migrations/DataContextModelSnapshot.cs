@@ -297,6 +297,8 @@ namespace TenMan.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ActualStatus");
+
                     b.Property<DateTime>("EndDate");
 
                     b.Property<string>("Remarks");
@@ -305,7 +307,7 @@ namespace TenMan.Web.Migrations
 
                     b.Property<DateTime>("StartDate");
 
-                    b.Property<int?>("TenantId");
+                    b.Property<int?>("UnitId");
 
                     b.Property<int?>("WorkerId");
 
@@ -313,7 +315,7 @@ namespace TenMan.Web.Migrations
 
                     b.HasIndex("SpecialityId");
 
-                    b.HasIndex("TenantId");
+                    b.HasIndex("UnitId");
 
                     b.HasIndex("WorkerId");
 
@@ -434,6 +436,8 @@ namespace TenMan.Web.Migrations
                     b.Property<int>("Floor");
 
                     b.Property<int>("Number");
+
+                    b.Property<string>("Owner");
 
                     b.Property<int>("SquareMeters");
 
@@ -571,9 +575,9 @@ namespace TenMan.Web.Migrations
                         .WithMany("Requests")
                         .HasForeignKey("SpecialityId");
 
-                    b.HasOne("TenMan.Web.Data.Entities.Tenant", "Tenant")
+                    b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
                         .WithMany("Requests")
-                        .HasForeignKey("TenantId");
+                        .HasForeignKey("UnitId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Worker", "Worker")
                         .WithMany("Requests")

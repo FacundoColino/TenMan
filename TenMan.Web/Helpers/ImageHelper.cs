@@ -13,7 +13,7 @@ namespace TenMan.Web.Helpers
             var file = $"{guid}.jpg";
             var path = Path.Combine(
                 Directory.GetCurrentDirectory(),
-                "wwwroot\\images\\Properties",
+                "wwwroot\\images\\Requests",
                 file);
 
             using (var stream = new FileStream(path, FileMode.Create))
@@ -21,7 +21,7 @@ namespace TenMan.Web.Helpers
                 await imageFile.CopyToAsync(stream);
             }
 
-            return $"~/images/Properties/{file}";
+            return $"~/images/Requests/{file}";
         }
     }
 }

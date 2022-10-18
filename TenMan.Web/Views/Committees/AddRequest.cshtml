@@ -1,0 +1,96 @@
+﻿@model TenMan.Web.Models.RequestViewModel
+
+@{
+    ViewData["Title"] = "Crear";
+}
+
+<h2>Agregar Solicitud</h2>
+
+<h4>Solicitud</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddRequest">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UnitId" /> @*De lo contrario llega nulo*@
+
+            <div class="form-group">
+                <label asp-for="SpecialtyId" class="control-label"></label>
+                <select asp-for="SpecialtyId" asp-items="Model.Specialties" class="form-control"></select>
+                <span asp-validation-for="SpecialtyId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            @*<div class="form-group"> Poner ficha final cuando el estado sea igual a Finalizada
+                    <label asp-for="EndDate" class="control-label"></label>
+                    <input asp-for="EndDate" class="form-control" />
+                    <span asp-validation-for="EndDate" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
+                <label asp-for="WorkerId" class="control-label"></label>
+                <select asp-for="WorkerId" asp-items="Model.Workers" class="form-control"></select>
+                <span asp-validation-for="WorkerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusTypeId" class="control-label"></label>
+                <select asp-for="StatusTypeId" asp-items="Model.StatusTypes" class="form-control"></select>
+                <span asp-validation-for="StatusTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Remarks" class="control-label"></label>
+                <textarea asp-for="Remarks" class="form-control"></textarea>
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" asp-route-id="@Model.UnitId" class="btn btn-default" />
+                <a asp-action="DetailsUnit" asp-route-id="@Model.UnitId" class="btn btn-success">Volver a la Unidad</a>
+            </div>
+        </form>
+    </div>
+</div>
+@if (Model.Statuses.Count == 0)
+{
+    <h5>Esta solicitud aún no ha cambiado de estado</h5>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Statuses.FirstOrDefault().DateLocal)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Statuses.FirstOrDefault().StatusType)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Statuses)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateLocal)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StatusType)
+                    </td>
+                    <td>
+                        <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                        <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
+                        <a asp-action="DeleteUnit" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

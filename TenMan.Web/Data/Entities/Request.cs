@@ -15,8 +15,9 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
-        [Display(Name = "Fecha Fin")]
-        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
+        //Agregar fecha estimada
+
+        [Display(Name = "Fecha Fin")]        
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
@@ -26,9 +27,11 @@ namespace TenMan.Web.Data.Entities
         public DateTime StartDateLocal => StartDate.ToLocalTime();
 
         [Display(Name = "Fecha Fin")]
-        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDateLocal => EndDate.ToLocalTime();
+
+        [Display(Name = "Estado Actual")]
+        public string ActualStatus { get; set; }
 
         [Display(Name = "Observaciones")]
         public string Remarks { get; set; }
@@ -38,7 +41,7 @@ namespace TenMan.Web.Data.Entities
 
         public ICollection<RequestImage> Images { get; set; }
 
-        public Tenant Tenant { get; set; }
+        public Unit Unit { get; set; }
 
         public Worker Worker { get; set; }
 

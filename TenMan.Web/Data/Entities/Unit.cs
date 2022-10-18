@@ -22,6 +22,9 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Departamento")]
         public string Apartment { get; set; }
 
+        [Display(Name = "Propietario")]
+        public string Owner { get; set; }
+
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [Display(Name = "Metros Cuadrados")]
         public int SquareMeters { get; set; }

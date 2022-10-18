@@ -51,6 +51,24 @@ namespace TenMan.Web.Helpers
 
             return list;
         }
+        public IEnumerable<SelectListItem> GetComboWorkers()
+        {
+            var list = _context.Workers.Select(w => new SelectListItem
+            {
+                Text = w.User.FullName,
+                Value = w.Id.ToString()
+                //Value = $"{ ten.Id }" // Convierte a string
+            }).OrderBy(w => w.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione el especialista",
+                Value = "0"
+            });
+
+            return list;
+        }
         public IEnumerable<SelectListItem> GetComboUnits(int id)
         {
             _context.Units.Where(unit => unit.Tenant.Id == id);
@@ -75,6 +93,23 @@ namespace TenMan.Web.Helpers
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione la unidad",
+                Value = "0"
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboStatusTypes()
+        {
+            var list = _context.StatusTypes.Select(st => new SelectListItem
+            {
+                Text = st.Description,
+                Value = $"{ st.Id }" // Convierte a string
+            }).OrderBy(st => st.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione el estado",
                 Value = "0"
             });
 

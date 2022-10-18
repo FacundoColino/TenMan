@@ -27,4 +27,10 @@
     <Folder Include="wwwroot\FileUpload\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\css\tenmanGreen - Copia.min.css">
+      <DependentUpon>tenmanGreen.min.css</DependentUpon>
+    </Content>
+  </ItemGroup>
+
 </Project>

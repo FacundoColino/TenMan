@@ -1,0 +1,35 @@
+﻿@model TenMan.Web.Data.Entities.Committee
+
+@{
+    ViewData["Title"] = "Expensas";
+}
+<style>
+    td {
+        border-color: maroon !important;
+    }
+</style>
+<h2>Expensas</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <td>@Html.DisplayNameFor(model => model.Address)</td>
+    </tr>
+    <tr>
+        <td>@Model.Administrator.User.FullName</td>
+    </tr>
+    <tr>
+        <td>sdjdsd</td>
+        <td>sdkjsldkjsd</td>
+    </tr>
+    @foreach (var item in Model.Units)
+    {
+        <tr>
+            <td>@item.Number</td>
+            <td>@item.Floor</td>
+            <td>@item.Apartment</td>
+            <td>@item.Owner</td>
+            <td>@item.CheckingAccount.PreviousBalance</td>
+            <td>@item.CheckingAccount.Balance</td>
+        </tr>
+    }
+</table>

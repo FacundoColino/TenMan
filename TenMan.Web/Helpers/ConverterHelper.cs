@@ -28,10 +28,12 @@ namespace TenMan.Web.Helpers
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
                 Speciality = await _context.Specialties.FindAsync(model.SpecialtyId),
-                Statuses = model.Statuses,
-                Worker = model.Worker, // Poner WorkerID?
+                Statuses = isNew ? new List<Status>() : model.Statuses,
+                ActualStatus = isNew ? "Generada" : model.ActualStatus,
+                Remarks = model.Remarks,
+                Worker = await _context.Workers.FindAsync(model.WorkerId),
                 Images = isNew ? new List<RequestImage>() : model.Images,
-                Tenant = await _context.Tenants.FindAsync(model.TenantId)
+                Unit = await _context.Units.FindAsync(model.UnitId)
             };
         }
 
@@ -40,14 +42,19 @@ namespace TenMan.Web.Helpers
                 return new RequestViewModel
                 {
                     Id = request.Id,
+                    Remarks = request.Remarks,
+                    ActualStatus = request.ActualStatus,
+                    StatusTypes = _combosHelper.GetComboStatusTypes(),
+                    StatusTypeId = 0,
                     StartDate = request.StartDate,
                     EndDate = request.EndDate,
-                    //Speciality = request.Speciality,
+                    Speciality = request.Speciality,
                     Statuses = request.Statuses,
-                    Worker = request.Worker, // Poner WorkerID?
+                    Worker = request.Worker,
+                    WorkerId = request.Worker.Id,
                     Images = request.Images,
-                    Tenant = request.Tenant,
-                    TenantId = request.Tenant.Id,
+                    Unit = request.Unit,
+                    UnitId = request.Unit.Id,
                     SpecialtyId = request.Speciality.Id,
                     Specialties = _combosHelper.GetComboSpecialties()
                 };

@@ -54,68 +54,6 @@
     <a asp-action="AddRequest" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Solicitud</a> |
     <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
 </div>
-@if (Model.Requests.Count == 0)
-{
-    <h5>Locatario sin solicitudes de reparación o trabajos</h5>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                @*<th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Statuses)
-                </th>*@
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Speciality)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Worker.User.FullName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Requests.FirstOrDefault().Images)
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Requests)
-            {
-            <tr>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Speciality)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EndDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Worker.User.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Images.Count)
-                </td>
-                <td>
-                    <a asp-action="EditRequest" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                    <a asp-action="DetailsRequest" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                    <a asp-action="DeleteRequest" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-}
     @if (Model.Units.Count == 0)
     {
         <h5>Locatario no asignado a ninguna unidad</h5>

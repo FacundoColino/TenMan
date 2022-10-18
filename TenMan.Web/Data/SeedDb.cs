@@ -129,9 +129,12 @@ namespace TenMan.Web.Data
         }
         private async Task CheckWorkersAsync(User user)
         {
-            _context.Workers.Add(new Worker { User = user });
+            if (!_context.Workers.Any())
+            {
+                _context.Workers.Add(new Worker { User = user });
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

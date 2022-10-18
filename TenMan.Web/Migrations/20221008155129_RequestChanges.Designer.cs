@@ -10,8 +10,8 @@ using TenMan.Web.Data;
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220828035653_Users")]
-    partial class Users
+    [Migration("20221008155129_RequestChanges")]
+    partial class RequestChanges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -205,6 +205,24 @@ namespace TenMan.Web.Migrations
                     b.ToTable("Administrators");
                 });
 
+            modelBuilder.Entity("TenMan.Web.Data.Entities.CheckingAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Balance");
+
+                    b.Property<string>("Number")
+                        .IsRequired();
+
+                    b.Property<decimal>("PreviousBalance");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CheckingAccounts");
+                });
+
             modelBuilder.Entity("TenMan.Web.Data.Entities.Committee", b =>
                 {
                     b.Property<int>("Id")
@@ -234,54 +252,29 @@ namespace TenMan.Web.Migrations
                     b.ToTable("Committees");
                 });
 
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Owner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("CellPhone")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("FixedPhone")
-                        .HasMaxLength(20);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Owners");
-                });
-
             modelBuilder.Entity("TenMan.Web.Data.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount");
+
                     b.Property<DateTime>("Date");
 
-                    b.Property<int?>("ReceiptId");
+                    b.Property<string>("PdfFile");
+
+                    b.Property<string>("Status");
 
                     b.Property<int?>("TenantId");
 
+                    b.Property<int?>("UnitId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiptId");
-
                     b.HasIndex("TenantId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("Payments");
                 });
@@ -308,19 +301,25 @@ namespace TenMan.Web.Migrations
 
                     b.Property<DateTime>("EndDate");
 
+                    b.Property<string>("Remarks");
+
                     b.Property<int?>("SpecialityId");
 
                     b.Property<DateTime>("StartDate");
 
                     b.Property<int?>("TenantId");
 
-                    b.Property<int?>("Id");
+                    b.Property<int?>("UnitId");
+
+                    b.Property<int?>("WorkerId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("SpecialityId");
 
                     b.HasIndex("TenantId");
+
+                    b.HasIndex("UnitId");
 
                     b.HasIndex("WorkerId");
 
@@ -333,8 +332,7 @@ namespace TenMan.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired();
+                    b.Property<string>("ImageUrl");
 
                     b.Property<int?>("RequestId");
 
@@ -435,6 +433,8 @@ namespace TenMan.Web.Migrations
                     b.Property<string>("Apartment")
                         .IsRequired();
 
+                    b.Property<int?>("CheckingAccountId");
+
                     b.Property<int?>("CommitteeId");
 
                     b.Property<int>("Floor");
@@ -446,6 +446,8 @@ namespace TenMan.Web.Migrations
                     b.Property<int?>("TenantId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CheckingAccountId");
 
                     b.HasIndex("CommitteeId");
 
@@ -560,13 +562,13 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Payment", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Receipt", "Receipt")
-                        .WithMany()
-                        .HasForeignKey("ReceiptId");
-
                     b.HasOne("TenMan.Web.Data.Entities.Tenant", "Tenant")
                         .WithMany("Payments")
                         .HasForeignKey("TenantId");
+
+                    b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Request", b =>
@@ -576,8 +578,12 @@ namespace TenMan.Web.Migrations
                         .HasForeignKey("SpecialityId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Tenant", "Tenant")
-                        .WithMany("Requests")
+                        .WithMany()
                         .HasForeignKey("TenantId");
+
+                    b.HasOne("TenMan.Web.Data.Entities.Unit")
+                        .WithMany("Requests")
+                        .HasForeignKey("UnitId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Worker", "Worker")
                         .WithMany("Requests")
@@ -618,6 +624,10 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Unit", b =>
                 {
+                    b.HasOne("TenMan.Web.Data.Entities.CheckingAccount", "CheckingAccount")
+                        .WithMany()
+                        .HasForeignKey("CheckingAccountId");
+
                     b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
                         .WithMany("Units")
                         .HasForeignKey("CommitteeId");

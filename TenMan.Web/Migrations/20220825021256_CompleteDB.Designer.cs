@@ -165,7 +165,7 @@ namespace TenMan.Web.Migrations
 
                     b.Property<int?>("TenantId");
 
-                    b.Property<int?>("WorkerId");
+                    b.Property<int?>("Id");
 
                     b.HasKey("Id");
 
