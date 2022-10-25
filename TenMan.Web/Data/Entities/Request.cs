@@ -12,22 +12,22 @@ namespace TenMan.Web.Data.Entities
 
         [Display(Name = "Fecha Inicio")]
         [Required(ErrorMessage = "El campo {0} is obligatorio.")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDate { get; set; }
 
         //Agregar fecha estimada
 
         [Display(Name = "Fecha Fin")]        
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
         [Display(Name = "Fecha Inicio")]
         [Required(ErrorMessage = "El campo {0} is obligatorio.")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime StartDateLocal => StartDate.ToLocalTime();
 
         [Display(Name = "Fecha Fin")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime EndDateLocal => EndDate.ToLocalTime();
 
         [Display(Name = "Estado Actual")]

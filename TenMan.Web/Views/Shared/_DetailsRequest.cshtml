@@ -1,0 +1,198 @@
+﻿@model TenMan.Web.Data.Entities.Request
+
+@{
+    ViewData["Title"] = "Detalles";
+}
+
+<h2>Solicitud</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h4>Locatario</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.Document)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Tenant.User.Document)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Tenant.User.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.LastName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Tenant.User.LastName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Tenant.User.Email)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.PhoneNumber)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Tenant.User.PhoneNumber)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h4>Detalles de la solicitud</h4>
+            <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.ActualStatus)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.ActualStatus)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.StartDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.StartDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.EndDateLocal)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.EndDateLocal)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Speciality.Name)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Speciality.Name)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Remarks)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Remarks)
+                </dd>
+                <dt>
+                    Especialista
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Worker.User.FullName)
+                </dd>
+                <dt>
+                    Unidad
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.UnitFullName)
+                </dd>
+                <dt>
+                    Consorcio
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Committee.Address)
+                </dd>
+                <dt>
+                    Unidades
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Unit.Committee.Units.Count)
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="EditRequest" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a>
+    <a asp-action="AddImage" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Imagen</a>
+    <a asp-action="DetailsUnit" asp-route-id="@Model.Unit.Tenant.Id" class="btn btn-success">Volver a la Unidad</a>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <div>
+            <h4>Imagenes</h4>
+            @if (Model.Images.Count == 0)
+            {
+                <h5>Todavía no se han agregado imagenes.</h5>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Images.FirstOrDefault().ImageUrl)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Images)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div>
+            <h4>Estados</h4>
+            @if (Model.Statuses.Count == 0)
+            {
+                <h5>Todavía no se han registrado estados para la solicitud</h5>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Statuses.FirstOrDefault().DateLocal)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Statuses.FirstOrDefault().StatusType.Description)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Statuses)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateLocal)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.StatusType.Description)
+                                </td>
+                                <td>
+                                    <a asp-action="EditContract" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                    <a asp-action="DetailsContract" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
+                                    <a asp-action="DeleteContract" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
+

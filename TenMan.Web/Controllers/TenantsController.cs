@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,6 +86,34 @@ namespace TenMan.Web.Controllers
 
             return View(payment);
         }
+
+        public async Task<IActionResult> DetailsRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var request = await _context.Requests
+            .Include(r => r.Unit)
+            .ThenInclude(u => u.Tenant)
+            .ThenInclude(t => t.User)
+            .Include(r => r.Unit)
+            .ThenInclude(u => u.Committee)
+            .ThenInclude(c => c.Administrator)
+            .ThenInclude(a => a.User)
+            .Include(r => r.Images)
+            .Include(r => r.Worker)
+            .ThenInclude(w => w.User)
+            .Include(r => r.Statuses)
+            .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (request == null)
+                return NotFound();
+
+            return View(request);
+        }
+
+
         // GET: Tenants/Create
         public IActionResult Create()
         {
@@ -295,5 +324,147 @@ namespace TenMan.Web.Controllers
             }
             return View(tenant.Payments);
         }
+        public IActionResult IndexRequests()
+        {
+            string email = User.Identity.Name;
+
+            var tenant = _context.Tenants
+                .Include(t => t.User)
+                .Include(t => t.Units)
+                .ThenInclude(u => u.Requests)
+                .FirstOrDefault(t => t.User.Email == User.Identity.Name);
+
+            if (tenant == null)
+            {
+                return NotFound();
+            }
+            return View(tenant.Units.FirstOrDefault().Requests);
+        }
+        public async Task<IActionResult> DetailsUnit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var unit = await _context.Units
+                .Include(u => u.Requests)
+                .ThenInclude(r => r.Images)
+                .Include(u => u.Requests)
+                .ThenInclude(r => r.Speciality)
+                .Include(u => u.Requests)
+                .ThenInclude(r => r.Worker)
+                .ThenInclude(w => w.User)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (unit == null)
+            {
+                return NotFound();
+            }
+
+            return View(unit);
+        }
+
+        public IActionResult IndexUnits()
+        {
+            string email = User.Identity.Name;
+
+            var tenant = _context.Tenants
+                .Include(t => t.User)
+                .Include(t => t.Units)
+                .ThenInclude(u => u.Requests)
+                .FirstOrDefault(t => t.User.Email == User.Identity.Name);
+
+            if (tenant == null)
+            {
+                return NotFound();
+            }
+            return View(tenant.Units);
+        }
+        public async Task<IActionResult> AddRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var unit = await _context.Units
+                .Include(u => u.Requests)
+                .ThenInclude(r => r.Images)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (unit == null)
+                return NotFound();
+
+            var model = new RequestViewModel
+            {
+                UnitId = unit.Id,
+                Specialties = _combosHelper.GetComboSpecialties(),
+                StatusTypeId = 1,
+                Workers = _combosHelper.GetComboWorkers(),
+                Images = unit.Requests.FirstOrDefault().Images,
+                StartDate = DateTime.Today.ToUniversalTime()
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddRequest(RequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var request = await _converterHelper.ToRequestAsync(model, true);
+                _context.Requests.Add(request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("IndexUnits");
+            }
+            return View(model);
+        }
+      
+        public async Task<IActionResult> AddImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var request = await _context.Requests.FindAsync(id.Value);
+            if (request == null)
+            {
+                return NotFound();
+            }
+
+            var model = new RequestImageViewModel
+            {
+                Id = request.Id
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddImage(RequestImageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var requestImage = new RequestImage
+                {
+                    ImageUrl = path,
+                    Request = await _context.Requests.FindAsync(model.Id)
+                };
+
+                _context.RequestImages.Add(requestImage);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsRequest)}/{model.Id}");
+            }
+
+            return View(model);
+        }
+      
     }
 }

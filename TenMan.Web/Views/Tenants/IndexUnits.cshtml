@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TenMan.Web.Data.Entities.Unit>
+
+@{
+    ViewData["Title"] = "Unidades";
+}
+
+<h2>Unidades</h2>
+
+<table class="table table-striped table-hover ">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Floor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Apartment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstOrDefault().SquareMeters)
+            </th>
+            <th>
+                Solicitudes
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Floor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apartment)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SquareMeters)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Requests.Count)
+                </td>
+                <td>
+                    <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

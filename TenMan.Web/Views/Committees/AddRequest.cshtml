@@ -14,6 +14,7 @@
         <form asp-action="AddRequest">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="UnitId" /> @*De lo contrario llega nulo*@
+            <input type="hidden" asp-for="StartDate" />
 
             <div class="form-group">
                 <label asp-for="SpecialtyId" class="control-label"></label>
@@ -22,14 +23,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
+                <input asp-for="StartDate" class="form-control" type="text" disabled/>
                 <span asp-validation-for="StartDate" class="text-danger"></span>
             </div>
             @*<div class="form-group"> Poner ficha final cuando el estado sea igual a Finalizada
-                    <label asp-for="EndDate" class="control-label"></label>
-                    <input asp-for="EndDate" class="form-control" />
-                    <span asp-validation-for="EndDate" class="text-danger"></span>
-                </div>*@
+            <label asp-for="EndDate" class="control-label"></label>
+            <input asp-for="EndDate" class="form-control" />
+            <span asp-validation-for="EndDate" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <label asp-for="WorkerId" class="control-label"></label>
                 <select asp-for="WorkerId" asp-items="Model.Workers" class="form-control"></select>
@@ -52,7 +53,7 @@
         </form>
     </div>
 </div>
-@if (Model.Statuses.Count == 0)
+@*@if (Model.Statuses.Count == 0)
 {
     <h5>Esta solicitud aún no ha cambiado de estado</h5>
 }
@@ -89,7 +90,7 @@ else
             }
         </tbody>
     </table>
-}
+}*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

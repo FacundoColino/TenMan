@@ -1,10 +1,10 @@
 ﻿@model TenMan.Web.Models.RequestImageViewModel
 
 @{
-    ViewData["Title"] = "Crear";
+    ViewData["Title"] = "Agregar Imagen";
 }
 
-<h2>Agregar imagen</h2>
+<h2>Agregar Imagen</h2>
 
 <h4>Solicitud</h4>
 <hr />
@@ -22,8 +22,9 @@
 
             <div class="form-group">
                 <input type="submit" value="Agregar" class="btn btn-primary" />
-                <a asp-action="DetailsRequest" asp-route-id="@Model.Id" class="btn btn-success">Volver a la Solicitud</a>
+                <a asp-action="DetailsProperty" asp-route-id="@Model.Id" class="btn btn-success">Volver a la Solicitud</a>
             </div>
         </form>
     </div>
 </div>
+

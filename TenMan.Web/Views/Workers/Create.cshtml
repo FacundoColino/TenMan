@@ -1,0 +1,59 @@
+﻿@model TenMan.Web.Models.AddWorkerViewModel
+
+@{
+    ViewData["Title"] = "Agregar especialista";
+}
+
+<h2>Agregar Especialista</h2>
+
+<h4>Especialista</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <partial name="_User" />
+
+            <div class="form-group">
+                <label asp-for="RegisterNumber" class="control-label"></label>
+                <input asp-for="RegisterNumber" class="form-control" />
+                <span asp-validation-for="RegisterNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SpecialtyId" class="control-label"></label>
+                <select asp-for="SpecialtyId" asp-items="Model.Specialties" class="form-control"></select>
+                <span asp-validation-for="SpecialtyId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordConfirm" class="control-label"></label>
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

@@ -5,23 +5,85 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
+/* Financial Times 
+-o-colors-page-background: #fff1e5;
+--o-colors-box-background: #f2dfce; Olympic Peach
+--o-colors-body-text: #33302e;
+--o-colors-muted-text: #ccc1b7;
+--o-colors-link-text: #0d7680;
+--o-colors-link-hover-text: #08474d;
+--o-colors-black: #000;
+--o-colors-white: #fff;
+--o-colors-ft-pink: #fcd0b1;
+--o-colors-brand-ft-pink: #fcd0b1;
+--o-colors-ft-grey: #333;
+--o-colors-claret: #990f3d;
+--o-colors-teal: #0d7680;
+--o-colors-oxford: #0f5499;
+--o-colors-slate: #262a33;
+--o-colors-paper: #fff1e5;
+--o-colors-mandarin: #f83;
+--o-colors-light-blue: #00a0dd;
+--o-colors-crimson: #c00;
+--o-colors-graphics-dark-blue: #006f9b;
+--o-colors-wheat: #f2dfce;
+--o-colors-candy: #ff7faa;
+--o-colors-wasabi: #96cc28;
+--o-colors-jade: #00994d;
+--o-colors-velvet: #593380;
+--o-colors-lemon: #ffec1a;
+--o-colors-sky: #cce6ff;
+--o-colors-org-b2c: #4e96eb;
+--o-colors-org-b2c-dark: #3a70af;
+--o-colors-org-b2c-light: #99c6fb;
+--o-colors-matisse: #355778;
+--o-colors-transparent: transparent;
+--o-colors-black-5: #f2e5da;
+--o-colors-black-10: #e6d9ce;
+--o-colors-black-20: #ccc1b7;
+--o-colors-black-30: #b3a9a0;
+--o-colors-black-40: #999189;
+--o-colors-black-50: #807973;
+--o-colors-black-60: #66605c;
+--o-colors-black-70: #4d4845;
+--o-colors-black-80: #33302e;
+--o-colors-black-90: #1a1817;
+--o-colors-white-10: #fff2e8;
+--o-colors-white-20: #fff4ea;
+--o-colors-white-40: #fff7ef;
+--o-colors-white-60: #fff9f5;
+--o-colors-white-80: #fffcfa;
+--o-colors-claret-30: #4d081f;
+--o-colors-claret-40: #660a29;
+--o-colors-claret-50: #800d33;
+    */
+
+html {
+    font-family: sans-serif;
+    font-size: .8125em;
+}
+
+
 :root {
-    --color-navbar-default: #333333;
+    /*--color-body: #f2dfce;*/
+    --color-body: #fffaf0;
+    --color-navbar-default: #99E6B3;
     --color-background: #fff;
     --color-text: black;
-    --color-navbar-default-text: pink;
-    --color-navbar-inverse: #333333;
-    --color-navbar-inverse-text: pink;
+    --color-navbar-default-text: white;
+    /* --color-navbar-inverse: #DF963A;*/
+    --color-navbar-inverse: #016a3a;
+    --color-navbar-inverse-text: white;
     --color-navbar-a-default: red;
     --color-navbar-a-default-text: yellow;
     --color-navbar-a-inverse: red;
-    --color-navbar-a-inverse-text: pink;
+    --color-navbar-a-inverse-text: white;
     --color-navbar-default-focus-background: red;
     --color-navbar-default-focus-color: blue;
-    --color-navbar-inverse-focus-background: pink;
+    --color-navbar-inverse-focus-background: #7de65e;
     --color-navbar-inverse-focus-color: black;
     --color-navbar-default-border: yellow;
-    --color-navbar-inverse-border: pink;
+    --color-navbar-inverse-border: #7de65e;
     --color-navbar-inverse-active-background: red;
     --color-navbar-inverse-active-text: yellow;
     --color-navbar-default-active-background: red;
@@ -39,7 +101,8 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 body {
-  margin: 0;
+    margin: 0;
+    background: var(--color-body) !important;
 }
 article,
 aside,

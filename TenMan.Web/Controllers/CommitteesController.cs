@@ -121,7 +121,9 @@ namespace TenMan.Web.Controllers
                 UnitId = unit.Id,
                 Specialties = _combosHelper.GetComboSpecialties(),
                 StatusTypes = _combosHelper.GetComboStatusTypes(),
-                Workers = _combosHelper.GetComboWorkers()
+                Workers = _combosHelper.GetComboWorkers(),
+                StartDate = DateTime.Today.ToUniversalTime(),
+                Remarks = "test"
             };
             return View(model);
         }

@@ -29,6 +29,8 @@ namespace TenMan.Web.Models
 
         public IEnumerable<SelectListItem> Specialties { get; set; }
         public IEnumerable<SelectListItem> Workers { get; set; }
+
+        public IEnumerable<SelectListItem> Units { get; set; }
         public IEnumerable<SelectListItem> StatusTypes { get; set; }
 
     }

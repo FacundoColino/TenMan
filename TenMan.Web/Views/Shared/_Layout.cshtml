@@ -20,7 +20,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse" @*style="border-bottom: 2px solid darkgreen"*@ >
+    <nav class="navbar navbar-inverse" @*style="border-bottom: 2px solid darkgreen"*@>
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -35,7 +35,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">Quienes Somos</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contacto</a></li>
                     @if (this.User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
                     {
@@ -43,6 +43,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Opciones <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
+                                <li><a asp-area="" asp-controller="Workers" asp-action="Index">Operarios</a></li>
                                 <li><a asp-area="" asp-controller="Units" asp-action="Index">Unidades</a></li>
                                 <li class="divider"></li>
                                 <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
@@ -54,23 +55,37 @@
                     }
                     @if (this.User.Identity.IsAuthenticated && User.IsInRole("Tenant"))
                     {
-                        <li><a asp-area="" asp-controller="Requests" asp-action="Index">Solicitudes</a></li>
-                        <li><a asp-area="" asp-controller="Reports" asp-action="Index">Ver Expensas</a></li>
-                        <li><a asp-area="" asp-controller="Tenants" asp-action="IndexPayments">Mis Pagos</a></li>
-                        <li><a asp-area="" asp-controller="Tenants" asp-action="AddPayment">Informar Pago</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Opciones <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a asp-area="" asp-controller="Tenants" asp-action="IndexUnits">Unidades</a></li>
+                                <li><a asp-area="" asp-controller="Reports" asp-action="Index">Ver Expensas</a></li>
+                                <li><a asp-area="" asp-controller="Tenants" asp-action="IndexPayments">Mis Pagos</a></li>
+                                <li><a asp-area="" asp-controller="Tenants" asp-action="AddPayment">Informar Pago</a></li>
+                            </ul>
+                        </li>
+                    }
+                    @if (this.User.Identity.IsAuthenticated && User.IsInRole("Worker"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Opciones <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a asp-area="" asp-controller="Workers" asp-action="IndexRequests">Solicitudes</a></li>
+                            </ul>
+                        </li>
                     }
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    @if (this.User.Identity.IsAuthenticated)
-                    {
-                        <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a></li>
-                        <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
-                    }
-                </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        @if (this.User.Identity.IsAuthenticated)
+                        {
+                            <li><a asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a></li>
+                            <li><a asp-area="" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        }
+                    </ul>
             </div>
         </div>
     </nav>
