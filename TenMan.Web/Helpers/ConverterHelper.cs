@@ -39,25 +39,30 @@ namespace TenMan.Web.Helpers
 
         public RequestViewModel ToRequestViewModel(Request request)
         {
-                return new RequestViewModel
-                {
-                    Id = request.Id,
-                    Remarks = request.Remarks,
-                    ActualStatus = request.ActualStatus,
-                    StatusTypes = _combosHelper.GetComboStatusTypes(),
-                    StatusTypeId = 0,
-                    StartDate = request.StartDate,
-                    EndDate = request.EndDate,
-                    Speciality = request.Speciality,
-                    Statuses = request.Statuses,
-                    Worker = request.Worker,
-                    WorkerId = request.Worker.Id,
-                    Images = request.Images,
-                    Unit = request.Unit,
-                    UnitId = request.Unit.Id,
-                    SpecialtyId = request.Speciality.Id,
-                    Specialties = _combosHelper.GetComboSpecialties()
-                };
+            RequestViewModel requestViewModel = new RequestViewModel
+            {
+                Id = request.Id,
+                Remarks = request.Remarks,
+                ActualStatus = request.ActualStatus,
+                StatusTypes = _combosHelper.GetComboStatusTypes(),
+                StatusTypeId = 0,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Speciality = request.Speciality,
+                Statuses = request.Statuses,
+                Images = request.Images,
+                Unit = request.Unit,
+                UnitId = request.Unit.Id,
+                SpecialtyId = request.Speciality.Id,
+                Specialties = _combosHelper.GetComboSpecialties(),
+                Workers = _combosHelper.GetComboWorkers()
+            };
+            if (request.Worker != null)
+            {
+                requestViewModel.Worker = request.Worker;
+                requestViewModel.WorkerId = request.Worker.Id;
+            }
+            return requestViewModel;
         }
     }
 }

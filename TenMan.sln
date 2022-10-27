@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32413.511
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenMan.Common", "TenMan.Common\TenMan.Common.csproj", "{7263B654-6DB4-41D1-BCCA-A5251F81F8D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TenMan.Common", "TenMan.Common\TenMan.Common.csproj", "{7263B654-6DB4-41D1-BCCA-A5251F81F8D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenMan.Web", "TenMan.Web\TenMan.Web.csproj", "{0E978A4F-DD32-4AA3-892E-119C371D7FA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TenMan.Web", "TenMan.Web\TenMan.Web.csproj", "{0E978A4F-DD32-4AA3-892E-119C371D7FA3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

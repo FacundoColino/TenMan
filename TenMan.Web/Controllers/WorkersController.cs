@@ -16,17 +16,19 @@ namespace TenMan.Web.Controllers
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IConverterHelper _converterHelper;
         private readonly ICombosHelper _combosHelper;
-
 
         public WorkersController(
             DataContext context,
             IUserHelper userHelper,
-            ICombosHelper combosHelper
+            ICombosHelper combosHelper,
+            IConverterHelper converterHelper
             )
         {
             _userHelper = userHelper;
             _context = context;
+            _converterHelper = converterHelper;
             _combosHelper = combosHelper;
         }
 
@@ -193,7 +195,57 @@ namespace TenMan.Web.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> EditRequest(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var request = await _context.Requests
+            .Include(r => r.Unit)
+            .Include(r => r.Images)
+            .Include(r => r.Worker)
+            .ThenInclude(w => w.User)
+            .Include(r => r.Statuses)
+            .ThenInclude(s => s.StatusType)
+            .Include(r => r.Speciality)
+                .FirstOrDefaultAsync(r => r.Id == id);
 
+            if (request == null)
+                return NotFound();
+
+            var model = _converterHelper.ToRequestViewModel(request);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditRequest(RequestViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var actualStatus = _context.StatusTypes.FirstOrDefault(st => st.Id == model.StatusTypeId);
+                model.ActualStatus = actualStatus.Description;
+
+                var request = await _converterHelper.ToRequestAsync(model, false);
+
+                if (model.ActualStatus == "Finalizada")
+                {
+                    model.EndDate = DateTime.Now;
+                }
+                Status status = new Status
+                {
+                    Date = DateTime.Now,
+                    Request = request,
+                    StatusType = actualStatus
+                };
+
+                request.Statuses.Add(status);
+
+                _context.Requests.Update(request);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("IndexRequests");
+            }
+            return View(model);
+        }
         private bool WorkerExists(int id)
         {
             return _context.Workers.Any(e => e.Id == id);
@@ -205,6 +257,7 @@ namespace TenMan.Web.Controllers
             var worker = _context.Workers
                 .Include(w => w.User)
                 .Include(w => w.Requests)
+                .ThenInclude(r => r.Speciality)
                 .FirstOrDefault(w => w.User.Email == User.Identity.Name);
 
             if (worker == null)

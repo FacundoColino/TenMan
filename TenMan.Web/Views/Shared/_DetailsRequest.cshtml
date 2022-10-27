@@ -36,7 +36,8 @@
                     @Html.DisplayFor(model => model.Unit.Tenant.User.Email)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.Unit.Tenant.User.PhoneNumber)
+                    @*@Html.DisplayNameFor(model => model.Unit.Tenant.User.PhoneNumber)*@
+                    Telefono
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.Unit.Tenant.User.PhoneNumber)
@@ -65,8 +66,11 @@
                     @Html.DisplayNameFor(model => model.EndDateLocal)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.EndDateLocal)
-                </dd>
+                    @if (Model.EndDateLocal != DateTime.MinValue)
+                    {
+                        @Html.DisplayFor(model => model.EndDateLocal)
+                    }
+                    </dd>
                 <dt>
                     @Html.DisplayNameFor(model => model.Speciality.Name)
                 </dt>
@@ -183,9 +187,9 @@
                                     @Html.DisplayFor(modelItem => item.StatusType.Description)
                                 </td>
                                 <td>
-                                    <a asp-action="EditContract" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
-                                    <a asp-action="DetailsContract" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
-                                    <a asp-action="DeleteContract" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                                    <a asp-action="EditRequest" asp-route-id="@item.Id" class="btn btn-warning">Editar</a>
+                                    <a asp-action="DetailsRequesr" asp-route-id="@item.Id" class="btn btn-info">Detalles</a>
+                                    <a asp-action="DeleteRequest" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
                                 </td>
                             </tr>
                         }

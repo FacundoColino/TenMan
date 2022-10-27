@@ -105,6 +105,8 @@ namespace TenMan.Web.Controllers
             .Include(r => r.Worker)
             .ThenInclude(w => w.User)
             .Include(r => r.Statuses)
+            .ThenInclude(s => s.StatusType)
+            .Include(r => r.Speciality)
             .FirstOrDefaultAsync(m => m.Id == id);
 
             if (request == null)
@@ -261,8 +263,8 @@ namespace TenMan.Web.Controllers
         {
             return _context.Tenants.Any(e => e.Id == id);
         }
-       
-     
+
+
 
         //[Authorize(Roles ="Tenant")]
         // GET: Payments/Create
@@ -395,6 +397,8 @@ namespace TenMan.Web.Controllers
             if (unit == null)
                 return NotFound();
 
+            DateTime date = DateTime.Today.ToUniversalTime();
+
             var model = new RequestViewModel
             {
                 UnitId = unit.Id,
@@ -402,7 +406,8 @@ namespace TenMan.Web.Controllers
                 StatusTypeId = 1,
                 Workers = _combosHelper.GetComboWorkers(),
                 Images = unit.Requests.FirstOrDefault().Images,
-                StartDate = DateTime.Today.ToUniversalTime()
+                ActualStatus = "Generada",
+                StartDate = date
             };
             return View(model);
         }
@@ -412,13 +417,23 @@ namespace TenMan.Web.Controllers
             if (ModelState.IsValid)
             {
                 var request = await _converterHelper.ToRequestAsync(model, true);
+
+                Status status = new Status
+                {
+                    Date = request.StartDate,
+                    Request = request,
+                    StatusType = _context.StatusTypes.FirstOrDefault(st => st.Id == model.StatusTypeId)
+                };
+
+                request.Statuses.Add(status);
+
                 _context.Requests.Add(request);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("IndexUnits");
+                return RedirectToAction($"{nameof(DetailsUnit)}/{request.Unit.Id}");
             }
             return View(model);
         }
-      
+
         public async Task<IActionResult> AddImage(int? id)
         {
             if (id == null)
@@ -465,6 +480,6 @@ namespace TenMan.Web.Controllers
 
             return View(model);
         }
-      
+
     }
 }

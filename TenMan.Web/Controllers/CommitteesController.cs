@@ -147,10 +147,13 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
             var request = await _context.Requests
-                .Include(r => r.Unit)
-                .Include(r => r.Worker)
-                .Include(r => r.Speciality)
-                .Include(r => r.Statuses)
+            .Include(r => r.Unit)
+            .Include(r => r.Images)
+            .Include(r => r.Worker)
+            .ThenInclude(w => w.User)
+            .Include(r => r.Statuses)
+            .ThenInclude(s => s.StatusType)
+            .Include(r => r.Speciality)
                 .FirstOrDefaultAsync(r => r.Id == id);
 
             if (request == null)
@@ -160,7 +163,7 @@ namespace TenMan.Web.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Editequest(RequestViewModel model)
+        public async Task<IActionResult> EditRequest(RequestViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -169,6 +172,15 @@ namespace TenMan.Web.Controllers
                 {
                     model.EndDate = DateTime.Now;
                 }
+                Status status = new Status
+                {
+                    Date = DateTime.Now,
+                    Request = request,
+                    StatusType = _context.StatusTypes.FirstOrDefault(st => st.Id == model.StatusTypeId)
+                };
+
+                request.Statuses.Add(status);
+
                 _context.Requests.Update(request);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"DetailsUnit/{model.UnitId}");
@@ -193,6 +205,8 @@ namespace TenMan.Web.Controllers
             .Include(r => r.Worker)
             .ThenInclude(w => w.User)
             .Include(r => r.Statuses)
+            .ThenInclude(s => s.StatusType)
+            .Include(r => r.Speciality)
             .FirstOrDefaultAsync(m => m.Id == id);
 
             if (request == null)

@@ -5,6 +5,36 @@
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
+/*
+    :root {
+    --global-palette1: #049f82;
+    --global-palette2: #008f72;
+    --global-palette3: #222222;
+    --global-palette4: #353535;
+    --global-palette5: #454545;
+    --global-palette6: #676767;
+    --global-palette7: #eeeeee;
+    --global-palette8: #f7f7f7;
+    --global-palette9: #ffffff;
+    --global-palette9rgb: 255, 255, 255;
+    --global-palette-highlight: var(--global-palette1);
+    --global-palette-highlight-alt: var(--global-palette2);
+    --global-palette-highlight-alt2: var(--global-palette9);
+    --global-palette-btn-bg: var(--global-palette1);
+    --global-palette-btn-bg-hover: var(--global-palette2);
+    --global-palette-btn: #ffffff;
+    --global-palette-btn-hover: #ffffff;
+    --global-body-font-family: Lato, var(--global-fallback-font);
+    --global-heading-font-family: Cabin, var(--global-fallback-font);
+    --global-primary-nav-font-family: Cabin, var(--global-fallback-font);
+    --global-fallback-font: sans-serif;
+    --global-display-fallback-font: sans-serif;
+    --global-content-width: 1800px;
+    --global-content-narrow-width: 842px;
+    --global-content-edge-padding: 1.5rem;
+    --global-calc-content-width: calc(1800px - var(--global-content-edge-padding) - var(--global-content-edge-padding) );
+}
+*/
 /* Financial Times 
 -o-colors-page-background: #fff1e5;
 --o-colors-box-background: #f2dfce; Olympic Peach
@@ -72,7 +102,7 @@ html {
     --color-text: black;
     --color-navbar-default-text: white;
     /* --color-navbar-inverse: #DF963A;*/
-    --color-navbar-inverse: #016a3a;
+    --color-navbar-inverse: #049f82;
     --color-navbar-inverse-text: white;
     --color-navbar-a-default: red;
     --color-navbar-a-default-text: yellow;

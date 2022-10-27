@@ -11,6 +11,9 @@
     <thead>
         <tr>
             <th>
+
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.StartDateLocal)
             </th>
             <th>
@@ -23,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.Speciality.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker.User.FullName)
+                Operario
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Remarks)
@@ -36,16 +39,32 @@
         {
             <tr>
                 <td>
+                    @{
+                        string icono = "~/images/amarillo.png";
+
+                        if (item.ActualStatus == "Generada")
+                        {
+                            icono = "~/images/rojo.png";
+                        }
+                        else if (item.ActualStatus == "Finalizada")
+                        {
+                            icono = "~/images/verde.png";
+                        }
+                    }
+                    <img src="@Url.Content(icono)" alt="" height='18' width='18'>
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.StartDateLocal)
                 </td>
+
                 <td>
-                    @Html.DisplayFor(modelItem => item.EndDateLocal)
+                    @if (item.EndDateLocal != DateTime.MinValue)
+                    {
+                        @Html.DisplayFor(modelItem => item.EndDateLocal)
+                    }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.EndDateLocal)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ActualStatus);
+                    @Html.DisplayFor(modelItem => item.ActualStatus)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Speciality.Name)
