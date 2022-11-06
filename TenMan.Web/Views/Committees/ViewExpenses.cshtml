@@ -1,27 +1,49 @@
-﻿@model TenMan.Web.Data.Entities.Committee
+﻿@model TenMan.Web.Models.ExpensesViewModel
 
 @{
     ViewData["Title"] = "Expensas";
 }
 <style>
     td {
-        border-color: maroon !important;
+        border-color: black;
     }
 </style>
 <h2>Expensas</h2>
 
 <table class="table table-bordered">
     <tr>
-        <td>@Html.DisplayNameFor(model => model.Address)</td>
+        <td rowspan="3">
+            <img src="~/images/Logo8.PNG" alt="" border=3 height=100 width=300 />
+        </td>
+        <td>@Html.DisplayNameFor(model => model.Committee.Address)</td>
+        <td>@Model.Committee.Administrator.User.FullName</td>
     </tr>
     <tr>
-        <td>@Model.Administrator.User.FullName</td>
     </tr>
     <tr>
         <td>sdjdsd</td>
         <td>sdkjsldkjsd</td>
     </tr>
-    @foreach (var item in Model.Units)
+</table>
+<table class="table table-bordered"> 
+    @foreach (var item in Model.Fields)
+    {
+        <tr>
+            <td style="font-weight: 700">@item.Number</td>
+            <td style="font-weight: 700">@item.Description</td>
+        </tr>
+        @foreach (var cost in Model.Committee.Costs)
+        {
+            if (cost.Description == item.Description)
+            {
+                <tr>
+                    <td>@cost.Description</td>
+                    <td>@cost.Amount</td>
+                </tr>
+            }
+        }
+    }
+    @foreach (var item in Model.Committee.Units)
     {
         <tr>
             <td>@item.Number</td>

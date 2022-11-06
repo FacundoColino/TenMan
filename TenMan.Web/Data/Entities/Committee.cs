@@ -31,7 +31,20 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
 
+
+        [Display(Name = "Clave SUTERH")]
+        [MaxLength(8, ErrorMessage = "El campo {0} no puede contener más de {1} caracteres.")]
+        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
+        public string SuterhKey { get; set; }
+
+        [Display(Name = "CUIT")]
+        [MaxLength(11, ErrorMessage = "El campo {0} no puede contener más de {1} caracteres. Recuerde incluir los guiones")]
+        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
+        public string CUIT { get; set; }
+
         public ICollection<Unit> Units { get; set; }
+
+        public ICollection<Cost> Costs { get; set; } 
 
         public Administrator Administrator { get; set; }
 

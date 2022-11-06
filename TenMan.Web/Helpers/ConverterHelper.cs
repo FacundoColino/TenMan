@@ -3,6 +3,12 @@ using System.Threading.Tasks;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using TenMan.Web.Data;
+using TenMan.Web.Data.Entities;
+using TenMan.Web.Helpers;
+using TenMan.Web.Models;
 
 namespace TenMan.Web.Helpers
 {
@@ -22,7 +28,7 @@ namespace TenMan.Web.Helpers
         //TODO: Revisar los comentarios de este método.
         public async Task<Request> ToRequestAsync(RequestViewModel model, bool isNew)
         {
-            return new Request
+            var request = new Request
             {
                 Id = isNew ? 0 : model.Id,
                 StartDate = model.StartDate,
@@ -31,10 +37,12 @@ namespace TenMan.Web.Helpers
                 Statuses = isNew ? new List<Status>() : model.Statuses,
                 ActualStatus = isNew ? "Generada" : model.ActualStatus,
                 Remarks = model.Remarks,
-                Worker = await _context.Workers.FindAsync(model.WorkerId),
+                Worker = await _context.Workers.Include(w => w.User).FirstOrDefaultAsync(w => w.Id == model.WorkerId),
+                //FindAsync(model.WorkerId),
                 Images = isNew ? new List<RequestImage>() : model.Images,
                 Unit = await _context.Units.FindAsync(model.UnitId)
             };
+            return request;
         }
 
         public RequestViewModel ToRequestViewModel(Request request)

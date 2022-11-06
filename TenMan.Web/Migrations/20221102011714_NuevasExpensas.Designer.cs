@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221102011714_NuevasExpensas")]
+    partial class NuevasExpensas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,46 +262,6 @@ namespace TenMan.Web.Migrations
                     b.HasIndex("AdministratorId");
 
                     b.ToTable("Committees");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Cost", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Amount");
-
-                    b.Property<int?>("CommitteeId");
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int>("FieldId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommitteeId");
-
-                    b.HasIndex("FieldId");
-
-                    b.ToTable("Costs");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Field", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int>("Number");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Field");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Payment", b =>
@@ -610,18 +572,6 @@ namespace TenMan.Web.Migrations
                     b.HasOne("TenMan.Web.Data.Entities.Administrator", "Administrator")
                         .WithMany("Committees")
                         .HasForeignKey("AdministratorId");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Cost", b =>
-                {
-                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
-                        .WithMany("Costs")
-                        .HasForeignKey("CommitteeId");
-
-                    b.HasOne("TenMan.Web.Data.Entities.Field", "Field")
-                        .WithMany()
-                        .HasForeignKey("FieldId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Payment", b =>

@@ -1,0 +1,52 @@
+﻿@model IEnumerable<TenMan.Web.Data.Entities.Committee>
+
+@{
+    ViewData["Title"] = "Lista de Consorcios";
+}
+
+<h2>Consorcios</h2>
+
+<table class="table table-dark">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Neighborhood)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Neighborhood)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a asp-controller="Reports" asp-action="RequestsReport" class="btn btn-warning" asp-route-id="@item.Id">Solicitudes</a> |
+                    @*<a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id">Detalles</a> |
+                    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

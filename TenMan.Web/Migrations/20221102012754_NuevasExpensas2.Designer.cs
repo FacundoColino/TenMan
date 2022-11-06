@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221102012754_NuevasExpensas2")]
+    partial class NuevasExpensas2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,16 +272,12 @@ namespace TenMan.Web.Migrations
 
                     b.Property<decimal>("Amount");
 
-                    b.Property<int?>("CommitteeId");
-
                     b.Property<string>("Description")
                         .IsRequired();
 
                     b.Property<int>("FieldId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CommitteeId");
 
                     b.HasIndex("FieldId");
 
@@ -614,10 +612,6 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Cost", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
-                        .WithMany("Costs")
-                        .HasForeignKey("CommitteeId");
-
                     b.HasOne("TenMan.Web.Data.Entities.Field", "Field")
                         .WithMany()
                         .HasForeignKey("FieldId")

@@ -29,13 +29,17 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Metros Cuadrados")]
         public int SquareMeters { get; set; }
 
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Display(Name = "Porcentaje")]
+        [Range(0,100)]
+        public double Percentage { get; set; }
+
         [Display(Name = "Unidad Funcional")]
         public string UnitFullName => $"{Number} - {Floor}{Apartment}";
 
         public Committee Committee { get; set; }
 
         public CheckingAccount CheckingAccount { get; set; }
-
         public  Tenant Tenant { get; set; }
 
         public ICollection<Request> Requests { get; set; }

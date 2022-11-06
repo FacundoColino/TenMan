@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Helpers;
@@ -18,18 +16,78 @@ namespace TenMan.Web.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
+        private readonly MailService _mailService;
 
         public CommitteesController(
-            DataContext context, 
-            ICombosHelper combosHelper, 
+            DataContext context,
+            ICombosHelper combosHelper,
             IConverterHelper converterHelper,
-            IImageHelper imageHelper
+            IImageHelper imageHelper,
+            MailService mailService
             )
         {
             _context = context;
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
+            _mailService = mailService;
+        }
+        public async Task<IActionResult> AddCost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var committee = await _context.Committees.FindAsync(id);
+
+            if (committee == null)
+                return NotFound();
+
+            var model = new AddCostViewModel
+            {
+                CommitteeId = committee.Id,
+                Fields = _combosHelper.GetComboFields(),
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddCost(AddCostViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var cost = new Cost
+                {
+                    Description = model.Description,
+                    Amount = model.Amount,
+                    Field = _context.Fields.FindAsync(model.FieldId).Result,
+                    Committee = _context.Committees.FindAsync(model.CommitteeId).Result
+                };
+                _context.Add(cost);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"IndexCosts/{model.CommitteeId}");
+            }
+            return View(model);
+        }
+        public IActionResult IndexCosts(int? id)
+        {
+            var committee = _context.Committees
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (committee == null)
+            {
+                return NotFound();
+            }
+
+            ListCostsViewModel model = new ListCostsViewModel
+            {
+                Fields = _context.Fields,
+                CommitteeId = committee.Id,
+                Costs = committee.Costs
+            };
+            return View(model);
         }
         public async Task<IActionResult> AddUnit(int? id)
         {
@@ -68,13 +126,79 @@ namespace TenMan.Web.Controllers
                     Floor = model.Floor,
                     Apartment = model.Apartment,
                     SquareMeters = model.SquareMeters,
+                    Percentage = model.Percentage,
+                    Owner = model.Owner,
                     CheckingAccount = account,
                     Committee = _context.Committees.FindAsync(model.CommitteeId).Result,
-                    Tenant = _context.Tenants.FindAsync(model.TenantId).Result
                 };
+                if (model.TenantId != 0)
+                {
+                    unit.Tenant = _context.Tenants.FindAsync(model.TenantId).Result;
+                }
                 _context.Add(unit);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.CommitteeId}");
+            }
+            return View(model);
+        }
+        public async Task<IActionResult> EditUnit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var unit = await _context.Units
+                .Include(u => u.CheckingAccount)
+            .Include(u => u.Tenant)
+                        .ThenInclude(t => t.User)
+            .Include(u => u.Committee)
+            .Include(u => u.Requests)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (unit == null)
+                return NotFound();
+
+            var model = new UnitViewModel
+            {
+                Apartment = unit.Apartment,
+                CheckingAccount = unit.CheckingAccount,
+                CommitteeId = unit.Committee.Id,
+                Committee = unit.Committee,
+                Floor = unit.Floor,
+                Number = unit.Number,
+                Owner = unit.Owner,
+                Percentage = unit.Percentage,
+                Requests = unit.Requests,
+                SquareMeters = unit.SquareMeters,
+                TenantId = (unit.Tenant != null ? unit.Tenant.Id : 0),
+                Tenants = _combosHelper.GetComboTenants()
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditUnit(UnitViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var unit = new Unit
+                {
+                    Id = model.Id,
+                    Apartment = model.Apartment,
+                    CheckingAccount = model.CheckingAccount,
+                    Committee = model.Committee,
+                    Floor = model.Floor,
+                    Number = model.Number,
+                    Owner = model.Owner,
+                    Percentage = model.Percentage,
+                    Tenant = await _context.Tenants.FindAsync(model.TenantId),
+                    Requests = model.Requests,
+                    SquareMeters = model.SquareMeters
+                };
+
+                _context.Units.Update(unit);
+                await _context.SaveChangesAsync();
+
+                 return RedirectToAction($"Details/{model.CommitteeId}");
             }
             return View(model);
         }
@@ -167,7 +291,11 @@ namespace TenMan.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                var actualStatus = _context.StatusTypes.FirstOrDefault(st => st.Id == model.StatusTypeId);
+                model.ActualStatus = actualStatus.Description;
+
                 var request = await _converterHelper.ToRequestAsync(model, false);
+
                 if (model.ActualStatus == "Finalizada")
                 {
                     model.EndDate = DateTime.Now;
@@ -176,13 +304,18 @@ namespace TenMan.Web.Controllers
                 {
                     Date = DateTime.Now,
                     Request = request,
-                    StatusType = _context.StatusTypes.FirstOrDefault(st => st.Id == model.StatusTypeId)
+                    StatusType = actualStatus
                 };
 
                 request.Statuses.Add(status);
 
                 _context.Requests.Update(request);
                 await _context.SaveChangesAsync();
+
+                //Envio de email
+
+                _mailService.SendEmailGmail(request.Worker.User.Email, "TenMan - Nuevo trabajo asignado", "Ha sido asignado para resolver una solicitud");
+
                 return RedirectToAction($"DetailsUnit/{model.UnitId}");
             }
             return View(model);
@@ -403,6 +536,8 @@ namespace TenMan.Web.Controllers
             var committee = _context.Committees
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
                 .FirstOrDefault();
 
             if (committee != null)
@@ -435,14 +570,19 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(u => u.CheckingAccount)
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
+                .Include(c => c.Costs)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (committee == null)
             {
                 return NotFound();
             }
-
-            return View(committee);
+            ExpensesViewModel model = new ExpensesViewModel
+            {
+                Committee = committee,
+                Fields = _context.Fields
+            };
+            return View(model);
         }
         //private async Task<IActionResult> CalculateCosts(int? id)
         //{

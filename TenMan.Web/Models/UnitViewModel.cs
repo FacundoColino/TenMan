@@ -10,10 +10,9 @@ namespace TenMan.Web.Models
 {
     public class UnitViewModel : Unit
     {
-        [Required]
         [Display(Name = "Locatario")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un locatario.")]
-        public int TenantId { get; set; }
+        //[Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un locatario.")]
+        public int? TenantId { get; set; }
         public int CommitteeId { get; set; }
         public IEnumerable<SelectListItem> Tenants { get; set; }
     }

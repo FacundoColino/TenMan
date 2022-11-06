@@ -5,6 +5,7 @@ namespace TenMan.Web.Helpers
 {
     public interface ICombosHelper
     {
+        IEnumerable<SelectListItem> GetComboFields();
         IEnumerable<SelectListItem> GetComboSpecialties();
         IEnumerable<SelectListItem> GetComboTenants();
         IEnumerable<SelectListItem> GetComboWorkers();

@@ -51,6 +51,7 @@ namespace TenMan.Web
             });
 
             services.AddTransient<SeedDb>();
+            services.AddSingleton<MailService>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();

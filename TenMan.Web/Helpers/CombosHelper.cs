@@ -69,6 +69,23 @@ namespace TenMan.Web.Helpers
 
             return list;
         }
+        public IEnumerable<SelectListItem> GetComboFields()
+        {
+            var list = _context.Fields.Select(f => new SelectListItem
+            {
+                Text = f.Description,
+                Value = f.Id.ToString()
+            }).OrderBy(f => f.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione el rubro",
+                Value = "0"
+            });
+
+            return list;
+        }
         public IEnumerable<SelectListItem> GetComboUnits(int id)
         {
             _context.Units.Where(unit => unit.Tenant.Id == id);

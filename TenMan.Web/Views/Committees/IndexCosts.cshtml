@@ -1,0 +1,63 @@
+﻿@model ListCostsViewModel
+
+@{
+    ViewData["Title"] = "Lista de Costos";
+}
+
+<h2>Costos</h2>
+<p>
+    <a asp-action="AddCost" asp-route-id="@Model.CommitteeId" class="btn btn-primary">Agregar Costo</a>
+</p>
+
+@foreach (var item in Model.Fields)
+{
+    <table class="table w-75">
+        <thead>
+            <tr>
+                <th style="width: 10%">
+                    @Html.DisplayNameFor(model => model.Fields.FirstOrDefault().Number)
+                </th>
+                <th style="width: 40%">
+                    @Html.DisplayNameFor(model => model.Fields.FirstOrDefault().Description)
+                </th>
+
+                <th></th>
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Number)
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cost in Model.Costs)
+            {
+                    <tr style="background: #bceffb">
+                        <th></th>
+                        <th style="width: 10%">
+                            @Html.DisplayNameFor(model => cost.Description)
+                        </th>
+                        <th style="width: 40%">
+                            @Html.DisplayNameFor(model => cost.Amount)
+                        </th>
+                    </tr>
+                    if (cost.Field.Description == item.Description)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>
+                                @Html.DisplayFor(modelItem => cost.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => cost.Amount)
+                            </td>
+                        </tr>
+                    }
+
+            }
+        </tbody>
+    </table>
+}
