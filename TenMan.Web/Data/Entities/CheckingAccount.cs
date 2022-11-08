@@ -24,6 +24,10 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal PreviousBalance { get; set; }
 
+        [Display(Name = "Su Pago")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal YourPayment { get; set; }
+
         [Display(Name = "Total")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Total => Balance + PreviousBalance;

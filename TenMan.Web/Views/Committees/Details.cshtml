@@ -41,8 +41,9 @@
     <a asp-controller="Committees" asp-action="AddUnit" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Unidad</a> |
     <a asp-controller="Committees" asp-action="AddWorker" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Especialista</a> |
     <a asp-controller="Committees" asp-action="IndexCosts" class="btn btn-warning" asp-route-id="@Model.Id">Administrar Costos</a> |
-    <a asp-controller="Committees" asp-action="CalculateCosts" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a> |
-    <a asp-controller="Committees" asp-action="ViewExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |
+    <a asp-controller="Committees" asp-action="CalculateExpenses" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a> |
+    @*<a asp-controller="Committees" asp-action="ViewExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |*@
+    <a asp-controller="Committees" asp-action="IndexExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |
     <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
 </div>
 @if (Model.Units.Count == 0)

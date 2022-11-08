@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221108032523_Expenses5")]
+    partial class Expenses5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -328,7 +330,7 @@ namespace TenMan.Web.Migrations
 
                     b.HasIndex("FieldId");
 
-                    b.ToTable("ExpensesCosts");
+                    b.ToTable("ExpensesCost");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Field", b =>
@@ -698,7 +700,7 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Expenses", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Committee")
+                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
                         .WithMany("Expenses")
                         .HasForeignKey("CommitteeId")
                         .OnDelete(DeleteBehavior.Cascade);

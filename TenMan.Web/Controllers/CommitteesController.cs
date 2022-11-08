@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenMan.Web.Data;
@@ -198,7 +199,7 @@ namespace TenMan.Web.Controllers
                 _context.Units.Update(unit);
                 await _context.SaveChangesAsync();
 
-                 return RedirectToAction($"Details/{model.CommitteeId}");
+                return RedirectToAction($"Details/{model.CommitteeId}");
             }
             return View(model);
         }
@@ -527,6 +528,184 @@ namespace TenMan.Web.Controllers
         {
             return _context.Committees.Any(e => e.Id == id);
         }
+        public ActionResult CalculateExpenses(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var committee = _context.Committees
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (committee == null)
+            {
+                return NotFound();
+            }
+            List<UnitDescriptionLine> unitDescriptionLines = new List<UnitDescriptionLine>();
+            List<ExpensesCost> expensesCosts = new List<ExpensesCost>();
+
+            foreach (Cost cost in committee.Costs)
+            {
+                ExpensesCost ec = new ExpensesCost
+                {
+                    Amount = cost.Amount,
+                    Description = cost.Description,
+                    Field = cost.Field,
+                };
+                expensesCosts.Add(ec);
+            }
+            Expenses exp = new Expenses
+            {
+                CommitteeId = committee.Id,
+                ExpensesCosts = expensesCosts,
+                Month = DateTime.Now.Month,
+                Year = DateTime.Now.Year,
+                Fields = _context.Fields,
+                //Notes = new List<string>()
+            };
+            decimal total = exp.GetTotal();
+
+            foreach (Unit unit in committee.Units)
+            {
+                decimal balance = (decimal)unit.Percentage * total;
+                decimal prev = unit.CheckingAccount.PreviousBalance;
+
+                balance += prev;
+
+                UnitDescriptionLine unitLine = new UnitDescriptionLine
+                {
+                    Unit = unit,
+                    NewUnitTotal = balance,
+                    Interest = 0
+                };
+                unitDescriptionLines.Add(unitLine);
+                //unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+                //unit.CheckingAccount.Balance = balance;
+            }
+            exp.UnitDescriptionLines = unitDescriptionLines;
+            return View(exp);
+        }
+
+        [HttpPost]
+        public ActionResult CalculateExpenses(Expenses model, List<UnitDescriptionLine> unitLines)
+        {
+            if (ModelState.IsValid)
+            {
+                var committee = _context.Committees
+                  .Include(c => c.Units)
+                  .ThenInclude(u => u.CheckingAccount)
+                  .Include(c => c.Costs)
+                  .ThenInclude(c => c.Field)
+                  .Include(c => c.Administrator)
+                  .ThenInclude(a => a.User)
+                  .FirstOrDefault(c => c.Id == model.CommitteeId);
+
+                // La razón de crear nuevos costos para expensas es que al querer guardar la expensa en la base de datos,
+                // Trata de crear tambien los costos asociados que ya existen.
+                List<ExpensesCost> expensesCosts = new List<ExpensesCost>();
+
+                foreach (Cost cost in committee.Costs)
+                {
+                    ExpensesCost ec = new ExpensesCost
+                    {
+                        Amount = cost.Amount,
+                        Description = cost.Description,
+                        Field = cost.Field,
+                    };
+                    expensesCosts.Add(ec);
+                }
+
+                model.ExpensesCosts = expensesCosts;
+                decimal total = model.GetTotal();
+
+                List<UnitDescriptionLine> unitDescriptionLines = new List<UnitDescriptionLine>();
+
+                foreach (Unit unit in committee.Units)
+                {
+                    decimal balance = (decimal)unit.Percentage * total;
+                    decimal prev = unit.CheckingAccount.PreviousBalance;
+
+                    balance += prev;
+
+                    UnitDescriptionLine unitLine = new UnitDescriptionLine
+                    {
+                        Unit = unit,
+                        NewUnitTotal = balance,
+                        Interest = 0
+                    };
+                    unitDescriptionLines.Add(unitLine);
+                    unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+                    unit.CheckingAccount.Balance = balance;
+                }
+                model.UnitDescriptionLines = unitDescriptionLines;
+                model.Id = 0;
+                _context.Expenses.Add(model);
+                _context.SaveChanges();
+                return RedirectToAction($"IndexExpenses/{model.CommitteeId}");
+            }
+            return View(model);
+        }
+
+        public IActionResult IndexExpenses(int? id)
+        {
+            var committee = _context.Committees
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .Include(c => c.Expenses)
+                .ThenInclude(e => e.ExpensesCosts)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (committee == null)
+            {
+                return NotFound();
+            }
+            IEnumerable<Expenses> expenses = _context.Expenses.Where(e => e.CommitteeId == committee.Id);
+            return View(expenses);
+        }
+        //public void CalculateExpenses(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return;
+        //    }
+        //    var committee = _context.Committees
+        //        .Include(c => c.Units)
+        //        .ThenInclude(u => u.CheckingAccount)
+        //        .Include(c => c.Costs)
+        //        .ThenInclude(c => c.Field)
+        //        .Include(c => c.Administrator)
+        //        .ThenInclude(a => a.User)
+        //        .FirstOrDefault();
+
+        //    if (committee != null)
+        //    {
+        //        Expenses exp = new Expenses
+        //        {
+        //            Committee = committee,
+        //            Costs = committee.Costs,
+        //            Month
+        //        };
+        //        foreach (Unit unit in committee.Units)
+        //        {
+        //            decimal balance = unit.SquareMeters * committee.Price;
+        //            decimal prev = unit.CheckingAccount.PreviousBalance;
+
+        //            unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+        //            unit.CheckingAccount.Balance = balance;
+        //        }
+        //        _context.Committees.Update(committee);
+        //        _context.SaveChanges();
+        //        RedirectToAction($"Details/{id}");
+        //    }
+        //}
         public void CalculateCosts(int? id)
         {
             if (id == null)

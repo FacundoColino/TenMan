@@ -33,29 +33,29 @@
             </tr>
         </thead>
         <tbody>
+            <tr style="background: #bceffb">
+                <th></th>
+                <th style="width: 10%">
+                    Descripción
+                </th>
+                <th style="width: 40%">
+                    Importe
+                </th>
+            </tr>
             @foreach (var cost in Model.Costs)
             {
-                    <tr style="background: #bceffb">
-                        <th></th>
-                        <th style="width: 10%">
-                            @Html.DisplayNameFor(model => cost.Description)
-                        </th>
-                        <th style="width: 40%">
-                            @Html.DisplayNameFor(model => cost.Amount)
-                        </th>
+                if (cost.Field.Description == item.Description)
+                {
+                    <tr>
+                        <td></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => cost.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => cost.Amount)
+                        </td>
                     </tr>
-                    if (cost.Field.Description == item.Description)
-                    {
-                        <tr>
-                            <td></td>
-                            <td>
-                                @Html.DisplayFor(modelItem => cost.Description)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => cost.Amount)
-                            </td>
-                        </tr>
-                    }
+                }
 
             }
         </tbody>
