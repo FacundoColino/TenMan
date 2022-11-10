@@ -1,4 +1,4 @@
-﻿@model TenMan.Web.Models.ExpensesViewModel
+﻿@model TenMan.Web.Data.Entities.Expenses
 
 @{
     ViewData["Title"] = "Expensas";
@@ -9,49 +9,100 @@
     }
 </style>
 <h2>Expensas</h2>
+    <p>
+        <input type="submit" value="Exportar a Excel" class="btn btn-primary" /> |
+    </p>
+    <input type="hidden" asp-for="Year" />
+    <input type="hidden" asp-for="Month" />
+    <input type="hidden" asp-for="CommitteeId" />
 
-<table class="table table-bordered">
-    <tr>
-        <td rowspan="3">
-            <img src="~/images/Logo8.PNG" alt="" border=3 height=100 width=300 />
-        </td>
-        <td>@Html.DisplayNameFor(model => model.Committee.Address)</td>
-        <td>@Model.Committee.Administrator.User.FullName</td>
-    </tr>
-    <tr>
-    </tr>
-    <tr>
-        <td>sdjdsd</td>
-        <td>sdkjsldkjsd</td>
-    </tr>
-</table>
-<table class="table table-bordered"> 
-    @foreach (var item in Model.Fields)
-    {
+    <table class="table table-bordered style=" font-size: 12px"">
         <tr>
-            <td style="font-weight: 700">@item.Number</td>
-            <td style="font-weight: 700">@item.Description</td>
+            <td rowspan="3">
+                <img src="~/images/Logo8.PNG" alt="" border=3 height=100 width=300 />
+            </td>
+            <td>@Html.DisplayNameFor(model => model.Committee.Address)</td>
+            <td>@Model.Committee.Address</td>
         </tr>
-        @foreach (var cost in Model.Committee.Costs)
+        <tr>
+            <td>Administrador</td>
+            <td>@Model.Committee.Administrator.User.FullName</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Committee.SuterhKey)</td>
+            <td>@Model.Committee.SuterhKey</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Committee.CUIT)</td>
+            <td>@Model.Committee.CUIT</td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+    <table class="table table-bordered" style="font-size: 12px">
+        <thead>
+            <tr><td colspan="6" style="background: #049f82; color: white">PAGOS DEL PERIODO POR SUMINISTROS, SERVICIOS, ABONOS Y SEGUROS</td></tr>
+        </thead>
+        @foreach (var item in Model.Fields)
         {
-            if (cost.Description == item.Description)
+            if (Model.CostWithField(item.Description))
             {
                 <tr>
-                    <td>@cost.Description</td>
-                    <td>@cost.Amount</td>
+                    <td style="font-weight: 700">@item.Number</td>
+                    <td style="font-weight: 700">@item.Description</td>
+                    <td>TOTAL</td>
                 </tr>
+                @foreach (var cost in Model.ExpensesCosts)
+                {
+                    if (cost.Field.Description == item.Description)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@cost.Description</td>
+                            <td>@cost.Amount</td>
+                        </tr>
+                    }
+                }
             }
+
         }
-    }
-    @foreach (var item in Model.Committee.Units)
-    {
+
         <tr>
-            <td>@item.Number</td>
-            <td>@item.Floor</td>
-            <td>@item.Apartment</td>
-            <td>@item.Owner</td>
-            <td>@item.CheckingAccount.PreviousBalance</td>
-            <td>@item.CheckingAccount.Balance</td>
+            <td colspan="6" style="background: #049f82; color: white">TOTAL A PAGAR</>
+            <td>@Model.GetTotal()</td>
         </tr>
-    }
-</table>
+    </table>
+    <table class="table table-bordered" style="font-size: 12px">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Number)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Floor)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Apartment)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Owner)</th>
+                <th>Saldo Anterior</th>
+                <th>Su Pago</th>
+                <th>TOTAL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.UnitDescriptionLines)
+            {
+            <tr>
+                <td name="unitLines">@item.Unit.Number</td>
+                <td name="unitLines">@item.Unit.Floor</td>
+                <td name="unitLines">@item.Unit.Apartment</td>
+                <td name="unitLines">@item.Unit.Owner</td>
+                <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance</td>
+                <td name="unitLines">@item.Unit.CheckingAccount.YourPayment</td>
+                <td name="unitLines">@item.Unit.CheckingAccount.ExpABalance</td>
+                <td name="unitLines">@item.NewUnitTotal</td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+    <div>
+        <a asp-action="ExportExcel" class="btn btn-success">Exportar Excel</a> |
+        <a asp-action="SendEmail" asp-route-id="@Model.Id" class="btn btn-primary">Enviar a los propietarios</a> |
+        <a asp-action="IndexExpenses" asp-route-id="@Model.Id" class="btn btn-success">Volver a la lista</a>
+    </div>

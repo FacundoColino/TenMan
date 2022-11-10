@@ -18,7 +18,7 @@
     <input type="hidden" asp-for="CommitteeId" />
 
     <table class="table table-bordered style=" font-size: 12px"">
-        @*<tr>
+        <tr>
             <td rowspan="3">
                 <img src="~/images/Logo8.PNG" alt="" border=3 height=100 width=300 />
             </td>
@@ -36,7 +36,7 @@
         <tr>
             <td>@Html.DisplayNameFor(model => model.Committee.CUIT)</td>
             <td>@Model.Committee.CUIT</td>
-        </tr>*@
+        </tr>
         <tr>
         </tr>
     </table>
@@ -71,10 +71,10 @@
     <table class="table table-bordered" style="font-size: 12px">
         <thead>
             <tr>
-                @*<th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Number)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Number)</th>
                 <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Floor)</th>
                 <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Apartment)</th>
-                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Owner)</th>*@
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Owner)</th>
                 <th>Saldo Anterior</th>
                 <th>TOTAL</th>
             </tr>

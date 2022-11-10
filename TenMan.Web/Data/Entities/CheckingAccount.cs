@@ -24,6 +24,16 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal PreviousBalance { get; set; }
 
+        [Display(Name = "Saldo Pendiente")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal PendingBalance { get; set; }
+
+        [Display(Name = "EXP A")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal ExpABalance { get; set; }
+
         [Display(Name = "Su Pago")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal YourPayment { get; set; }

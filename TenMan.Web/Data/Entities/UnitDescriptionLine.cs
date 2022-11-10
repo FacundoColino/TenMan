@@ -11,6 +11,14 @@ namespace TenMan.Web.Models
         // Ejemplo: El pago anterior ya está contenido dentro de Checking Account y a la hora de calcular no cambia.
         public decimal Interest { get; set; }
 
+        public decimal ExpA { get; set; }
+
+        public decimal PendingBalance { get; set; }
+
+        public decimal PreviousBalance { get; set; }
+
+        public decimal YourPayment { get; set; }
+
         public decimal NewUnitTotal { get; set; }
 
         public int ExpensesId { get; set; }

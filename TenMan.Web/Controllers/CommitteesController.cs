@@ -563,6 +563,7 @@ namespace TenMan.Web.Controllers
             Expenses exp = new Expenses
             {
                 CommitteeId = committee.Id,
+                Committee = committee,
                 ExpensesCosts = expensesCosts,
                 Month = DateTime.Now.Month,
                 Year = DateTime.Now.Year,
@@ -573,10 +574,10 @@ namespace TenMan.Web.Controllers
 
             foreach (Unit unit in committee.Units)
             {
-                decimal balance = (decimal)unit.Percentage * total;
+                decimal expA = (decimal)unit.Percentage * total;
                 decimal prev = unit.CheckingAccount.PreviousBalance;
-
-                balance += prev;
+                decimal pending = unit.CheckingAccount.PendingBalance - unit.CheckingAccount.YourPayment;
+                decimal balance = expA + pending;               
 
                 UnitDescriptionLine unitLine = new UnitDescriptionLine
                 {
@@ -741,28 +742,59 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var committee = await _context.Committees
-                .Include(c => c.Units)
-                .ThenInclude(u => u.Tenant)
-                .ThenInclude(t => t.User)
-                .Include(c => c.Units)
-                .ThenInclude(u => u.CheckingAccount)
+            var expenses = await _context.Expenses
+                .Include(e => e.ExpensesCosts)
+                .Include(e => e.UnitDescriptionLines)
+                .Include(e => e.Committee)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            var committee = _context.Committees
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
                 .Include(c => c.Costs)
-                .FirstOrDefaultAsync(c => c.Id == id);
+                .ThenInclude(c => c.Field)
+                .FirstOrDefault();
+
+            expenses.Fields = _context.Fields;
+
 
             if (committee == null)
             {
                 return NotFound();
             }
-            ExpensesViewModel model = new ExpensesViewModel
-            {
-                Committee = committee,
-                Fields = _context.Fields
-            };
-            return View(model);
+            return View(expenses);
         }
+        //public async Task<IActionResult> ViewExpenses(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var committee = await _context.Committees
+        //        .Include(c => c.Units)
+        //        .ThenInclude(u => u.Tenant)
+        //        .ThenInclude(t => t.User)
+        //        .Include(c => c.Units)
+        //        .ThenInclude(u => u.CheckingAccount)
+        //        .Include(c => c.Administrator)
+        //        .ThenInclude(a => a.User)
+        //        .Include(c => c.Costs)
+        //        .FirstOrDefaultAsync(c => c.Id == id);
+
+        //    if (committee == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ExpensesViewModel model = new ExpensesViewModel
+        //    {
+        //        Committee = committee,
+        //        Fields = _context.Fields
+        //    };
+        //    return View(model);
+        //}
         //private async Task<IActionResult> CalculateCosts(int? id)
         //{
         //    if (id == null)

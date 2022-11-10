@@ -22,7 +22,7 @@ namespace TenMan.Web.Data.Entities
         public int Year { get; set; }
         public IEnumerable<ExpensesCost> ExpensesCosts { get; set; }
         //public IEnumerable<string> Notes { get; set; }
-        //public Committee Committee { get; set; }
+        public Committee Committee { get; set; }
         public int CommitteeId { get; set; }
         public IEnumerable<UnitDescriptionLine> UnitDescriptionLines { get; set; }
         public IEnumerable<Field> Fields { get; set; }

@@ -137,16 +137,18 @@ namespace TenMan.Web.Controllers
                     };
                     if (payment.Status == "Aprobado")
                     {
-                        decimal balance = payment.Unit.CheckingAccount.Balance;
-                        decimal previousBalance = payment.Unit.CheckingAccount.PreviousBalance;
-                        decimal total = payment.Unit.CheckingAccount.Total;
+                        //decimal balance = payment.Unit.CheckingAccount.Balance;
+                        //decimal previousBalance = payment.Unit.CheckingAccount.PreviousBalance;
+                        //decimal total = payment.Unit.CheckingAccount.Total;
 
-                        total = total - payment.Amount;
-                        previousBalance = previousBalance + total;
-                        balance = total;
+                        //total = total - payment.Amount;
+                        //previousBalance = previousBalance + total;
+                        //balance = total;
 
-                        payment.Unit.CheckingAccount.Balance = balance;
-                        payment.Unit.CheckingAccount.PreviousBalance = previousBalance;
+                        //payment.Unit.CheckingAccount.Balance = balance;
+                        //payment.Unit.CheckingAccount.PreviousBalance = previousBalance;
+
+                        payment.Unit.CheckingAccount.YourPayment += payment.Amount;
                     }
                     _context.Payments.Update(payment);
                     await _context.SaveChangesAsync();
