@@ -20,6 +20,12 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Año")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe ingresar un año.")]
         public int Year { get; set; }
+
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [Display(Name = "Fecha")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debe ingresar una fecha.")]
+        public DateTime Date { get; set; }
+
         public IEnumerable<ExpensesCost> ExpensesCosts { get; set; }
         //public IEnumerable<string> Notes { get; set; }
         public Committee Committee { get; set; }

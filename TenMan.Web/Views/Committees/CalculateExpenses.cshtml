@@ -51,7 +51,7 @@
                 <tr>
                     <td style="font-weight: 700">@item.Number</td>
                     <td style="font-weight: 700">@item.Description</td>
-                    <td>TOTAL</td>
+                    <td style="font-weight: 700">TOTAL</td>
                 </tr>
                 @foreach (var cost in Model.ExpensesCosts)
                 {
@@ -65,8 +65,11 @@
                     }
                 }
             }
-
         }
+        <tr>
+            <td colspan="2" style="background: #049f82; color: white">TOTAL A PAGAR</>
+            <td style="background: #049f82; color: white">@Model.GetTotal()</td>
+        </tr>
     </table>
     <table class="table table-bordered" style="font-size: 12px">
         <thead>
@@ -75,21 +78,29 @@
                 <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Floor)</th>
                 <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Apartment)</th>
                 <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Owner)</th>
+                <th>% A</th>
                 <th>Saldo Anterior</th>
+                <th>Su Pago</th>
+                <th>Saldo Pendiente</th>
+                <th>EXP A</th>
                 <th>TOTAL</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.UnitDescriptionLines)
             {
-                <tr>
-                    <td name="unitLines">@item.Unit.Number</td>
-                    <td name="unitLines">@item.Unit.Floor</td>
-                    <td name="unitLines">@item.Unit.Apartment</td>
-                    <td name="unitLines">@item.Unit.Owner</td>
-                    <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance</td>
-                    <td name="unitLines">@item.NewUnitTotal</td>
-                </tr>
+            <tr>
+                <td name="unitLines">@item.Unit.Number</td>
+                <td name="unitLines">@item.Unit.Floor</td>
+                <td name="unitLines">@item.Unit.Apartment</td>
+                <td name="unitLines">@item.Unit.Owner</td>
+                <td name="unitLines">@item.Unit.Percentage.ToString("0.00")%</td>
+                <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance.ToString("0.00")</td>
+                <td name="unitLines">@item.Unit.CheckingAccount.YourPayment.ToString("0.00")</td>
+                <td name="unitLines">@item.PendingBalance.ToString("0.00")</td>
+                <td name="unitLines">@item.ExpA.ToString("0.00")</td>
+                <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td>
+            </tr>
             }
         </tbody>
 

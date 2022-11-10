@@ -574,15 +574,20 @@ namespace TenMan.Web.Controllers
 
             foreach (Unit unit in committee.Units)
             {
-                decimal expA = (decimal)unit.Percentage * total;
-                decimal prev = unit.CheckingAccount.PreviousBalance;
-                decimal pending = unit.CheckingAccount.PendingBalance - unit.CheckingAccount.YourPayment;
+                decimal expA = ((decimal)unit.Percentage / 100) * total;
+                decimal prev = unit.CheckingAccount.Total;
+                decimal payment = unit.CheckingAccount.YourPayment;
+                decimal pending = unit.CheckingAccount.Total - payment;
                 decimal balance = expA + pending;               
 
                 UnitDescriptionLine unitLine = new UnitDescriptionLine
                 {
                     Unit = unit,
+                    YourPayment = payment,
+                    PreviousBalance = prev,
+                    PendingBalance = pending,
                     NewUnitTotal = balance,
+                    ExpA = expA,
                     Interest = 0
                 };
                 unitDescriptionLines.Add(unitLine);
@@ -629,19 +634,26 @@ namespace TenMan.Web.Controllers
 
                 foreach (Unit unit in committee.Units)
                 {
-                    decimal balance = (decimal)unit.Percentage * total;
-                    decimal prev = unit.CheckingAccount.PreviousBalance;
-
-                    balance += prev;
+                    decimal expA = ((decimal)unit.Percentage / 100) * total;
+                    decimal payment = unit.CheckingAccount.YourPayment;
+                    decimal pending = unit.CheckingAccount.Total - payment;
+                    decimal balance = expA + pending;
+                    decimal prev = unit.CheckingAccount.Total;
 
                     UnitDescriptionLine unitLine = new UnitDescriptionLine
                     {
                         Unit = unit,
+                        YourPayment = payment,
+                        PreviousBalance = prev,
+                        PendingBalance = pending,
+                        ExpA = expA,
                         NewUnitTotal = balance,
                         Interest = 0
                     };
                     unitDescriptionLines.Add(unitLine);
-                    unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
+                    unit.CheckingAccount.PreviousBalance = prev;
+                    unit.CheckingAccount.YourPayment = 0;
+                    unit.CheckingAccount.PendingBalance = pending;
                     unit.CheckingAccount.Balance = balance;
                 }
                 model.UnitDescriptionLines = unitDescriptionLines;

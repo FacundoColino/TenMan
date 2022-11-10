@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.FirstOrDefault().Month)
             </th>
             <th>
-                @*@Html.DisplayNameFor(model => model.FirstOrDefault().Committee.Description)*@
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Committee.Description)
             </th>
             <th></th>
         </tr>
@@ -32,7 +32,7 @@
                     @Html.DisplayFor(modelItem => item.Month)
                 </td>
                 <td>
-                    @*@Html.DisplayFor(modelItem => item.Committee.Description)*@
+                    @Html.DisplayFor(modelItem => item.Committee.Description)
                 </td>
                 <td>
                     <a asp-action="ViewExpenses" asp-route-id="@item.Id" class="btn btn-info">Ver</a>
