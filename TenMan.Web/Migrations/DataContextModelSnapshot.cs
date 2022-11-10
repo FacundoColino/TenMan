@@ -300,6 +300,8 @@ namespace TenMan.Web.Migrations
 
                     b.Property<int>("CommitteeId");
 
+                    b.Property<DateTime>("Date");
+
                     b.Property<int>("Month");
 
                     b.Property<int>("Year");

@@ -21,10 +21,15 @@ namespace TenMan.Web.Data.Entities
         [Range(1, int.MaxValue, ErrorMessage = "Debe ingresar un año.")]
         public int Year { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [Display(Name = "Fecha")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debe ingresar una fecha.")]
+        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
+
+        [Display(Name = "Fecha de Generación")]
+        [Required(ErrorMessage = "El campo {0} is obligatorio.")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
+        public DateTime DateLocal => Date.ToLocalTime();
 
         public IEnumerable<ExpensesCost> ExpensesCosts { get; set; }
         //public IEnumerable<string> Notes { get; set; }

@@ -350,6 +350,7 @@ namespace TenMan.Web.Controllers
             }
 
             var unit = await _context.Units
+                .Include(u => u.Committee)
                 .Include(u => u.Requests)
                 .ThenInclude(r => r.Images)
                 .Include(u => u.Requests)
@@ -373,6 +374,8 @@ namespace TenMan.Web.Controllers
 
             var tenant = _context.Tenants
                 .Include(t => t.User)
+                .Include(t => t.Units)
+                .ThenInclude(u => u.Committee)
                 .Include(t => t.Units)
                 .ThenInclude(u => u.Requests)
                 .FirstOrDefault(t => t.User.Email == User.Identity.Name);
@@ -480,6 +483,23 @@ namespace TenMan.Web.Controllers
 
             return View(model);
         }
+        public IActionResult IndexExpenses(int? id)
+        {
+            var committee = _context.Committees
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .Include(c => c.Expenses)
+                .ThenInclude(e => e.ExpensesCosts)
+                .FirstOrDefault(c => c.Id == id);
 
+            if (committee == null)
+            {
+                return NotFound();
+            }
+            IEnumerable<Expenses> expenses = _context.Expenses.Where(e => e.CommitteeId == committee.Id);
+            return View(expenses);
+        }
     }
 }

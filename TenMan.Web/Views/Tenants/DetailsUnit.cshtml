@@ -39,6 +39,7 @@
 <div>
     <a asp-action="EditUnit" asp-route-id="@Model.Id" class="btn btn-warning">Editar</a> |
     <a asp-action="AddRequest" asp-route-id="@Model.Id" class="btn btn-primary">Agregar Solicitud</a> |
+    <a asp-action="IndexExpenses" asp-route-id="@Model.Committee.Id" class="btn btn-primary">Ver Expensas</a> |
     <a asp-action="IndexUnit" asp-route-id="@Model.Id" class="btn btn-success">Volver a la lista</a>
 </div>
 @if (Model.Requests.Count == 0)

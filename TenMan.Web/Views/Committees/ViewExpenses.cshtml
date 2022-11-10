@@ -9,12 +9,12 @@
     }
 </style>
 <h2>Expensas</h2>
-    <p>
-        <input type="submit" value="Exportar a Excel" class="btn btn-primary" /> |
-    </p>
-    <input type="hidden" asp-for="Year" />
-    <input type="hidden" asp-for="Month" />
-    <input type="hidden" asp-for="CommitteeId" />
+<p>
+    <input type="submit" value="Exportar a Excel" class="btn btn-primary" /> |
+</p>
+<input type="hidden" asp-for="Year" />
+<input type="hidden" asp-for="Month" />
+<input type="hidden" asp-for="CommitteeId" />
 
     <table class="table table-bordered style=" font-size: 12px"">
         <tr>
@@ -90,24 +90,27 @@
         <tbody>
             @foreach (var item in Model.UnitDescriptionLines)
             {
-            <tr>
-                <td name="unitLines">@item.Unit.Number</td>
-                <td name="unitLines">@item.Unit.Floor</td>
-                <td name="unitLines">@item.Unit.Apartment</td>
-                <td name="unitLines">@item.Unit.Owner</td>
-                <td name="unitLines">@item.Unit.Percentage.ToString("0.00")%</td>
-                <td name="unitLines">@item.PreviousBalance.ToString("0.00")</td>
-                <td name="unitLines">@item.YourPayment.ToString("0.00")</td>
-                <td name="unitLines">@item.PendingBalance.ToString("0.00")</td>
-                <td name="unitLines">@item.ExpA.ToString("0.00")</td>
-                <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td>
-            </tr>
+                <tr>
+                    <td name="unitLines">@item.Unit.Number</td>
+                    <td name="unitLines">@item.Unit.Floor</td>
+                    <td name="unitLines">@item.Unit.Apartment</td>
+                    <td name="unitLines">@item.Unit.Owner</td>
+                    <td name="unitLines">@item.Unit.Percentage.ToString("0.00")%</td>
+                    <td name="unitLines">@item.PreviousBalance.ToString("0.00")</td>
+                    <td name="unitLines">@item.YourPayment.ToString("0.00")</td>
+                    <td name="unitLines">@item.PendingBalance.ToString("0.00")</td>
+                    <td name="unitLines">@item.ExpA.ToString("0.00")</td>
+                    <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td>
+                </tr>
             }
         </tbody>
 
     </table>
-    <div>
-        <a asp-action="ExportExcel" class="btn btn-success">Exportar Excel</a> |
-        <a asp-action="SendEmail" asp-route-id="@Model.Id" class="btn btn-primary">Enviar a los propietarios</a> |
-        <a asp-action="IndexExpenses" asp-route-id="@Model.Id" class="btn btn-success">Volver a la lista</a>
-    </div>
+<div>
+    @if (this.User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
+    {
+        <a asp-action="SendExpensesEmail" asp-route-id="@Model.Id" class="btn btn-primary">Enviar a los propietarios</a>
+    }
+    <a onclick="tableToExcel('tblExport', 'W3C Example Table')" class="btn btn-success">Exportar Excel</a>
+    <a asp-action="IndexExpenses" asp-route-id="@Model.CommitteeId" class="btn btn-success">Volver a la lista</a>
+</div>

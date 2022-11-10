@@ -16,6 +16,7 @@
     <input type="hidden" asp-for="Year" />
     <input type="hidden" asp-for="Month" />
     <input type="hidden" asp-for="CommitteeId" />
+    <input type="hidden" asp-for="Date" />
 
     <table class="table table-bordered style=" font-size: 12px"">
         <tr>
@@ -89,18 +90,18 @@
         <tbody>
             @foreach (var item in Model.UnitDescriptionLines)
             {
-            <tr>
-                <td name="unitLines">@item.Unit.Number</td>
-                <td name="unitLines">@item.Unit.Floor</td>
-                <td name="unitLines">@item.Unit.Apartment</td>
-                <td name="unitLines">@item.Unit.Owner</td>
-                <td name="unitLines">@item.Unit.Percentage.ToString("0.00")%</td>
-                <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance.ToString("0.00")</td>
-                <td name="unitLines">@item.Unit.CheckingAccount.YourPayment.ToString("0.00")</td>
-                <td name="unitLines">@item.PendingBalance.ToString("0.00")</td>
-                <td name="unitLines">@item.ExpA.ToString("0.00")</td>
-                <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td>
-            </tr>
+                <tr>
+                    <td name="unitLines">@item.Unit.Number</td>
+                    <td name="unitLines">@item.Unit.Floor</td>
+                    <td name="unitLines">@item.Unit.Apartment</td>
+                    <td name="unitLines">@item.Unit.Owner</td>
+                    <td name="unitLines">@item.Unit.Percentage.ToString("0.00")%</td>
+                    <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance.ToString("0.00")</td>
+                    <td name="unitLines">@item.Unit.CheckingAccount.YourPayment.ToString("0.00")</td>
+                    <td name="unitLines">@item.PendingBalance.ToString("0.00")</td>
+                    <td name="unitLines">@item.ExpA.ToString("0.00")</td>
+                    <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td>
+                </tr>
             }
         </tbody>
 

@@ -567,6 +567,7 @@ namespace TenMan.Web.Controllers
                 ExpensesCosts = expensesCosts,
                 Month = DateTime.Now.Month,
                 Year = DateTime.Now.Year,
+                Date = DateTime.Now.ToUniversalTime(),
                 Fields = _context.Fields,
                 //Notes = new List<string>()
             };
@@ -747,6 +748,57 @@ namespace TenMan.Web.Controllers
                 RedirectToAction($"Details/{id}");
             }
         }
+        public async Task<IActionResult> SendExpensesEmail(int? id)
+        {
+            var expenses = await _context.Expenses
+               .Include(e => e.ExpensesCosts)
+               .Include(e => e.UnitDescriptionLines)
+               .Include(e => e.Committee)
+               .ThenInclude(c => c.Units)
+               .ThenInclude(u => u.Tenant)
+               .ThenInclude(t => t.User)
+               .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (expenses == null)
+                return NotFound();
+
+            foreach (Unit unit in expenses.Committee.Units)
+            {
+                var email = unit.Tenant.User.Email;
+
+            }
+
+            return View();
+        }
+        //protected void ExportExcel()
+        //{
+        //    Response.Clear();
+        //    Response.Buffer = true;
+        //    string FileName = "ReporteColectoras" + DateTime.Now + ".xls";
+        //    Response.AddHeader("content-disposition", "attachment;filename=" + FileName);
+        //    Response.Charset = "";
+        //    Response.ContentType = "application/vnd.ms-excel";
+
+        //    StringWriter sw = new StringWriter();
+        //    HtmlTextWriter HW = new HtmlTextWriter(sw);
+
+
+        //    // Read Style file (css) here and add to response 
+        //    FileInfo fi = new FileInfo(Server.MapPath("~/css/estilos-grid3.css"));
+        //    StringBuilder sb = new StringBuilder();
+        //    StreamReader sr = fi.OpenText();
+        //    while (sr.Peek() >= 0)
+        //    {
+        //        sb.Append(sr.ReadLine());
+        //    }
+        //    sr.Close();
+        //    lvColectora.RenderControl(HW);
+        //    //GdColectora.RenderControl(HW);
+        //    Response.Write("<html><head><style type='text/css'>" + sb.ToString() + "</style></head><body>" + sw.ToString() + "</body></html>");
+        //    Response.Flush();
+        //    Response.Close();
+        //    Response.End();
+        //}
         public async Task<IActionResult> ViewExpenses(int? id)
         {
             if (id == null)
