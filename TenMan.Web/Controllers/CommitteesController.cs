@@ -315,7 +315,7 @@ namespace TenMan.Web.Controllers
 
                 //Envio de email
 
-                _mailService.SendEmailGmail(request.Worker.User.Email, "TenMan - Nuevo trabajo asignado", "Ha sido asignado para resolver una solicitud");
+                _mailService.SendEmailGmail(request.Worker.User.Email, "TenMan - Nuevo trabajo asignado", "Ha sido asignado para resolver una solicitud", "");
 
                 return RedirectToAction($"DetailsUnit/{model.UnitId}");
             }
@@ -579,7 +579,7 @@ namespace TenMan.Web.Controllers
                 decimal prev = unit.CheckingAccount.Total;
                 decimal payment = unit.CheckingAccount.YourPayment;
                 decimal pending = unit.CheckingAccount.Total - payment;
-                decimal balance = expA + pending;               
+                decimal balance = expA + pending;
 
                 UnitDescriptionLine unitLine = new UnitDescriptionLine
                 {
@@ -748,28 +748,7 @@ namespace TenMan.Web.Controllers
                 RedirectToAction($"Details/{id}");
             }
         }
-        public async Task<IActionResult> SendExpensesEmail(int? id)
-        {
-            var expenses = await _context.Expenses
-               .Include(e => e.ExpensesCosts)
-               .Include(e => e.UnitDescriptionLines)
-               .Include(e => e.Committee)
-               .ThenInclude(c => c.Units)
-               .ThenInclude(u => u.Tenant)
-               .ThenInclude(t => t.User)
-               .FirstOrDefaultAsync(e => e.Id == id);
 
-            if (expenses == null)
-                return NotFound();
-
-            foreach (Unit unit in expenses.Committee.Units)
-            {
-                var email = unit.Tenant.User.Email;
-
-            }
-
-            return View();
-        }
         //protected void ExportExcel()
         //{
         //    Response.Clear();
@@ -823,64 +802,120 @@ namespace TenMan.Web.Controllers
 
             expenses.Fields = _context.Fields;
 
-
             if (committee == null)
             {
                 return NotFound();
             }
             return View(expenses);
         }
-        //public async Task<IActionResult> ViewExpenses(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> ExportPDF(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //    var committee = await _context.Committees
-        //        .Include(c => c.Units)
-        //        .ThenInclude(u => u.Tenant)
-        //        .ThenInclude(t => t.User)
-        //        .Include(c => c.Units)
-        //        .ThenInclude(u => u.CheckingAccount)
-        //        .Include(c => c.Administrator)
-        //        .ThenInclude(a => a.User)
-        //        .Include(c => c.Costs)
-        //        .FirstOrDefaultAsync(c => c.Id == id);
+            var expenses = await _context.Expenses
+                .Include(e => e.ExpensesCosts)
+                .Include(e => e.UnitDescriptionLines)
+                .Include(e => e.Committee)
+                .FirstOrDefaultAsync(e => e.Id == id);
 
-        //    if (committee == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ExpensesViewModel model = new ExpensesViewModel
-        //    {
-        //        Committee = committee,
-        //        Fields = _context.Fields
-        //    };
-        //    return View(model);
-        //}
-        //private async Task<IActionResult> CalculateCosts(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var committee = await _context.Committees.Find(id);
+            var committee = _context.Committees
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .FirstOrDefault();
 
-        //    if (committee != null)
-        //    {
-        //        foreach (Unit unit in committee.Units)
-        //        {
-        //            decimal balance = unit.SquareMeters * committee.Price;
-        //            decimal prev = unit.CheckingAccount.PreviousBalance;
+            expenses.Fields = _context.Fields;
 
-        //            unit.CheckingAccount.PreviousBalance = prev + unit.CheckingAccount.Balance;
-        //            unit.CheckingAccount.Balance = balance;
-        //        }
-        //        _context.Committees.Update(committee);
-        //        _context.SaveChanges();
-        //        //RedirectToAction($"Details/{id}");
-        //    }
-        //}
+            if (committee == null)
+            {
+                return NotFound();
+            }
+            return new Rotativa.AspNetCore.ViewAsPdf("ViewExpenses", expenses)
+            {
+                FileName = "Expensas" + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf"
+            };
+        }
+        public async Task<IActionResult> ExportPDFForMail(int? id, string pdfFile)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var expenses = await _context.Expenses
+               .Include(e => e.ExpensesCosts)
+               .Include(e => e.UnitDescriptionLines)
+               .Include(e => e.Committee)
+               .ThenInclude(c => c.Units)
+               .ThenInclude(u => u.Tenant)
+               .ThenInclude(t => t.User)
+               .FirstOrDefaultAsync(e => e.Id == id);
+
+            var committee = await _context.Committees
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .FirstOrDefaultAsync();
+
+            expenses.Fields = _context.Fields;
+
+            return new Rotativa.AspNetCore.ViewAsPdf("ViewExpenses", expenses)
+            {
+                FileName = pdfFile,
+                SaveOnServerPath = pdfFile
+            };
+        }
+        public async Task<IActionResult> SendExpensesEmail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            string pdfFile = @"C:\Store\Expensas" + DateTime.Now.ToString("ddMMyyyyhhmmss") + ".pdf";
+
+            await ExportPDFForMail(id, pdfFile);
+
+            var expenses = await _context.Expenses
+               .Include(e => e.ExpensesCosts)
+               .Include(e => e.UnitDescriptionLines)
+               .Include(e => e.Committee)
+               .ThenInclude(c => c.Units)
+               .ThenInclude(u => u.Tenant)
+               .ThenInclude(t => t.User)
+               .FirstOrDefaultAsync(e => e.Id == id);
+
+            var committee = _context.Committees
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
+                .Include(c => c.Units)
+                .ThenInclude(u => u.CheckingAccount)
+                .Include(c => c.Costs)
+                .ThenInclude(c => c.Field)
+                .FirstOrDefault();
+
+            if (expenses == null)
+                return NotFound();
+
+            expenses.Fields = _context.Fields;
+
+            foreach (Unit unit in expenses.Committee.Units)
+            {
+                if (unit.Tenant != null)
+                {
+                    var email = unit.Tenant.User.Email;
+                    if (email == "karitovr80@gmail.com")
+                        _mailService.SendEmailGmail(email, @"Expensas " + expenses.Month + expenses.Year, "Estimados Propietarios. \nAdjuntamos las expensas de este mes.\nSaludos Cordiales", pdfFile);
+                }
+            }
+            return View();
+        }
     }
 }

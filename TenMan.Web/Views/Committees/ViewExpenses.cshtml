@@ -9,9 +9,7 @@
     }
 </style>
 <h2>Expensas</h2>
-<p>
-    <input type="submit" value="Exportar a Excel" class="btn btn-primary" /> |
-</p>
+
 <input type="hidden" asp-for="Year" />
 <input type="hidden" asp-for="Month" />
 <input type="hidden" asp-for="CommitteeId" />
@@ -107,10 +105,5 @@
 
     </table>
 <div>
-    @if (this.User.Identity.IsAuthenticated && User.IsInRole("Administrator"))
-    {
-        <a asp-action="SendExpensesEmail" asp-route-id="@Model.Id" class="btn btn-primary">Enviar a los propietarios</a>
-    }
-    <a onclick="tableToExcel('tblExport', 'W3C Example Table')" class="btn btn-success">Exportar Excel</a>
-    <a asp-action="IndexExpenses" asp-route-id="@Model.CommitteeId" class="btn btn-success">Volver a la lista</a>
+    @*<a asp-action="IndexExpenses" asp-route-id="@Model.CommitteeId" class="btn btn-success">Volver a la lista</a>*@
 </div>

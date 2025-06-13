@@ -3,78 +3,129 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div id="NavbarYBody" class="d-flex flex-column w-100 ms-2">
+    <div id="navbarDiv">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-nowrap disableAjax" href="index.php?route=/server/status">
+                                <img src="~/Images/dot.gif" title="Estado actual" alt="Estado actual" class="icon ic_s_status">&nbsp;Estado actual
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-nowrap disableAjax" href="index.php?route=/server/status">
+                                <img src="~/Images/dot.gif" title="Estado actual" alt="Estado actual" class="icon ic_s_status">&nbsp;Estado actual
+                            </a>
+                        </li>
+                        @*<li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dropdown
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>*@
+                        @*<li class="nav-item">
+                                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                            </li>*@
+                    </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
 
-<h2>Locatarios</h2>
+    </div>
+    </div>
+    <h2>Locatarios</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Document)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.PhoneNumber)
-            </th>
-            <th>
-                Unidades
-            </th>
-            <th>
-                Solicitudes
-            </th>
-            <th>
-                Pagos
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(model => item.User.Document)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User.Address)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.User.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Units.Count)
-            </td>
-            <td>
-                @Html.DisplayFor(model => item.Payments.Count)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.Document)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.LastName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.Address)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.User.PhoneNumber)
+                </th>
+                <th>
+                    Unidades
+                </th>
+                <th>
+                    Solicitudes
+                </th>
+                <th>
+                    Pagos
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => item.User.Document)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.Address)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.User.PhoneNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Units.Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => item.Payments.Count)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

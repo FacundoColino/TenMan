@@ -16,7 +16,7 @@ namespace TenMan.Web.Helpers
         {
             this.configuration = configuration;
         }
-        public void SendEmailGmail(String receptor, String asunto, String mensaje)
+        public void SendEmailGmail(String receptor, String asunto, String mensaje, string file)
         {
             MailMessage mail = new MailMessage();
 
@@ -30,6 +30,12 @@ namespace TenMan.Web.Helpers
             mail.Body = mensaje;
             mail.IsBodyHtml = true;
             mail.Priority = MailPriority.Normal;
+
+            if (!string.IsNullOrEmpty(file))
+            {
+                Attachment attachment = new Attachment(file);
+                mail.Attachments.Add(attachment);
+            }
 
             String smtpserver = this.configuration["hostGmail"];
             int port = int.Parse(this.configuration["portGmail"]);
@@ -47,7 +53,6 @@ namespace TenMan.Web.Helpers
 
             smtpClient.Send(mail);
         }
-
         public void SendEmailOutlook(String receptor, String asunto, String mensaje)
         {
             MailMessage mail = new MailMessage();

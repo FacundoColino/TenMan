@@ -44,7 +44,9 @@
                 }
              </td>
             <td>
-                <a asp-action="ViewExpenses" asp-route-id="@item.Id" class="btn btn-info">Ver</a>
+                <a asp-action="ViewExpenses" asp-route-id="@item.Id" class="btn btn-info">Ver</a> |
+                <a asp-action="ExportPDF" asp-route-id="@item.Id" class="btn btn-primary">Descargar PDF</a> |
+                <a asp-action="SendExpensesEmail" asp-route-id="@item.Id" class="btn btn-primary">Enviar por Mail a Propietarios</a>
             </td>
         </tr>
         }

@@ -22,7 +22,7 @@ namespace TenMan.Web.Controllers
         // GET: Fields
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Field.ToListAsync());
+            return View(await _context.Fields.ToListAsync());
         }
 
         // GET: Fields/Details/5
@@ -33,7 +33,7 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var @field = await _context.Field
+            var @field = await _context.Fields
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@field == null)
             {
@@ -50,7 +50,7 @@ namespace TenMan.Web.Controllers
         }
 
         // POST: Fields/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -73,7 +73,7 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var @field = await _context.Field.FindAsync(id);
+            var @field = await _context.Fields.FindAsync(id);
             if (@field == null)
             {
                 return NotFound();
@@ -82,7 +82,7 @@ namespace TenMan.Web.Controllers
         }
 
         // POST: Fields/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -124,7 +124,7 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var @field = await _context.Field
+            var @field = await _context.Fields
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@field == null)
             {
@@ -139,15 +139,15 @@ namespace TenMan.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @field = await _context.Field.FindAsync(id);
-            _context.Field.Remove(@field);
+            var @field = await _context.Fields.FindAsync(id);
+            _context.Fields.Remove(@field);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool FieldExists(int id)
         {
-            return _context.Field.Any(e => e.Id == id);
+            return _context.Fields.Any(e => e.Id == id);
         }
     }
 }
