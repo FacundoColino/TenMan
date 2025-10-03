@@ -71,8 +71,11 @@ namespace TenMan.Web.Data
         {
             if (!_context.Administrators.Any())
             {
-                _context.Administrators.Add(new Administrator { User = user });
-
+                _context.Administrators.Add(new Administrator
+                {
+                    User = user,
+                    CUIT = "2327212129"
+                });
                 await _context.SaveChangesAsync();
             }
         }
@@ -82,7 +85,7 @@ namespace TenMan.Web.Data
 
             if (!_context.Committees.Any())
             {
-                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales", Price = 200M, Administrator = admin });
+                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales",CUIT = "11111111", SuterhKey="2837283", Price = 200M, Administrator = admin });
 
                 await _context.SaveChangesAsync();
             }
