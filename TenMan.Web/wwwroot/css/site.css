@@ -3,6 +3,47 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     /*    padding-top: 50px;*/
     padding-bottom: 20px;
+    /*background-color: #f4f6f8 !important;*/
+    background-color: gray !important;
+}
+.main {
+    /* margin-top: 50px;  altura del navbar */
+    height: calc(100vh - 50px);
+    display: flex;
+}
+.tenman-sidebar {
+    width: 200px;
+    /*background-color: #343a40;*/
+    background-color: floralwhite;
+    padding: 15px;
+}
+    .tenman-sidebar .nav > li > a {
+        /*color: #adb5bd;*/
+        color: black;
+        border-radius: 4px;
+        padding: 8px 12px;
+        display: block;
+    }
+
+        .tenman-sidebar .nav > li > a:hover {
+            /*background-color: #495057;*/
+            background-color: #E3735E;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    .tenman-sidebar .nav > li.active > a {
+        background-color: #337ab7; /* azul Bootstrap 3 */
+        color: #fff;
+    }
+.tenman-content {
+    flex: 1;
+    /*padding: 20px;
+    background-color: #212529;*/
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+    overflow-y: auto;
 }
 /* Navbar Color */
 /*.navbar {

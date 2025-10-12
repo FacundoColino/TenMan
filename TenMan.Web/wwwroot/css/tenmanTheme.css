@@ -97,7 +97,8 @@ html {
 
 :root {
     /*--color-body: #f2dfce;*/
-    --color-body: #fffaf0;
+    /* --color-body: #fffaf0;*/
+    --color-body: #f4f6f8;
     --color-navbar-default: #99E6B3;
     --color-background: #fff;
     --color-text: black;

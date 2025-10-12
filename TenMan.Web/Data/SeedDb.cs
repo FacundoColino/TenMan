@@ -21,6 +21,7 @@ namespace TenMan.Web.Data
             await CheckRoles();
 
             var admin = await CheckUserAsync("27010101", "Faqundo", "Colino", "faqundo.colino@gmail.com", "1130767787", "Aguilar 2497", "Administrator");
+            var admin2 = await CheckUserAsync("36780653", "Magnus", "Carlsen", "magnus.carlsen@jmailx.com", "113222222", "Cabildo 1950", "Administrator");
             var sa = await CheckUserAsync("27010102", "Facundo", "Colino", "facundo.colino@usal.edu.ar", "1130767787", "Aguilar 2497", "SuperAdmin");
             var tenant = await CheckUserAsync("27845890", "Carolina", "Roman", "karitovr80@gmail.com", "1136557821", "Balbin 300", "Tenant");
             var worker = await CheckUserAsync("30987172", "Francisco", "Perez", "facundo.colino@xerox.com", "1120984530", "Bolivar 3300", "Worker");
