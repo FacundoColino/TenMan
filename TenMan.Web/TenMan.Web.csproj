@@ -5,6 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20221110151946_ExpensesFix.cs" />
+    <Compile Remove="Migrations\20221110151946_ExpensesFix.Designer.cs" />
+    <Compile Remove="Migrations\20221110163651_ExpensesFix2.cs" />
+    <Compile Remove="Migrations\20221110163651_ExpensesFix2.Designer.cs" />
+    <Compile Remove="Migrations\20251016211211_AgregarRelacionesRubroConsorcio.cs" />
+    <Compile Remove="Migrations\20251016211211_AgregarRelacionesRubroConsorcio.Designer.cs" />
+    <Compile Remove="Migrations\20251016211730_AgregarRelacionesRubroConsorcio.cs" />
+    <Compile Remove="Migrations\20251016211730_AgregarRelacionesRubroConsorcio.Designer.cs" />
+    <Compile Remove="Migrations\20251016212127_AgregarRelacionesRubroConsorcio2.cs" />
+    <Compile Remove="Migrations\20251016212127_AgregarRelacionesRubroConsorcio2.Designer.cs" />
+    <Compile Remove="Migrations\20251016212441_AgregarRelacionesRubroConsorcio.cs" />
+    <Compile Remove="Migrations\20251016212441_AgregarRelacionesRubroConsorcio.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Reports\RequestsForWorker.rdlc" />
   </ItemGroup>
 

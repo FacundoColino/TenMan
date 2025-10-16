@@ -343,6 +343,8 @@ namespace TenMan.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("CommitteeId");
+
                     b.Property<string>("Description")
                         .IsRequired();
 
@@ -352,9 +354,11 @@ namespace TenMan.Web.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommitteeId");
+
                     b.HasIndex("ExpensesId");
 
-                    b.ToTable("Field");
+                    b.ToTable("Fields");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Payment", b =>
@@ -701,7 +705,7 @@ namespace TenMan.Web.Migrations
             modelBuilder.Entity("TenMan.Web.Data.Entities.Cost", b =>
                 {
                     b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
-                        .WithMany("Costs")
+                        .WithMany()
                         .HasForeignKey("CommitteeId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Field", "Field")
@@ -732,6 +736,10 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Field", b =>
                 {
+                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
+                        .WithMany("Fields")
+                        .HasForeignKey("CommitteeId");
+
                     b.HasOne("TenMan.Web.Data.Entities.Expenses")
                         .WithMany("Fields")
                         .HasForeignKey("ExpensesId");

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Helpers;
@@ -86,7 +87,28 @@ namespace TenMan.Web.Data
 
             if (!_context.Committees.Any())
             {
-                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales",CUIT = "11111111", SuterhKey="2837283", Price = 200M, Administrator = admin });
+                Field rubro1 = new Field(1,"DETALLE DE SUELDO Y CARGAS SOCIALES");
+                Field rubro2 = new Field(2, "SERVICIOS PÚBLICOS");
+                Field rubro3 = new Field(3, "ABONOS DE SERVICIOS");
+                Field rubro4 = new Field(4, "MANTENIMIENTO DE PARTES COMÚNES");
+                Field rubro5 = new Field(5, "REPARACIONES EN UNIDADES FUNCIONALES");
+                Field rubro6 = new Field(6, "GASTOS BANCARIOS");
+                Field rubro7 = new Field(7, "GASTOS DE LIMPIEZA");
+                Field rubro8 = new Field(8, "GASTOS DE ADMINISTRACIÓN");
+                Field rubro9 = new Field(9, "OTROS");
+
+                List<Field> rubros = new List<Field>();
+                rubros.Add(rubro1);
+                rubros.Add(rubro2);
+                rubros.Add(rubro3);
+                rubros.Add(rubro4); 
+                rubros.Add(rubro5); 
+                rubros.Add(rubro6);
+                rubros.Add(rubro7);
+                rubros.Add(rubro8);
+                rubros.Add(rubro9);
+
+                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales",CUIT = "11111111", SuterhKey="2837283", Fields = rubros, Administrator = admin });
 
                 await _context.SaveChangesAsync();
             }

@@ -3,15 +3,19 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Locatarios</p>
+    <p class="text-muted">Desde aquí puedes gestionar todos los locatarios del consorcio</p>
+</div>
     <div class="panel panel-default">
-        <div class="panel-heading">
-            Locatarios
+    <div class="panel-heading tenman-panel-heading2">
+        Lista de Locatarios
         </div>
         <div class="panel-body">
         <p>
             <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
         </p>
-        <table class="table table-striped table-condensed">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>
@@ -70,9 +74,9 @@
                             @Html.DisplayFor(model => item.Payments.Count)
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-pencil"></i></a> |
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
                         </td>
                     </tr>
                 }

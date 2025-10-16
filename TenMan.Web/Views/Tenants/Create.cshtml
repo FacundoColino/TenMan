@@ -3,13 +3,17 @@
 @{
     ViewData["Title"] = "Crear Locatario";
 }
-
-<h2>Agregar Locatario</h2>
-
-<h4>Locatario</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="tenman-pagedesc">
+<p class="tenman-title">Agregar Locatarios</p>
+<p class="text-muted">Desde aquí puedes agregar nuevos locatarios</p>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="glyphicon glyphicon-user"></i><b>  Nuevo Locatario</b>
+        </h4>
+    </div>
+    <div class="panel-body">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 

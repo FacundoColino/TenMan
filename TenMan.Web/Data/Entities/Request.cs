@@ -43,6 +43,8 @@ namespace TenMan.Web.Data.Entities
 
         public Unit Unit { get; set; }
 
+        public int? WorkerId { get; set; }
+
         public Worker Worker { get; set; }
 
         public ICollection<Status> Statuses { get; set; }

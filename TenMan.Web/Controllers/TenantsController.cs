@@ -487,8 +487,7 @@ namespace TenMan.Web.Controllers
         public IActionResult IndexExpenses(int? id)
         {
             var committee = _context.Committees
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
                 .Include(c => c.Expenses)

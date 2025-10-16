@@ -8,6 +8,12 @@ namespace TenMan.Web.Data.Entities
 {
     public class Field
     {
+        public Field(int number, string description)
+        {
+            Number = number;
+            Description = description;
+        }
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -17,5 +23,7 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }
+
+        public Committee Committee { get; set; }
     }
 }

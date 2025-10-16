@@ -2,7 +2,7 @@
 
 namespace TenMan.Web.Migrations
 {
-    public partial class NewExpenses4 : Migration
+    public partial class InicialConCorrecciones : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

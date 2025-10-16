@@ -44,9 +44,9 @@ namespace TenMan.Web.Data.Entities
 
         public ICollection<Unit> Units { get; set; }
 
-        public ICollection<Cost> Costs { get; set; }
-
         public ICollection<Expenses> Expenses { get; set; }
+
+        public ICollection<Field> Fields { get; set; }
 
         public Administrator Administrator { get; set; }
 

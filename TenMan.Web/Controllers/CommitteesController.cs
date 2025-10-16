@@ -70,6 +70,7 @@ namespace TenMan.Web.Controllers
             }
             return View(model);
         }
+        /*
         public IActionResult IndexCosts(int? id)
         {
             var committee = _context.Committees
@@ -89,7 +90,7 @@ namespace TenMan.Web.Controllers
                 Costs = committee.Costs
             };
             return View(model);
-        }
+        }*/
         public async Task<IActionResult> AddUnit(int? id)
         {
             if (id == null)
@@ -528,6 +529,7 @@ namespace TenMan.Web.Controllers
         {
             return _context.Committees.Any(e => e.Id == id);
         }
+        /*
         public ActionResult CalculateExpenses(int? id)
         {
             if (id == null)
@@ -537,8 +539,8 @@ namespace TenMan.Web.Controllers
             var committee = _context.Committees
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
+                .Include(c => c.Expenses)
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
                 .FirstOrDefault(c => c.Id == id);
@@ -598,7 +600,6 @@ namespace TenMan.Web.Controllers
             exp.UnitDescriptionLines = unitDescriptionLines;
             return View(exp);
         }
-
         [HttpPost]
         public ActionResult CalculateExpenses(Expenses model, List<UnitDescriptionLine> unitLines)
         {
@@ -607,8 +608,7 @@ namespace TenMan.Web.Controllers
                 var committee = _context.Committees
                   .Include(c => c.Units)
                   .ThenInclude(u => u.CheckingAccount)
-                  .Include(c => c.Costs)
-                  .ThenInclude(c => c.Field)
+                  .Include(c => c.Fields)
                   .Include(c => c.Administrator)
                   .ThenInclude(a => a.User)
                   .FirstOrDefault(c => c.Id == model.CommitteeId);
@@ -669,8 +669,7 @@ namespace TenMan.Web.Controllers
         public IActionResult IndexExpenses(int? id)
         {
             var committee = _context.Committees
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
                 .Include(c => c.Expenses)
@@ -683,7 +682,7 @@ namespace TenMan.Web.Controllers
             }
             IEnumerable<Expenses> expenses = _context.Expenses.Where(e => e.CommitteeId == committee.Id);
             return View(expenses);
-        }
+        }*/
         //public void CalculateExpenses(int? id)
         //{
         //    if (id == null)
@@ -720,6 +719,7 @@ namespace TenMan.Web.Controllers
         //        RedirectToAction($"Details/{id}");
         //    }
         //}
+        /*
         public void CalculateCosts(int? id)
         {
             if (id == null)
@@ -747,7 +747,7 @@ namespace TenMan.Web.Controllers
                 _context.SaveChanges();
                 RedirectToAction($"Details/{id}");
             }
-        }
+        }*/
 
         //protected void ExportExcel()
         //{
@@ -796,8 +796,8 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(a => a.User)
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
+                .Include(c => c.Expenses)
                 .FirstOrDefault();
 
             expenses.Fields = _context.Fields;
@@ -826,8 +826,8 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(a => a.User)
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
+                .Include(c => c.Expenses)
                 .FirstOrDefault();
 
             expenses.Fields = _context.Fields;
@@ -861,8 +861,8 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(a => a.User)
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
+                .Include(c => c.Expenses)
                 .FirstOrDefaultAsync();
 
             expenses.Fields = _context.Fields;
@@ -897,8 +897,7 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(a => a.User)
                 .Include(c => c.Units)
                 .ThenInclude(u => u.CheckingAccount)
-                .Include(c => c.Costs)
-                .ThenInclude(c => c.Field)
+                .Include(c => c.Fields)
                 .FirstOrDefault();
 
             if (expenses == null)
