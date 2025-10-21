@@ -28,14 +28,16 @@ body {
 
         .tenman-sidebar .nav > li > a:hover {
             /*background-color: #495057;*/
-            background-color: #E3735E;
+            /* background-color: #E3735E;*/
+            background-color: #016A3A;
             color: #fff;
             text-decoration: none;
         }
 
     .tenman-sidebar .nav > li.active > a {
         /* background-color: #337ab7; /* azul Bootstrap 3 */
-        background-color: #D3634E;
+        /* background-color: #D3634E; /* ladrillo */
+        background-color: #016A3A;
         color: #fff;
     }
 .tenman-content {

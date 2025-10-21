@@ -87,15 +87,15 @@ namespace TenMan.Web.Data
 
             if (!_context.Committees.Any())
             {
-                Field rubro1 = new Field(1,"DETALLE DE SUELDO Y CARGAS SOCIALES");
-                Field rubro2 = new Field(2, "SERVICIOS PÚBLICOS");
-                Field rubro3 = new Field(3, "ABONOS DE SERVICIOS");
-                Field rubro4 = new Field(4, "MANTENIMIENTO DE PARTES COMÚNES");
-                Field rubro5 = new Field(5, "REPARACIONES EN UNIDADES FUNCIONALES");
-                Field rubro6 = new Field(6, "GASTOS BANCARIOS");
-                Field rubro7 = new Field(7, "GASTOS DE LIMPIEZA");
-                Field rubro8 = new Field(8, "GASTOS DE ADMINISTRACIÓN");
-                Field rubro9 = new Field(9, "OTROS");
+                Field rubro1 = new Field { Number = 1, Description = "DETALLE DE SUELDO Y CARGAS SOCIALES" };
+                Field rubro2 = new Field { Number = 2, Description = "SERVICIOS PÚBLICOS" };
+                Field rubro3 = new Field { Number = 3, Description = "ABONOS DE SERVICIOS" };
+                Field rubro4 = new Field { Number = 4, Description = "MANTENIMIENTO DE PARTES COMÚNES" };
+                Field rubro5 = new Field { Number = 5, Description = "REPARACIONES EN UNIDADES FUNCIONALES" };
+                Field rubro6 = new Field { Number = 6, Description = "GASTOS BANCARIOS" };
+                Field rubro7 = new Field { Number = 7, Description = "GASTOS DE LIMPIEZA" };
+                Field rubro8 = new Field { Number = 8, Description = "GASTOS DE ADMINISTRACIÓN" };
+                Field rubro9 = new Field { Number = 9, Description = "OTROS" };
 
                 List<Field> rubros = new List<Field>();
                 rubros.Add(rubro1);
@@ -113,7 +113,6 @@ namespace TenMan.Web.Data
                 await _context.SaveChangesAsync();
             }
         }
-
         private async Task CheckSpecialtiesAsync()
         {
             if (!_context.Specialties.Any())

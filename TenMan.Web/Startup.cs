@@ -57,6 +57,7 @@ namespace TenMan.Web
             services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IIFileHelper, FileHelper>();
+            services.AddScoped<IDefaultFieldsHelper, DefaultFieldsHelper>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

@@ -17,6 +17,7 @@ namespace TenMan.Web.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
+        private readonly IDefaultFieldsHelper _defaultFieldsHelper;
         private readonly MailService _mailService;
 
         public CommitteesController(
@@ -24,6 +25,7 @@ namespace TenMan.Web.Controllers
             ICombosHelper combosHelper,
             IConverterHelper converterHelper,
             IImageHelper imageHelper,
+            IDefaultFieldsHelper defaultFieldsHelper,
             MailService mailService
             )
         {
@@ -31,6 +33,7 @@ namespace TenMan.Web.Controllers
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
+            _defaultFieldsHelper = defaultFieldsHelper;
             _mailService = mailService;
         }
         public async Task<IActionResult> AddCost(int? id)
@@ -70,8 +73,7 @@ namespace TenMan.Web.Controllers
             }
             return View(model);
         }
-        /*
-        public IActionResult IndexCosts(int? id)
+        /*        public IActionResult IndexCosts(int? id)
         {
             var committee = _context.Committees
                 .Include(c => c.Costs)
@@ -91,6 +93,41 @@ namespace TenMan.Web.Controllers
             };
             return View(model);
         }*/
+        public async Task<IActionResult> AddField(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var committee = await _context.Committees.FindAsync(id);
+
+            if (committee == null)
+                return NotFound();
+
+            var model = new Field
+            {
+                CommitteeId = committee.Id,
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddField(Field model)
+        {
+            if (ModelState.IsValid)
+            {
+                var field = new Field
+                {
+                    Number = model.Number,
+                    Description = model.Description,
+                    Committee = _context.Committees.FindAsync(model.CommitteeId).Result
+                };
+                _context.Add(field);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.CommitteeId}");
+            }
+            return View(model);
+        }
         public async Task<IActionResult> AddUnit(int? id)
         {
             if (id == null)
@@ -413,6 +450,7 @@ namespace TenMan.Web.Controllers
             var committee = await _context.Committees
                 .Include(c => c.Units)
                 .ThenInclude(u => u.Requests)
+                .Include(c => c.Fields)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (committee == null)
@@ -434,10 +472,11 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Neighborhood,Address,Price")] Committee committee)
+        public async Task<IActionResult> Create([Bind("Id,Description,Neighborhood,Address,CUIT,SuterhKey")] Committee committee)
         {
             if (ModelState.IsValid)
             {
+                committee.Fields = _defaultFieldsHelper.GetRubrosDefault();
                 _context.Add(committee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -541,6 +580,7 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(u => u.CheckingAccount)
                 .Include(c => c.Fields)
                 .Include(c => c.Expenses)
+                .ThenInclude(c => c.ExpensesCosts)
                 .Include(c => c.Administrator)
                 .ThenInclude(a => a.User)
                 .FirstOrDefault(c => c.Id == id);
@@ -552,7 +592,7 @@ namespace TenMan.Web.Controllers
             List<UnitDescriptionLine> unitDescriptionLines = new List<UnitDescriptionLine>();
             List<ExpensesCost> expensesCosts = new List<ExpensesCost>();
 
-            foreach (Cost cost in committee.Costs)
+            foreach (ExpensesCost cost in committee.Costs)
             {
                 ExpensesCost ec = new ExpensesCost
                 {
@@ -599,7 +639,8 @@ namespace TenMan.Web.Controllers
             }
             exp.UnitDescriptionLines = unitDescriptionLines;
             return View(exp);
-        }
+        }*/
+        /*
         [HttpPost]
         public ActionResult CalculateExpenses(Expenses model, List<UnitDescriptionLine> unitLines)
         {
@@ -664,7 +705,7 @@ namespace TenMan.Web.Controllers
                 return RedirectToAction($"IndexExpenses/{model.CommitteeId}");
             }
             return View(model);
-        }
+        }*/
 
         public IActionResult IndexExpenses(int? id)
         {
@@ -682,7 +723,7 @@ namespace TenMan.Web.Controllers
             }
             IEnumerable<Expenses> expenses = _context.Expenses.Where(e => e.CommitteeId == committee.Id);
             return View(expenses);
-        }*/
+        }
         //public void CalculateExpenses(int? id)
         //{
         //    if (id == null)

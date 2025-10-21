@@ -4,47 +4,51 @@
     ViewData["Title"] = "Detalles del Consorcio";
 }
 
-<h2>Detalles del Consorcio</h2>
-
-<div>
-    <h4>Consorcio</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Neighborhood)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Neighborhood)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Address)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Address)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-    </dl>
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Detalles del Consorcio</p>
+    <p class="text-muted">Desde aquí puedes gestionar todo lo relacionado al consorcio</p>
 </div>
-<div>
-    <a asp-action="Edit" class="btn btn-warning" asp-route-id="@Model.Id">Editar</a> |
-    <a asp-controller="Committees" asp-action="AddUnit" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Unidad</a> |
-    <a asp-controller="Committees" asp-action="AddWorker" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Especialista</a> |
-    <a asp-controller="Committees" asp-action="IndexCosts" class="btn btn-warning" asp-route-id="@Model.Id">Administrar Costos</a> |
-    <a asp-controller="Committees" asp-action="CalculateExpenses" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a> |
-    @*<a asp-controller="Committees" asp-action="ViewExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |*@
-    <a asp-controller="Committees" asp-action="IndexExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |
-    <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Consorcio @Model.Description
+    </div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Neighborhood)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Neighborhood)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+        </dl>
+        <div class="btn-toolbar mb-3">
+            <div class="btn-group">
+                @*<a aspx-action="Edit" class="btn btn-warning" asp-route-id="@Model.Id">Editar</a>*@
+                <a asp-controller="Committees" asp-action="AddUnit" class="btn btn-default" asp-route-id="@Model.Id">Unidades</a>
+                <a asp-controller="Committees" asp-action="AddField" class="btn btn-default" asp-route-id="@Model.Id">Rubros de Gasto</a>
+                <a asp-controller="Committees" asp-action="AddWorker" class="btn btn-default" asp-route-id="@Model.Id">Contratistas</a>
+            </div>
+            <div class="btn-group me-2">
+                <a asp-controller="Committees" asp-action="IndexCosts" class="btn btn-secondary" asp-route-id="@Model.Id">Administrar Costos</a>
+                <a asp-controller="Committees" asp-action="CalculateExpenses" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a>
+                @*<a aspxxx-controller="Committees" asp-action="ViewExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |*@
+                <a asp-controller="Committees" asp-action="IndexExpenses" class="btn" asp-route-id="@Model.Id">Ver Expensas</a>
+                <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
+            </div>
+        </div>
+    </div>
 </div>
 @if (Model.Units.Count == 0)
 {
@@ -52,53 +56,103 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Floor)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Apartment)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Number)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Percentage)
-                </th>
-                <th>
-                    Solicitudes
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Units)
-            {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Floor)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Apartment)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Number)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Percentage)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Requests.Count)
-                </td>
-                <td>
-                    <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                    <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                    <a asp-action="DeleteUnit" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
+    <div class="panel panel-default">
+        <div class="panel-heading tenman-panel-heading2">
+            Unidades
+        </div>
+        <div class="panel-body">
+            <p>
+                <a asp-controller="Committees" asp-action="AddUnit" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Unidad</a>
+            </p>
+            <table class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Floor)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Apartment)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Number)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Units.FirstOrDefault().Percentage)
+                        </th>
+                        <th>
+                            Solicitudes
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Units)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Floor)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Apartment)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Number)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Percentage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Requests.Count)
+                            </td>
+                            <td>
+                                <a asp-action="EditUnit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="glyphicon glyphicon-pencil"></i></a> |
+                                <a asp-action="DetailsUnit" asp-route-id="@item.Id" class="btn btn-info btn-sm"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                                <a asp-action="DeleteUnit" asp-route-id="@item.Id" class="btn btn-danger btn-sm"><i class="glyphicon glyphicon-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Rubros
+    </div>
+    <div class="panel-body">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Fields.FirstOrDefault().Number)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Fields.FirstOrDefault().Description)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Fields)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <a asp-action="EditField" asp-route-id="@item.Id" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-pencil"></i></a> |
+                            <a asp-action="DetailsField" asp-route-id="@item.Id" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                            <a asp-action="DeleteField" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TenMan.Web.Data.Entities
 {
-    public class Cost
+    public class FixedCost
     {
         public int Id { get; set; }
 

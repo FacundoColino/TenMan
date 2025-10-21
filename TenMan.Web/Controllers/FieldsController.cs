@@ -54,15 +54,15 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Number,Description")] Field @field)
+        public async Task<IActionResult> Create([Bind("Id,Number,Description")] Field field)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@field);
+                _context.Add(field);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@field);
+            return View(field);
         }
 
         // GET: Fields/Edit/5

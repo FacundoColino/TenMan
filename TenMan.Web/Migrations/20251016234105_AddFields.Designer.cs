@@ -10,8 +10,8 @@ using TenMan.Web.Data;
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20251016224348_InicialConCorrecciones")]
-    partial class InicialConCorrecciones
+    [Migration("20251016234105_AddFields")]
+    partial class AddFields
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -345,7 +345,7 @@ namespace TenMan.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CommitteeId");
+                    b.Property<int>("CommitteeId");
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -740,7 +740,8 @@ namespace TenMan.Web.Migrations
                 {
                     b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
                         .WithMany("Fields")
-                        .HasForeignKey("CommitteeId");
+                        .HasForeignKey("CommitteeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TenMan.Web.Data.Entities.Expenses")
                         .WithMany("Fields")

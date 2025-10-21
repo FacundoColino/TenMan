@@ -46,7 +46,6 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
                                 <li><a asp-area="" asp-controller="Workers" asp-action="Index">Contratistas</a></li>
-                                <li><a asp-area="" asp-controller="Fields" asp-action="Index">Rubros</a></li>
                                 <li class="divider"></li>
                                 <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
                                 <li><a asp-area="" asp-controller="StatusTypes" asp-action="Index">Tipos de Estado</a></li>
@@ -150,11 +149,10 @@
                 <ul class="nav nav-pills nav-stacked">
                 <li class="@(IsActive("Tenants"))"><a asp-area="" asp-controller="Tenants" asp-action="Index">Locatarios</a></li>
                     <li><a asp-area="" asp-controller="Workers" asp-action="Index">Contratistas</a></li>
-                    <li><a asp-area="" asp-controller="Fields" asp-action="Index">Rubros</a></li>
                     <li><a class="divider"></a></li>
                     <li><a asp-area="" asp-controller="Specialties" asp-action="Index">Especialidades</a></li>
                     <li><a asp-area="" asp-controller="StatusTypes" asp-action="Index">Tipos de Estado</a></li>
-                    <li><a asp-area="" asp-controller="Committees" asp-action="Index">Consorcios</a></li>
+                <li class="@(IsActive("Committees"))"><a asp-area="" asp-controller="Committees" asp-action="Index">Consorcios</a></li>
                     <li><a asp-area="" asp-controller="Payments" asp-action="Index">Pagos</a></li>
                     <li><a class="divider"></a></li>
                     <li><a asp-area="" asp-controller="Reports" asp-action="CommitteeReports">Reportes de Consorcios</a></li>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20251016231819_InicialConCambios")]
+    partial class InicialConCambios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -343,7 +345,7 @@ namespace TenMan.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CommitteeId");
+                    b.Property<int?>("CommitteeId");
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -738,8 +740,7 @@ namespace TenMan.Web.Migrations
                 {
                     b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
                         .WithMany("Fields")
-                        .HasForeignKey("CommitteeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CommitteeId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Expenses")
                         .WithMany("Fields")
