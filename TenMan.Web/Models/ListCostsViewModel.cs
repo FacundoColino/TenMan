@@ -11,6 +11,6 @@ namespace TenMan.Web.Models
     {
         public int CommitteeId { get; set; }
         public IEnumerable<Data.Entities.Field> Fields { get; set; }
-        public IEnumerable<Cost> Costs { get; set; }
+        public IEnumerable<ExpensesCost> Costs { get; set; }
     }
 }

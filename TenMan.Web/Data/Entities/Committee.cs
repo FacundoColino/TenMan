@@ -50,6 +50,8 @@ namespace TenMan.Web.Data.Entities
 
         public ICollection<Field> Fields { get; set; }
 
+        public IList<Category> Categories { get; set; }
+
         public Administrator Administrator { get; set; }
 
     }

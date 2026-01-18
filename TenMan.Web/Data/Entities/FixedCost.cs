@@ -23,6 +23,12 @@ namespace TenMan.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Field Field { get; set; }
 
+        [Display(Name = "Categoria")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        [RegularExpression(@"^[a-zA-Z\s]+$",
+        ErrorMessage = "Solo se permiten letras")]
+        public  char Category { get; set; }
+
         public Committee Committee { get; set; }
     }
 }

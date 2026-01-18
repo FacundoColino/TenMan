@@ -1,15 +1,19 @@
-﻿@model TenMan.Web.Models.UnitViewModel
+﻿
+@model TenMan.Web.Models.UnitViewModel
 
 @{
     ViewData["Title"] = "Agregar Unidad";
 }
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Agregar Unidad</p>
+    <p class="text-muted">Ingresa los datos de la nueva Unidad. Siempre puedes editarla más tarde</p>
+</div>
 
-<h2>Agregar Unidad</h2>
-
-<h4>Unidad</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Nueva Unidad Funcional
+    </div>
+    <div class="panel-body">
         <form asp-action="AddUnit">
             <input type="hidden" asp-for="CommitteeId" />
             @*<input type="hidden" asp-for="TenantId" />*@
@@ -29,16 +33,19 @@
                 <input asp-for="Apartment" class="form-control" />
                 <span asp-validation-for="Apartment" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SquareMeters" class="control-label"></label>
-                <input asp-for="SquareMeters" class="form-control" />
-                <span asp-validation-for="SquareMeters" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Percentage" class="control-label"></label>
-                <input asp-for="Percentage" class="form-control" />
-                <span asp-validation-for="Percentage" class="text-danger"></span>
-            </div>
+            @for (int i = 0; i < Model.Categories.Count; i++)
+            {
+                <input type="hidden" asp-for="CategoriesPercents[i].CategoryId" />
+                <div class="form-group">
+                    @*<label asp-for="@cat" class="control-label"></label> *@
+                    <label class="control-label">@($"Categoria de Expensa - {Model.Categories[i].Letra} - {Model.Categories[i].Description}")</label>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoriesPercents[i].Percent" class="control-label"></label>
+                    <input asp-for="CategoriesPercents[i].Percent" class="form-control" />
+                    <span asp-validation-for="CategoriesPercents[i].Percent" class="text-danger"></span>
+                </div>
+            }
             <div class="form-group">
                 <label asp-for="Owner" class="control-label"></label>
                 <input asp-for="Owner" class="form-control" />
@@ -49,15 +56,11 @@
                 <select asp-for="TenantId" asp-items="Model.Tenants" class="form-control"></select>
                 @*<span asp-validation-for="TenantId" class="text-danger"></span>*@
             </div>
-
             <div class="form-group">
-                <input type="submit" value="Agregar" class="btn btn-primary" />
+                <input type="submit" value="Agregar" class="btn btn-default" />
+                <a asp-action="Details" asp-route-id="@Model.CommitteeId" class="btn btn-success">Volver a Consorcio</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Details" asp-route-id="@Model.CommitteeId" class="btn btn-success">Volver a Consorcio</a>
 </div>
 

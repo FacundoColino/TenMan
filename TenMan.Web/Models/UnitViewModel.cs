@@ -13,7 +13,9 @@ namespace TenMan.Web.Models
         [Display(Name = "Locatario")]
         //[Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un locatario.")]
         public int? TenantId { get; set; }
-        public int CommitteeId { get; set; }
+        public int? CommitteeId { get; set; }
         public IEnumerable<SelectListItem> Tenants { get; set; }
+        public IList<Category> Categories { get; set; } // Estas son las categorias generales y corresponden al Consorcio
+        public IList<CategoryPercent> CategoriesPercents { get; set; } // Categorias propias de la unidad con su porcentaje
     }
 }

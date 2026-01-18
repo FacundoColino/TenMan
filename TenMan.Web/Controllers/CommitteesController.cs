@@ -60,7 +60,7 @@ namespace TenMan.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var cost = new Cost
+                var cost = new FixedCost
                 {
                     Description = model.Description,
                     Amount = model.Amount,
@@ -73,10 +73,12 @@ namespace TenMan.Web.Controllers
             }
             return View(model);
         }
-        /*        public IActionResult IndexCosts(int? id)
+        /*
+         public IActionResult IndexCosts(int? id)
         {
             var committee = _context.Committees
-                .Include(c => c.Costs)
+                .Include(c => c.Expenses)
+                .ThenInclude(e => e.ExpensesCosts)
                 .ThenInclude(c => c.Field)
                 .FirstOrDefault(c => c.Id == id);
 
@@ -89,10 +91,47 @@ namespace TenMan.Web.Controllers
             {
                 Fields = _context.Fields,
                 CommitteeId = committee.Id,
-                Costs = committee.Costs
+                Costs = committee.Expenses.
             };
             return View(model);
         }*/
+        public async Task<IActionResult> AddExpenseCategory(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var committee = await _context.Committees.FindAsync(id);
+
+            if (committee == null)
+                return NotFound();
+
+            var model = new CategoryViewModel
+            {
+                CommitteeId = committee.Id,
+                Letras = new List<string> { "A", "B", "C", "D" }
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddExpenseCategory(CategoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var category = new Category
+                {
+                    Letra = model.Letra,
+                    Description = model.Description,
+                    Committee = _context.Committees.FindAsync(model.CommitteeId).Result,
+                };
+                _context.Add(category);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.CommitteeId}");
+            }
+            return View(model);
+        }
+
         public async Task<IActionResult> AddField(int? id)
         {
             if (id == null)
@@ -139,10 +178,27 @@ namespace TenMan.Web.Controllers
             if (committee == null)
                 return NotFound();
 
+            var categories = _context.Categories
+           .Where(cat => cat.Committee.Id == committee.Id)
+           .ToList();
+
+            List<CategoryPercent> catPercents = new List<CategoryPercent>();
+
+            foreach (var cat in committee.Categories)
+            {
+                CategoryPercent cp = new CategoryPercent();
+                cp.Category = cat;
+                cp.CategoryId = cat.Id;
+                cp.Percent = 0;
+                catPercents.Add(cp);
+            }
+
             var model = new UnitViewModel
             {
                 CommitteeId = committee.Id,
-                Tenants = _combosHelper.GetComboTenants()
+                Tenants = _combosHelper.GetComboTenants(),
+                Categories = categories,
+                CategoriesPercents = catPercents
             };
 
             return View(model);
@@ -165,14 +221,27 @@ namespace TenMan.Web.Controllers
                     Floor = model.Floor,
                     Apartment = model.Apartment,
                     SquareMeters = model.SquareMeters,
-                    Percentage = model.Percentage,
+                    Percentage = model.Percentage, // Esto debería ser una lista 
+                    CategoriesPercents = new List<CategoryPercent>(),
                     Owner = model.Owner,
                     CheckingAccount = account,
                     Committee = _context.Committees.FindAsync(model.CommitteeId).Result,
                 };
+
                 if (model.TenantId != 0)
                 {
                     unit.Tenant = _context.Tenants.FindAsync(model.TenantId).Result;
+                }
+                foreach (var item in model.CategoriesPercents)
+                {
+                    if (item.Percent.HasValue && item.Percent > 0)
+                    {
+                        unit.CategoriesPercents.Add(new CategoryPercent
+                        {
+                            CategoryId = item.CategoryId,
+                            Percent = item.Percent.Value
+                        });
+                    }
                 }
                 _context.Add(unit);
                 await _context.SaveChangesAsync();
@@ -192,7 +261,11 @@ namespace TenMan.Web.Controllers
                         .ThenInclude(t => t.User)
             .Include(u => u.Committee)
             .Include(u => u.Requests)
-                .FirstOrDefaultAsync(u => u.Id == id);
+            .Include(u => u.Committee.Categories)
+            .Include(u => u.CategoriesPercents)
+            .ThenInclude(cp => cp.Category)
+
+            .FirstOrDefaultAsync(u => u.Id == id);
 
             if (unit == null)
                 return NotFound();
@@ -206,7 +279,9 @@ namespace TenMan.Web.Controllers
                 Floor = unit.Floor,
                 Number = unit.Number,
                 Owner = unit.Owner,
-                Percentage = unit.Percentage,
+                Percentage = unit.Percentage, //Esto debería ser una lista
+                CategoriesPercents = unit.CategoriesPercents,
+                Categories = unit.Committee.Categories,
                 Requests = unit.Requests,
                 SquareMeters = unit.SquareMeters,
                 TenantId = (unit.Tenant != null ? unit.Tenant.Id : 0),
@@ -219,20 +294,35 @@ namespace TenMan.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var unit = new Unit
+                var unit = await _context.Units
+                .Include(u => u.CheckingAccount)
+                .Include(u => u.Tenant)
+                    .ThenInclude(t => t.User)
+                .Include(u => u.Committee)
+                .Include(u => u.Requests)
+                .Include(u => u.Committee.Categories)
+            .Include(u => u.CategoriesPercents)
+                    .ThenInclude(cp => cp.Category)
+               .FirstOrDefaultAsync(u => u.Id == model.Id);
+
+                foreach (var cat in model.CategoriesPercents)
                 {
-                    Id = model.Id,
-                    Apartment = model.Apartment,
-                    CheckingAccount = model.CheckingAccount,
-                    Committee = model.Committee,
-                    Floor = model.Floor,
-                    Number = model.Number,
-                    Owner = model.Owner,
-                    Percentage = model.Percentage,
-                    Tenant = await _context.Tenants.FindAsync(model.TenantId),
-                    Requests = model.Requests,
-                    SquareMeters = model.SquareMeters
-                };
+                    var cp = unit.CategoriesPercents
+                        .FirstOrDefault(x => x.CategoryId == cat.CategoryId);
+
+                    if (cp == null)
+                    {
+                        unit.CategoriesPercents.Add(new CategoryPercent
+                        {
+                            CategoryId = cat.CategoryId,
+                            Percent = cat.Percent
+                        });
+                    }
+                    else
+                    {
+                        cp.Percent = cat.Percent;
+                    }
+                }
 
                 _context.Units.Update(unit);
                 await _context.SaveChangesAsync();
@@ -451,6 +541,7 @@ namespace TenMan.Web.Controllers
                 .Include(c => c.Units)
                 .ThenInclude(u => u.Requests)
                 .Include(c => c.Fields)
+                .Include(c => c.Categories)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (committee == null)
@@ -706,7 +797,6 @@ namespace TenMan.Web.Controllers
             }
             return View(model);
         }*/
-
         public IActionResult IndexExpenses(int? id)
         {
             var committee = _context.Committees

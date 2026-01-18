@@ -41,10 +41,11 @@
                 <a asp-controller="Committees" asp-action="AddWorker" class="btn btn-default" asp-route-id="@Model.Id">Contratistas</a>
             </div>
             <div class="btn-group me-2">
-                <a asp-controller="Committees" asp-action="IndexCosts" class="btn btn-secondary" asp-route-id="@Model.Id">Administrar Costos</a>
+                @*<a asp-controller="Expenses" asp-action="CurrentExpense" class="btn btn-secondary" asp-route-id="@Model.Expenses.Where(e => e.Current = true).First().Id">Liquidación Actual</a>*@
                 <a asp-controller="Committees" asp-action="CalculateExpenses" class="btn btn-danger" asp-route-id="@Model.Id">Calcular Expensas</a>
                 @*<a aspxxx-controller="Committees" asp-action="ViewExpenses" class="btn btn-info" asp-route-id="@Model.Id">Ver Expensas</a> |*@
                 <a asp-controller="Committees" asp-action="IndexExpenses" class="btn" asp-route-id="@Model.Id">Ver Expensas</a>
+                <a asp-controller="Expenses" asp-action="Index" class="btn" asp-route-id="@Model.Id">Ver Expensas 2</a>
                 <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
             </div>
         </div>
@@ -118,6 +119,59 @@ else
 }
 <div class="panel panel-default">
     <div class="panel-heading tenman-panel-heading2">
+        Categorias de Expensas
+    </div>
+    <div class="panel-body">
+        <p>
+            <a asp-controller="Committees" asp-action="AddExpenseCategory" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Categoria</a>
+        </p>
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.FirstOrDefault().Letra)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Categories.FirstOrDefault().Description)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Categories.Count == 0)
+                {
+                      <tr>
+                            <td>
+                                Aún no has ingresado ninguna categoría de Expensas
+                            </td>
+                            </tr>
+                }
+                else
+                {
+                    @foreach (var item in Model.Categories)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Letra)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                <a asp-action="EditCategory" asp-route-id="@item.Id" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-pencil"></i></a> |
+                                <a asp-action="DetailsCategory" asp-route-id="@item.Id" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                                <a asp-action="DeleteCategory" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+
+                }
+                </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
         Rubros
     </div>
     <div class="panel-body">
@@ -153,6 +207,4 @@ else
             </tbody>
         </table>
     </div>
-</div>
-
 </div>

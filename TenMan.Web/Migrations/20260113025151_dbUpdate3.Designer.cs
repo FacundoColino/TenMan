@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260113025151_dbUpdate3")]
+    partial class dbUpdate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,13 +233,13 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.CategoryPercent", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("CategoryId");
 
-                    b.Property<double?>("Percent");
+                    b.Property<double>("Percent");
 
                     b.Property<int?>("UnitId");
 
@@ -342,7 +344,9 @@ namespace TenMan.Web.Migrations
 
                     b.Property<decimal>("Amount");
 
-                    b.Property<int>("CategoryId");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -352,8 +356,6 @@ namespace TenMan.Web.Migrations
                     b.Property<int>("FieldId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ExpensesId");
 
@@ -783,11 +785,6 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.ExpensesCost", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("TenMan.Web.Data.Entities.Expenses", "Expenses")
                         .WithMany("ExpensesCosts")
                         .HasForeignKey("ExpensesId");

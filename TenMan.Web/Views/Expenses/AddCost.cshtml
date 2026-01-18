@@ -1,0 +1,50 @@
+﻿@model TenMan.Web.Models.AddCostViewModel
+
+@{
+    ViewData["Title"] = "Crear";
+}
+
+<h2>Agregar Costo XSSS</h2>
+
+<h4>Costo</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddCost">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ExpenseId" />
+
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Rubro</label>
+                <select asp-for="FieldId" asp-items="Model.Fields" class="form-control"></select>
+                <span asp-validation-for="FieldId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Categoria</label>
+                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Crear" asp-route-id="@Model.ExpenseId" class="btn btn-default" />
+                <a asp-action="Details" asp-route-id="@Model.ExpenseId" class="btn btn-success">Volver al Consorcio</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

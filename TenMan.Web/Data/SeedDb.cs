@@ -108,7 +108,15 @@ namespace TenMan.Web.Data
                 rubros.Add(rubro8);
                 rubros.Add(rubro9);
 
-                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales",CUIT = "11111111", SuterhKey="2837283", Fields = rubros, Administrator = admin });
+                List<Category> categories = new List<Category>();
+                Category category = new Category
+                {
+                    Letra = "A",
+                    Description = "Gastos generales comúnes a todas las unidades"
+                };
+                categories.Add(category);
+
+                _context.Committees.Add(new Entities.Committee { Description = "Consorcio Inicial", Address = "Aguilar 2497", Neighborhood = "Colegiales",CUIT = "11111111", SuterhKey="2837283", Fields = rubros, Categories = categories, Administrator = admin });
 
                 await _context.SaveChangesAsync();
             }

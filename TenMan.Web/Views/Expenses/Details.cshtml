@@ -1,0 +1,99 @@
+﻿@model TenMan.Web.Data.Entities.Expenses
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Expenses</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Month)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Month)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt>
+            Consorcio
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Committee.Address)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@if (Model.ExpensesCosts.Count == 0)
+{
+    <h5>Todavía no se han cargado gastos</h5>
+}
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Gastos
+    </div>
+    <div class="panel-body">
+        <p>
+            <a asp-controller="Expenses" asp-action="AddCost" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Costo</a>
+        </p>
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExpensesCosts.FirstOrDefault().Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExpensesCosts.FirstOrDefault().Amount)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExpensesCosts.FirstOrDefault().Category)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ExpensesCosts.FirstOrDefault().Category.Description)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ExpensesCosts)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Amount)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Letra)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Category.Description)
+                        </td>
+                        <td>
+                            <a asp-action="EditField" asp-route-id="@item.Id" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-pencil"></i></a> |
+                            <a asp-action="DetailsField" asp-route-id="@item.Id" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                            <a asp-action="DeleteField" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

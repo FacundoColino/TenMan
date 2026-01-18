@@ -10,6 +10,8 @@ namespace TenMan.Web.Data.Entities
     {
         public int Id { get; set; }
 
+        public int CategoryId { get; set; }
+
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }
@@ -22,6 +24,12 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Rubro")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Field Field { get; set; }
+
+        [Display(Name = "Categoria")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        //[RegularExpression(@"^[a-zA-Z\s]+$",
+        //ErrorMessage = "Solo se permiten letras")]
+        public Category Category { get; set; }
 
         public Expenses Expenses { get; set; }
     }

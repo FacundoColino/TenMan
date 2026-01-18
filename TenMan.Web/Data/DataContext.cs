@@ -5,7 +5,8 @@ using TenMan.Web.Models;
 
 namespace TenMan.Web.Data
 {
-    public class DataContext : IdentityDbContext
+    // public class DataContext : IdentityDbContext
+    public class DataContext : IdentityDbContext<User> // Modificado en Enero 2026
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -13,10 +14,11 @@ namespace TenMan.Web.Data
 
         //Los DbSet son para poder llamar a _context.<Database>
         public DbSet<Administrator> Administrators { get; set; }
-
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<CategoryPercent> CategoriesPercent { get; set; }
         public DbSet<CheckingAccount> CheckingAccounts { get; set; }
         public DbSet<Committee> Committees { get; set; }
-        public DbSet<Cost> Costs { get; set; }
+        public DbSet<FixedCost> FixedCosts { get; set; }
         public DbSet<Expenses> Expenses { get; set; }
         public DbSet<ExpensesCost> ExpensesCosts { get; set; }
         public DbSet<Field> Fields { get; set; }

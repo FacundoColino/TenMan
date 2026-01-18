@@ -1,0 +1,81 @@
+﻿@model TenMan.Web.Data.Entities.Expenses
+
+@{
+    ViewData["Title"] = "Liquidación Actual";
+}
+
+<h2>Liquidaciób actual</h2>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <strong>Período:</strong> @Model.Year @Model.Month<br />
+        <strong>Estado:</strong>
+        <span class="badge bg-success">Abierta</span>
+    </div>
+</div>
+
+@if (Model.Current)
+{
+    <a asp-action="CreateCost"
+       asp-route-expensesId="@Model.Id"
+       class="btn btn-primary mb-3">
+        ➕ Agregar gasto
+    </a>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Concepto</th>
+            <th class="text-end">Monto</th>
+            <th class="text-end">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cost in Model.ExpensesCosts)
+        {
+            <tr>
+                <td>@cost.Description</td>
+                <td class="text-end">@cost.Amount.ToString("C")</td>
+                <td class="text-end">
+                    @if (Model.Current)
+                    {
+                        <a asp-action="EditCost"
+                           asp-route-id="@cost.Id"
+                           class="btn btn-sm btn-warning">
+                            Editar
+                        </a>
+
+                        <a asp-action="DeleteCost"
+                           asp-route-id="@cost.Id"
+                           class="btn btn-sm btn-danger">
+                            Eliminar
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Total</th>
+            <th class="text-end">
+                @Model.ExpensesCosts.Sum(c => c.Amount).ToString("C")
+            </th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+@if (Model.Current)
+{
+    <form asp-action="Close" method="post" class="mt-4">
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <button type="submit"
+                class="btn btn-danger"
+                onclick="return confirm('¿Cerrar la expensa? No podrá modificarse.')">
+            🔒 Cerrar expensa
+        </button>
+    </form>
+}

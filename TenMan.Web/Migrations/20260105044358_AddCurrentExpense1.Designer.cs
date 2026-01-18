@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TenMan.Web.Data;
 
 namespace TenMan.Web.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260105044358_AddCurrentExpense1")]
+    partial class AddCurrentExpense1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,49 +209,6 @@ namespace TenMan.Web.Migrations
                     b.ToTable("Administrators");
                 });
 
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CommitteeId");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("Letra")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommitteeId");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.CategoryPercent", b =>
-                {
-                    b.Property<int?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CategoryId");
-
-                    b.Property<double?>("Percent");
-
-                    b.Property<int?>("UnitId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("UnitId");
-
-                    b.ToTable("CategoriesPercent");
-                });
-
             modelBuilder.Entity("TenMan.Web.Data.Entities.CheckingAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -342,7 +301,9 @@ namespace TenMan.Web.Migrations
 
                     b.Property<decimal>("Amount");
 
-                    b.Property<int>("CategoryId");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
 
                     b.Property<string>("Description")
                         .IsRequired();
@@ -352,8 +313,6 @@ namespace TenMan.Web.Migrations
                     b.Property<int>("FieldId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("ExpensesId");
 
@@ -748,24 +707,6 @@ namespace TenMan.Web.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("TenMan.Web.Data.Entities.Category", b =>
-                {
-                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
-                        .WithMany("Categories")
-                        .HasForeignKey("CommitteeId");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.CategoryPercent", b =>
-                {
-                    b.HasOne("TenMan.Web.Data.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
-                        .WithMany("CategoriesPercents")
-                        .HasForeignKey("UnitId");
-                });
-
             modelBuilder.Entity("TenMan.Web.Data.Entities.Committee", b =>
                 {
                     b.HasOne("TenMan.Web.Data.Entities.Administrator", "Administrator")
@@ -783,11 +724,6 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.ExpensesCost", b =>
                 {
-                    b.HasOne("TenMan.Web.Data.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("TenMan.Web.Data.Entities.Expenses", "Expenses")
                         .WithMany("ExpensesCosts")
                         .HasForeignKey("ExpensesId");

@@ -29,6 +29,7 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Metros Cuadrados")]
         public int SquareMeters { get; set; }
 
+        // Aqui sería mejor crear un objeto porcentaje con el valor float del porcentaje y si está activo o no, por ejemplo si tiene %D o %C
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         [Display(Name = "Porcentaje")]
         [Range(0,100)]
@@ -38,10 +39,9 @@ namespace TenMan.Web.Data.Entities
         public string UnitFullName => $"{Number} - {Floor}{Apartment}";
 
         public Committee Committee { get; set; }
-
         public CheckingAccount CheckingAccount { get; set; }
         public  Tenant Tenant { get; set; }
-
         public ICollection<Request> Requests { get; set; }
+        public IList<CategoryPercent> CategoriesPercents { get; set; }
     }
 }

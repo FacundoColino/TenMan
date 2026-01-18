@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TenMan.Web.Data;
+using TenMan.Web.Data.Entities;
 
 namespace TenMan.Web.Helpers
 {
@@ -81,6 +82,74 @@ namespace TenMan.Web.Helpers
             list.Insert(0, new SelectListItem
             {
                 Text = "Seleccione el rubro",
+                Value = "0"
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboCategories(int id)
+        {
+            var list = _context.Categories
+                .Where(c => c.Committee.Id == id)
+                .Select(c => new SelectListItem
+            {
+                Text = c.Description,
+                Value = c.Id.ToString()
+            }).OrderBy(c => c.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione la categoría",
+                Value = "0"
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboCategories2(int id)
+        {
+            var categories = new List<string>
+        {
+            "A%",
+            "B%",
+            "C%",
+            "D%",
+            "E%",
+        };
+
+            var list = categories
+                .OrderBy(c => c)
+                .Select(c => new SelectListItem
+                {
+                    Text = c,
+                    Value = c
+                })
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione una categoría]",
+                Value = ""
+            });
+
+            return list;
+        }
+        public IEnumerable<SelectListItem> GetComboCategories3(int id)
+        {
+            _context.Categories.Where(cat => cat.Committee.Id == id);
+            var query = from c in _context.Categories
+                        where c.Committee.Id == id
+                        select new SelectListItem
+                        {
+                            Text = c.Description.ToString(),
+                            Value = c.Id.ToString()
+                        };
+
+            var list = query.ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione una categoría",
                 Value = "0"
             });
 

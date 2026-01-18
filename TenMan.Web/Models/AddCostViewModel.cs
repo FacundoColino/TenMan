@@ -10,8 +10,13 @@ namespace TenMan.Web.Models
 {
     public class AddCostViewModel
     {
+        /* 
+         Esta clase se utiliza para los FixedCost del Consorcio y los ExpenseCosts de las expensas
+         */
         public int FieldId { get; set; }
         public int CommitteeId { get; set; }
+        public int ExpenseId { get; set; }
+        public int CategoryId { get; set; }
 
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -22,5 +27,6 @@ namespace TenMan.Web.Models
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Amount { get; set; }
         public IEnumerable<SelectListItem> Fields { get; set; }
+        public IEnumerable<SelectListItem> Categories { get; set; }
     }
 }

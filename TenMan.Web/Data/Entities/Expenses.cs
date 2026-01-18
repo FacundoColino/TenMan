@@ -31,11 +31,14 @@ namespace TenMan.Web.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime DateLocal => Date.ToLocalTime();
 
-        public IEnumerable<ExpensesCost> ExpensesCosts { get; set; }
+        [Display(Name = "Estado")]
+        public bool Current {  get; set; }
+
+        public ICollection<ExpensesCost> ExpensesCosts { get; set; }
         //public IEnumerable<string> Notes { get; set; }
         public Committee Committee { get; set; }
         public int CommitteeId { get; set; }
-        public IEnumerable<UnitDescriptionLine> UnitDescriptionLines { get; set; }
+        public ICollection<UnitDescriptionLine> UnitDescriptionLines { get; set; }
         public IEnumerable<Field> Fields { get; set; }
         public decimal GetTotal()
         {

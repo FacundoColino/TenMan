@@ -11,5 +11,6 @@ namespace TenMan.Web.Helpers
         IEnumerable<SelectListItem> GetComboWorkers();
         IEnumerable<SelectListItem> GetComboUnits(int id);
         IEnumerable<SelectListItem> GetComboStatusTypes();
+        IEnumerable<SelectListItem> GetComboCategories(int id);
     }
 }
