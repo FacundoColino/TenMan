@@ -1,0 +1,62 @@
+﻿@model TenMan.Web.Models.AddAdminViewModel
+
+@{
+    ViewData["Title"] = "Agregar Administrador";
+}
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Agregar Administrador</p>
+    <p class="text-muted">Ingrese los datos del nuevo Administrador</p>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Nuevo Administrador
+    </div>
+    <div class="panel-body">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CUIT" class="control-label"></label>
+                <input asp-for="CUIT" class="form-control" />
+                <span asp-validation-for="CUIT" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RegisterNumber" class="control-label"></label>
+                <input asp-for="RegisterNumber" class="form-control" />
+                <span asp-validation-for="RegisterNumber" class="text-danger"></span>
+            </div>
+
+            <partial name="_User" />
+
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordConfirm" class="control-label"></label>
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

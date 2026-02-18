@@ -1,0 +1,63 @@
+﻿@model TenMan.Web.Models.RegisterUserViewModel
+
+@{
+    ViewData["Title"] = "Crear Usuario";
+}
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Creación de usuario</p>
+    <p class="text-muted">Desde aquí puedes registrate para acceder al sistema</p>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+            <i class="glyphicon glyphicon-user"></i><b>  Nuevo usuario</b>
+    </div>
+    <div class="panel-body">
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <partial name="_User" />
+
+            <div class="form-group">
+                <label class="control-label">Rol</label>
+            @Html.DropDownListFor(m => m.SelectedRole,
+            new SelectList(new[]
+            {
+                        new { Value = "Tenant", Text = "Locatario" },
+                        new { Value = "Worker", Text = "Proveedor de servicios" },
+                        new { Value = "Administrator", Text = "Administrador de Consorcio" }
+                        }, "Value", "Text"),
+                        "-- Seleccione tipo de usuario --",
+                        new { @id = "userType", @class = "form-control" })
+             </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PasswordConfirm" class="control-label"></label>
+                <input asp-for="PasswordConfirm" class="form-control" />
+                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Crear" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Volver a la lista</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

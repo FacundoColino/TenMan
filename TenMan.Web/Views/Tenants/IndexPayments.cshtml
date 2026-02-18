@@ -13,10 +13,16 @@
     <thead>
         <tr>
             <th>
+                Estado
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.DateLocal)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PdfFile)
@@ -31,12 +37,30 @@
         @foreach (var item in Model)
         {
         <tr>
+                <td>
+                    @{
+                        string icono = "~/images/amarillo.png";
+
+                        if (item.Status == "Rechazado")
+                        {
+                            icono = "~/images/rojo.png";
+                        }
+                        else if (item.Status == "Aprobado")
+                        {
+                            icono = "~/images/verde.png";
+                        }
+                    }
+                    <img src="@Url.Content(icono)" alt="" height='18' width='18'>
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Amount)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
             <td>
                 @{
                     string pdfLink = item.PdfFile;

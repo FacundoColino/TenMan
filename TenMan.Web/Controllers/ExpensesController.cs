@@ -9,6 +9,7 @@ using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Helpers;
 using TenMan.Web.Models;
+using TenMan.Web.Services.ExpensesServices;
 
 namespace TenMan.Web.Controllers
 {
@@ -16,11 +17,17 @@ namespace TenMan.Web.Controllers
     {
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
+        private readonly IImageHelper _imageHelper;
 
-        public ExpensesController(DataContext context, ICombosHelper combosHelper)
+        public ExpensesController(
+            DataContext context, 
+            ICombosHelper combosHelper,
+            IImageHelper imageHelper
+            )
         {
             _context = context;
             _combosHelper = combosHelper;
+            _imageHelper = imageHelper;
         }
 
         // GET: Expenses
@@ -68,6 +75,7 @@ namespace TenMan.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                expenses.Current = true;
                 _context.Add(expenses);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -140,6 +148,7 @@ namespace TenMan.Web.Controllers
             var expenses = await _context.Expenses
                 .Include(e => e.Committee)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (expenses == null)
             {
                 return NotFound();
@@ -147,7 +156,52 @@ namespace TenMan.Web.Controllers
 
             return View(expenses);
         }
+        public async Task<IActionResult> AddReceiptImage(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
+            var expCost = await _context.ExpensesCosts.FindAsync(id.Value);
+            if (expCost == null)
+            {
+                return NotFound();
+            }
+
+            var model = new ReceiptImageViewModel
+            {
+                ExpenseCostId = expCost.Id,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddReceiptImage(ReceiptImageViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = string.Empty;
+
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+                }
+
+                var receiptImage = new ReceiptImage
+                {
+                    ImageUrl = path,
+                    ExpensesCost = await _context.ExpensesCosts.FindAsync(model.ExpenseCostId)
+                };
+
+                _context.ReceiptImages.Add(receiptImage);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(Details)}/{model.ExpenseCostId}");
+            }
+
+            return View(model);
+        }
         public IActionResult CurrentExpense(int id)
         {
             var expenses = _context.Expenses
@@ -222,6 +276,33 @@ namespace TenMan.Web.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Details", new { id = expensesId });
+        }
+        public async Task<IActionResult> DetailsCost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var expCost = await _context.ExpensesCosts
+            .Include(c => c.Expenses)
+            .Include(c => c.Category)
+            .Include(c => c.ReceiptImages)
+            .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (expCost == null)
+                return NotFound();
+
+            return View(expCost);
+        }
+        public async Task<IActionResult> ViewSettlement(int id)
+        {
+            var period = await _context.ExpensesPeriods
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (period == null)
+                return NotFound();
+
+            return Content(period.HtmlSnapshot, "text/html");
         }
         private bool ExpensesExists(int id)
         {

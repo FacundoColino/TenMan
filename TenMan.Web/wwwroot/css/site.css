@@ -152,3 +152,12 @@ body {
 .nav-retro {
     background: linear-gradient(#fff, #dcdcdc);
 }
+.table-tenman.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #eef7f0;
+}
+.table-tenman.table-hover > tbody > tr:hover {
+    background-color: #dff0e4;
+}
+.table-tenman thead {
+    background-color: #eef7f0;
+}

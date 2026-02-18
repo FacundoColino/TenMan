@@ -8,6 +8,14 @@ namespace TenMan.Web.Data.Entities
 {
     public class Committee
     {
+        public Committee()
+        {
+            Expenses = new List<Expenses>();
+            FixedCosts = new List<FixedCost>();
+            Units = new List<Unit>();
+            Categories = new List<Category>();
+            Fields = new List<Field>();
+        }
         public int Id { get; set; }
 
         [Display(Name = "Descripción")]

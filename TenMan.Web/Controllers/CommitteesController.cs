@@ -1,13 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Data.Entities.Settings;
 using TenMan.Web.Helpers;
 using TenMan.Web.Models;
+using TenMan.Web.Models.Settings;
+using TenMan.Web.Services;
+using TenMan.Web.Services.ExpensesServices;
+using Field = TenMan.Web.Data.Entities.Field;
 
 namespace TenMan.Web.Controllers
 {
@@ -18,6 +26,9 @@ namespace TenMan.Web.Controllers
         private readonly IConverterHelper _converterHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IDefaultFieldsHelper _defaultFieldsHelper;
+        private readonly IDefaultCategoriesHelper _defaultCategoriesHelper;
+        private readonly IExpenseSummaryBuilder _expenseSummaryBuilder;
+        private readonly IViewRenderService _viewRenderService;
         private readonly MailService _mailService;
 
         public CommitteesController(
@@ -26,6 +37,9 @@ namespace TenMan.Web.Controllers
             IConverterHelper converterHelper,
             IImageHelper imageHelper,
             IDefaultFieldsHelper defaultFieldsHelper,
+            IDefaultCategoriesHelper defaultCategoriesHelper,
+            IExpenseSummaryBuilder expenseSummaryBuilder,
+            IViewRenderService viewRenderService,
             MailService mailService
             )
         {
@@ -33,7 +47,10 @@ namespace TenMan.Web.Controllers
             _combosHelper = combosHelper;
             _converterHelper = converterHelper;
             _imageHelper = imageHelper;
+            _defaultCategoriesHelper = defaultCategoriesHelper;
             _defaultFieldsHelper = defaultFieldsHelper;
+            _expenseSummaryBuilder = expenseSummaryBuilder;
+            _viewRenderService = viewRenderService;
             _mailService = mailService;
         }
         public async Task<IActionResult> AddCost(int? id)
@@ -248,6 +265,34 @@ namespace TenMan.Web.Controllers
                 return RedirectToAction($"Details/{model.CommitteeId}");
             }
             return View(model);
+        }
+
+        public async Task<IActionResult> Balance(int? id)
+        {
+            var committee = _context.Committees
+         .Where(c => c.Id == id)
+         .Select(c => new BalanceIndexViewModel
+         {
+             CommitteeName = c.Description,
+             UnitsBalances = c.Units.Select(u => new BalanceViewModel
+             {
+                 UnitId = u.Id,
+                 UnitNumber = u.Number,
+                 OwnerName = u.Owner,
+
+                 AccountNumber = u.CheckingAccount.Number,
+                 PreviousBalance = u.CheckingAccount.PreviousBalance,
+                 YourPayment = u.CheckingAccount.YourPayment,
+                 PendingBalance = u.CheckingAccount.PendingBalance,
+                 Balance = u.CheckingAccount.Balance
+             }).ToList()
+         })
+         .FirstOrDefault();
+
+            if (committee == null)
+                return NotFound();
+
+            return View(committee);
         }
         public async Task<IActionResult> EditUnit(int? id)
         {
@@ -526,7 +571,21 @@ namespace TenMan.Web.Controllers
         // GET: Committees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Committees.ToListAsync());
+            string name = User.Identity.Name;
+            //int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (User.IsInRole("Administrator"))
+            {
+                return View(await _context.Committees
+                    .Where(c => c.Administrator.User.UserName == name)
+                    .ToListAsync());
+            }
+            else if (User.IsInRole("SuperAdmin"))
+            {
+                return View(await _context.Committees
+                    .ToListAsync());
+            }
+            return Forbid();
         }
 
         // GET: Committees/Details/5
@@ -542,6 +601,8 @@ namespace TenMan.Web.Controllers
                 .ThenInclude(u => u.Requests)
                 .Include(c => c.Fields)
                 .Include(c => c.Categories)
+                .Include(c => c.Administrator)
+                .ThenInclude(a => a.User)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (committee == null)
@@ -555,7 +616,11 @@ namespace TenMan.Web.Controllers
         // GET: Committees/Create
         public IActionResult Create()
         {
-            return View();
+            CommitteeViewModel model = new CommitteeViewModel
+            {
+                Administrators = _combosHelper.GetComboAdministrators(),
+            };
+            return View(model);
         }
 
         // POST: Committees/Create
@@ -563,16 +628,38 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Neighborhood,Address,CUIT,SuterhKey")] Committee committee)
+        public async Task<IActionResult> Create(CommitteeViewModel model)
         {
             if (ModelState.IsValid)
             {
-                committee.Fields = _defaultFieldsHelper.GetRubrosDefault();
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var administrator = new Administrator();
+
+                if (User.IsInRole("SuperAdmin"))
+                    administrator = await _context.Administrators.FindAsync(model.AdministratorId);
+
+                else if (User.IsInRole("Administrador"))
+                {
+                    administrator = await _context.Administrators.FindAsync(userId);
+                }
+
+                Committee committee = new Committee
+                {
+                    Fields = _defaultFieldsHelper.GetRubrosDefault(),
+                    Categories = _defaultCategoriesHelper.GetCategoriesDefault(),
+                    Address = model.Address,
+                    Administrator = administrator,
+                    CUIT = model.CUIT,
+                    Description = model.Description,
+                    Neighborhood = model.Neighborhood,
+                    SuterhKey = model.SuterhKey
+                };
                 _context.Add(committee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(committee);
+            return View(model);
         }
 
         // GET: Committees/Edit/5
@@ -659,6 +746,92 @@ namespace TenMan.Web.Controllers
         {
             return _context.Committees.Any(e => e.Id == id);
         }
+        public ActionResult ExpenseSummary(int id)
+        {
+            // Muestra el resumen actual, todavía no se calculó nada.
+            var esvm = _expenseSummaryBuilder.Build(id); //Cambiar todo por la id del consorcio y luego llamar a la expensa que esta abierta o esto de calcular expensas ponerlo en el index de Expensas.
+            //GenerateSettlement(esvm); // Deberiamos llamar este metodo cuando se cierra la expensa
+            return View(esvm);
+        }
+        [HttpPost]
+        public void CalculateExpenses(int expenseId)
+        {
+            var expense = _context.Expenses
+                .Include(e => e.ExpensesCosts)
+                .Include(e => e.Committee)
+                    .ThenInclude(c => c.Units)
+                        .ThenInclude(u => u.CategoriesPercents)
+                .Include(e => e.Committee)
+                    .ThenInclude(c => c.Units)
+                        .ThenInclude(u => u.CheckingAccount)
+                .FirstOrDefault(e => e.Id == expenseId);
+
+            if (expense == null)
+                throw new Exception("Expensa no encontrada");
+
+            // Totales por categoría
+            var totalsByCategory = expense.ExpensesCosts
+                .GroupBy(ec => ec.CategoryId)
+                .Select(g => new
+                {
+                    CategoryId = g.Key,
+                    Total = g.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            // Recorrer unidades
+            foreach (var unit in expense.Committee.Units)
+            {
+                decimal totalForUnit = 0;
+
+                foreach (var categoryTotal in totalsByCategory)
+                {
+                    var percent = unit.CategoriesPercents
+                        .FirstOrDefault(cp => cp.CategoryId == categoryTotal.CategoryId);
+
+                    if (percent != null)
+                    {
+                        var amount = categoryTotal.Total * ((decimal)percent.Percent / 100m);
+                        totalForUnit += amount;
+                    }
+                }
+
+                // Actualizar cuenta corriente
+                var account = unit.CheckingAccount;
+
+                account.PreviousBalance = account.Balance;
+                account.PendingBalance += totalForUnit;
+                account.Balance = account.PreviousBalance + account.PendingBalance;
+            }
+
+            ExpenseSummaryViewModel esvm = new ExpenseSummaryViewModel {
+                Expense = expense,
+                Committee = expense.Committee,
+            };
+            GenerateSettlement(esvm);
+            _context.SaveChanges();
+        }
+        // Guardar Snapshot HTML de la expensa 
+        public async Task GenerateSettlement(ExpenseSummaryViewModel viewModel)
+        {
+
+            var html = await _viewRenderService.RenderToStringAsync(
+                "Expenses/SettlementTemplate",
+                viewModel);
+
+            var period = new ExpensePeriod
+            {
+                CommitteeId = viewModel.Committee.Id,
+                Year = viewModel.Expense.Year,
+                Month = viewModel.Expense.Month,
+                Date = viewModel.Expense.Date,
+                Current = false,
+                HtmlSnapshot = html
+            };
+
+            _context.ExpensesPeriods.Add(period);
+            await _context.SaveChangesAsync();
+        }
         /*
         public ActionResult CalculateExpenses(int? id)
         {
@@ -683,7 +856,7 @@ namespace TenMan.Web.Controllers
             List<UnitDescriptionLine> unitDescriptionLines = new List<UnitDescriptionLine>();
             List<ExpensesCost> expensesCosts = new List<ExpensesCost>();
 
-            foreach (ExpensesCost cost in committee.Costs)
+            foreach (FixedCost cost in committee.FixedCosts)
             {
                 ExpensesCost ec = new ExpensesCost
                 {
@@ -730,8 +903,7 @@ namespace TenMan.Web.Controllers
             }
             exp.UnitDescriptionLines = unitDescriptionLines;
             return View(exp);
-        }*/
-        /*
+        }
         [HttpPost]
         public ActionResult CalculateExpenses(Expenses model, List<UnitDescriptionLine> unitLines)
         {
@@ -938,6 +1110,64 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
             return View(expenses);
+        }
+        public IActionResult ExpenseSummarySettings(int id)
+        {
+            var settings = _context.ExpenseSummarySettings
+                .FirstOrDefault(s => s.CommitteeId == id);
+
+            var vm = settings == null
+                ? new ExpenseSummarySettingsViewModel
+                {
+                    CommitteeId = id,
+                    HeaderAlignment = "Center",
+                    ShowCategoryTotals = true,
+                    ShowFieldTotals = true,
+                    ShowUnitDetail = true,
+                    ShowFixedCostsDetail = true
+                }
+                : new ExpenseSummarySettingsViewModel
+                {
+                    CommitteeId = settings.CommitteeId,
+                    //HeaderAlignment = settings.HeaderAlignment,
+                    //ShowCategoryTotals = settings.ShowCategoryTotals,
+                    //ShowFieldTotals = settings.ShowFieldTotals,
+                    //ShowUnitDetail = settings.ShowUnitDetail,
+                    //ShowFixedCostsDetail = settings.ShowFixedCostsDetail
+                };
+
+            return View(vm);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SaveSummarySettings(ExpenseSummarySettingsViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("ExpenseSummarySettings", model);
+
+            var settings = _context.ExpenseSummarySettings
+                .FirstOrDefault(s => s.CommitteeId == model.CommitteeId);
+
+            if (settings == null)
+            {
+                settings = new ExpenseSummarySettings
+                {
+                    CommitteeId = model.CommitteeId
+                };
+
+                _context.ExpenseSummarySettings.Add(settings);
+            }
+
+            /*
+            settings.HeaderAlignment = model.HeaderAlignment;
+            settings.ShowCategoryTotals = model.ShowCategoryTotals;
+            settings.ShowFieldTotals = model.ShowFieldTotals;
+            settings.ShowUnitDetail = model.ShowUnitDetail;
+            settings.ShowFixedCostsDetail = model.ShowFixedCostsDetail;*/
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Details", new { id = model.CommitteeId });
         }
         public async Task<IActionResult> ExportPDF(int? id)
         {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TenMan.Web.Data.Entities;
+using TenMan.Web.Data.Entities.Settings;
 using TenMan.Web.Models;
 
 namespace TenMan.Web.Data
@@ -21,9 +22,12 @@ namespace TenMan.Web.Data
         public DbSet<FixedCost> FixedCosts { get; set; }
         public DbSet<Expenses> Expenses { get; set; }
         public DbSet<ExpensesCost> ExpensesCosts { get; set; }
+        public DbSet<ExpensePeriod> ExpensesPeriods { get; set; }
+        public DbSet<ExpenseSummarySettings> ExpenseSummarySettings { get; set; }
         public DbSet<Field> Fields { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<ReceiptImage> ReceiptImages { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<RequestImage> RequestImages { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
@@ -32,7 +36,7 @@ namespace TenMan.Web.Data
         public DbSet<SuperAdmin> SuperAdmins { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<Unit> Units { get; set; }
-        public DbSet<UnitDescriptionLine> UnitDescriptionLines { get; set; }
+        //public DbSet<UnitDescriptionLine> UnitDescriptionLines { get; set; }
         public DbSet<Worker> Workers { get; set; }
         //public DbSet<TenMan.Web.Data.Entities.Field> Field { get; set; }
     }

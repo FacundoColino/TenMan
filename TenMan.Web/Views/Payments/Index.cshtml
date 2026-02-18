@@ -4,12 +4,19 @@
     ViewData["Title"] = "Pagos";
 }
 
-<h2>Pagos</h2>
-
-<p>
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Pagos</p>
+    <p class="text-muted">Revisa los pagos realizados</p>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Lista de Pagos
+    </div>
+    <div class="panel-body">
+        <p>
     <a asp-action="Create" class="btn btn-info">Agregar</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -65,7 +72,7 @@
                     string pdfLink = item.PdfFile;
                 }
                 <i class="bi bi-file-earmark-pdf-fill m-3 text-bg-danger text-danger"></i><a style="padding-left: 5px" href=@Url.Content(pdfLink)>@item.PdfFile</a><br />
-                @*@Html.DisplayFor(modelItem => item.PdfFile)*@
+                @Html.DisplayFor(modelItem => item.PdfFile)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Unit.UnitFullName)
@@ -79,3 +86,5 @@
 }
     </tbody>
 </table>
+</div>
+</div>

@@ -42,8 +42,7 @@ namespace TenMan.Web.Controllers
         {
             return View(_context.Administrators
                 .Include(a => a.User)
-                .Include(a => a.Committees)
-                .Include(a => a.RegisterNumber));
+                .Include(a => a.Committees));
         }
 
         // GET: Administrators/Details/5
@@ -57,8 +56,6 @@ namespace TenMan.Web.Controllers
             var admin = await _context.Administrators
                 .Include(a => a.User)
                 .Include(a => a.Committees)
-                .Include(a => a.RegisterNumber)
-                //.ThenInclude(p => p.Receipt)
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (admin == null)
@@ -99,17 +96,32 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddUserViewModel model)
+        public async Task<IActionResult> Create(AddAdminViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await CreateUserAsync(model);
+
+                AddUserViewModel addUserViewModel = new AddUserViewModel
+                {
+                    Id = model.Id,
+                    Address = model.Address,
+                    Document = model.Document,
+                    PhoneNumber = model.PhoneNumber,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                };
+                    
+
+                var user = await CreateUserAsync(addUserViewModel);
+
                 if (user != null)
                 {
                     var admin = new Administrator
                     {
                         Committees = new List<Committee>(),
-                        User = user
+                        User = user,
+                        RegisterNumber = model.RegisterNumber,
+                        CUIT = model.RegisterNumber
                     };
                     _context.Administrators.Add(admin);
                     await _context.SaveChangesAsync();
@@ -158,15 +170,16 @@ namespace TenMan.Web.Controllers
                 return NotFound();
             }
 
-            var model = new EditUserViewModel
+            var model = new EditAdminViewModel
             {
+                RegisterNumber = admin.RegisterNumber,
+                CUIT = admin.CUIT,
                 Address = admin.User.Address,
                 Document = admin.User.Document,
                 FirstName = admin.User.FirstName,
                 Id = admin.Id,
                 LastName = admin.User.LastName,
                 PhoneNumber = admin.User.PhoneNumber
-                //Username = tenant.User.Email
             };
 
             return View(model);
@@ -178,7 +191,7 @@ namespace TenMan.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(EditUserViewModel model)
+        public async Task<IActionResult> Edit(EditAdminViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -191,7 +204,9 @@ namespace TenMan.Web.Controllers
                 admin.User.LastName = model.LastName;
                 admin.User.Address = model.Address;
                 admin.User.PhoneNumber = model.PhoneNumber;
-                //tenant.User.UserName = model.Username;
+                admin.RegisterNumber = model.RegisterNumber;
+                admin.CUIT = model.CUIT;
+                //admin.User.UserName = model.Username;
 
                 await _userHelper.UpdateUserAsync(admin.User);
                 return RedirectToAction(nameof(Index));

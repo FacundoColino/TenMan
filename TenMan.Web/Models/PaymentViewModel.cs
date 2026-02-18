@@ -11,9 +11,10 @@ namespace TenMan.Web.Models
 {
     public class PaymentViewModel : Payment
     {
+        public int TenantId { get; set; }
+
         [Display(Name = "Comprobante")]
         public IFormFile PdfFormFile { get; set; }
-        public int TenantId { get; set; }
 
         [Display(Name = "Unidad Funcional")]
         public int UnitId { get; set; }

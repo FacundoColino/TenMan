@@ -87,9 +87,10 @@
                             @Html.DisplayFor(modelItem => item.Category.Description)
                         </td>
                         <td>
-                            <a asp-action="EditField" asp-route-id="@item.Id" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-pencil"></i></a> |
-                            <a asp-action="DetailsField" asp-route-id="@item.Id" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a> |
-                            <a asp-action="DeleteField" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a>
+                            <a asp-action="EditCost" asp-route-id="@item.Id" class="btn btn-warning btn-xs"><i class="glyphicon glyphicon-pencil"></i></a> |
+                            <a asp-action="DetailsCost" asp-route-id="@item.Id" class="btn btn-info btn-xs"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                            <a asp-action="DeleteCost" asp-route-id="@item.Id" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-trash"></i></a> |
+                            <a asp-action="AddReceiptImage" asp-route-id="@item.Id" class="btn btn-primary btn-xs"><i class="glyphicon glyphicon-upload"></i></a> |
                         </td>
                     </tr>
                 }

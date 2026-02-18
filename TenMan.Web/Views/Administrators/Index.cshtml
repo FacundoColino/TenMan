@@ -1,7 +1,91 @@
-﻿
+﻿@model IEnumerable<TenMan.Web.Data.Entities.Administrator>
+
 @{
     ViewData["Title"] = "Index";
 }
-
-<h2>Index</h2>
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Administradores</p>
+    <p class="text-muted">Desde aquí puedes gestionar todos los administradores</p>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Lista de Administradores
+    </div>
+    <div class="panel-body">
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
+        </p>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.Document)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.FullName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.User.Address)
+                        </th>
+                        <th>
+                            Telefono
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CUIT)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.RegisterNumber)
+                        </th>
+                        <th>
+                            Consorcios
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => item.User.Document)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.User.FullName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.User.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.User.Address)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.User.PhoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.CUIT)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.RegisterNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Committees.Count)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" class="btn btn-warning btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i></a> |
+                                <a asp-action="Details" class="btn btn-info btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                                <a asp-action="Delete" class="btn btn-danger btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </<div>
+            </div>
+        </div>
+    </div>
+</div>
 

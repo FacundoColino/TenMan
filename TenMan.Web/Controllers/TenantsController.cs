@@ -12,7 +12,7 @@ using TenMan.Web.Models;
 
 namespace TenMan.Web.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    //[Authorize(Roles = "Administrator, SuperAdmin")]
     public class TenantsController : Controller
     {
         private readonly DataContext _context;
@@ -273,12 +273,17 @@ namespace TenMan.Web.Controllers
         {
             var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.User.Email == User.Identity.Name);
 
-            var model = new PaymentViewModel
+            if (tenant != null)
             {
-                Units = _combosHelper.GetComboUnits(tenant.Id),
-                TenantId = tenant.Id,
-            };
-            return View(model);
+
+                var model = new PaymentViewModel
+                {
+                    Units = _combosHelper.GetComboUnits(tenant.Id),
+                    TenantId = tenant.Id,
+                };
+                return View(model);
+            }
+            return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

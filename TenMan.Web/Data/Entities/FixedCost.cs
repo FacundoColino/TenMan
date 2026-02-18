@@ -22,12 +22,13 @@ namespace TenMan.Web.Data.Entities
         [Display(Name = "Rubro")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public Field Field { get; set; }
+        public ICollection<ReceiptImage> ReceiptImages { get; set; }
 
         [Display(Name = "Categoria")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        [RegularExpression(@"^[a-zA-Z\s]+$",
-        ErrorMessage = "Solo se permiten letras")]
-        public  char Category { get; set; }
+        //[RegularExpression(@"^[a-zA-Z\s]+$",
+        //ErrorMessage = "Solo se permiten letras")]
+        public Category Category { get; set; }
 
         public Committee Committee { get; set; }
     }

@@ -1,0 +1,128 @@
+﻿@model TenMan.Web.Models.ExpenseSummaryViewModel
+
+@{
+    ViewData["Title"] = "Expensas";
+}
+<style>
+    td {
+        border-color: black;
+    }
+</style>
+<h2>Expensas</h2>
+<form asp-action="CalculateExpenses">
+    <p>
+        <input type="submit" value="Liquidar" class="btn btn-danger" />
+    </p>
+   @*  @if (Model.Settings.HeaderAlignment == TenMan.Web.Data.Entities.Settings.HeaderAlignment.Left)
+    { *@
+        <input type="hidden" asp-for="@Model.Expense.Year" />
+        <input type="hidden" asp-for="@Model.Expense.Month" />
+        <input type="hidden" asp-for="@Model.Expense.CommitteeId" />
+        <input type="hidden" asp-for="@Model.Expense.Date" />
+
+        <table class="table table-bordered style=" font-size: 12px"">
+            <tr>
+            <td rowspan="3">
+                <img src="~/images/Logo8.PNG" alt="" border=3 height=100 width=300 />
+            </td>
+            <td>@Html.DisplayNameFor(model => model.Committee.Address)</td>
+            <td>@Model.Committee.Address</td>
+        </tr>
+        <tr>
+            <td>Administrador</td>
+            <td>@Model.Committee.Administrator.User.FullName</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Committee.SuterhKey)</td>
+            <td>@Model.Committee.SuterhKey</td>
+        </tr>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Committee.CUIT)</td>
+            <td>@Model.Committee.CUIT</td>
+        </tr>
+        <tr>
+        </tr>
+    </table>
+@*     } *@
+    <table class="table table-bordered" style="font-size: 12px">
+        <thead>
+            <tr><td colspan="6" style="background: #049f82; color: white">PAGOS DEL PERIODO POR SUMINISTROS, SERVICIOS, ABONOS Y SEGUROS</td></tr>
+        </thead>
+        @foreach (var item in Model.Committee.Fields)
+        {
+@*             if (Model.CostWithField(item.Description))
+            { *@
+                <tr>
+                    <td style="font-weight: 700">@item.Number</td>
+                    <td style="font-weight: 700">@item.Description</td>
+                    <td style="font-weight: 700">TOTAL</td>
+                </tr>
+                @foreach (var cost in Model.Expense.ExpensesCosts)
+                {
+                    if (cost.Field.Description == item.Description)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>@cost.Description</td>
+                            <td>@cost.Amount</td>
+                        </tr>
+                    }
+                }
+@*             } *@
+        }
+        <tr>
+            <td colspan="2" style="background: #049f82; color: white">TOTAL A PAGAR</>
+            <td style="background: #049f82; color: white">10000000</td>
+        </tr>
+    </table>
+    <table class="table table-bordered" style="font-size: 12px">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Number)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Floor)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Apartment)</th>
+                <th>@Html.DisplayNameFor(model => model.Committee.Units.FirstOrDefault().Owner)</th>
+                <th>Saldo Anterior</th>
+                <th>Su Pago</th>
+                <th>Saldo Pendiente</th>
+                <th>INT</th>
+                @foreach (var category in Model.Committee.Categories)
+                {
+                    <td name="unitLines">% @category.Letra</td>
+                    <td name="unitLines">EXP @category.Letra</td>
+                }
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+           @foreach (var item in Model.UnitDescriptionLines)
+            {
+                <tr>
+                    <td name="unitLines">@item.Unit.Number</td>
+                    <td name="unitLines">@item.Unit.Floor</td>
+                    <td name="unitLines">@item.Unit.Apartment</td>
+                    <td name="unitLines">@item.Unit.Owner</td>
+                    <td name="unitLines">@item.Unit.CheckingAccount.PreviousBalance.ToString("0.00")</td>
+                    <td name="unitLines">@item.Unit.CheckingAccount.YourPayment.ToString("0.00")</td>
+                    <td name="unitLines">@item.Unit.CheckingAccount.PendingBalance.ToString("0.00")</td>
+                    <td name="unitLines">Ver</td>
+
+                    @{
+                        decimal unitTotal = 0;
+                        foreach (var amountByCategory in item.AmountsByPercent)
+                        {
+                            <td name="unitLines">@(amountByCategory.Percent / 100)</td>
+                            <td name="unitLines">@amountByCategory.Amount.ToString("0.00")</td>
+                            unitTotal += amountByCategory.Amount;
+                        }
+                        <td name="unitLines">@unitTotal.ToString("0.00")</td>
+                    }
+                   
+@*                     <td name="unitLines">@item.ExpA.ToString("0.00")</td>
+                    <td name="unitLines">@item.NewUnitTotal.ToString("0.00")</td> *@
+                </tr>
+            } 
+        </tbody>
+
+    </table>
+</form>

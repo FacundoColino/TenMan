@@ -1,78 +1,86 @@
 ﻿@model IEnumerable<TenMan.Web.Data.Entities.Worker>
 
 @{
-    ViewData["Title"] = "Contratistas";
+    ViewData["Title"] = "Proveedores";
 }
-
-<h2>Contratistas</h2>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Document)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.LastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.Address)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.PhoneNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Specialty.Name)
-            </th>
-            <th>
-                Solicitudes
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => item.User.Document)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.LastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.Address)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.PhoneNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.Specialty.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.Requests.Count)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Editar</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Detalles</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="tenman-pagedesc">
+    <p class="tenman-title">Proveedores</p>
+    <p class="text-muted">Desde aquí puedes gestionar todos los proveedores del consorcio</p>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Lista de Proveedores
+    </div>
+    <div class="panel-body">
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.Document)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.FirstName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.LastName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.User.PhoneNumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Specialty.Name)
+                    </th>
+                    <th>
+                        Solicitudes
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(model => item.User.Document)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.FirstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.LastName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.Address)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.User.PhoneNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Specialty.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => item.Requests.Count)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" class="btn btn-warning btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-pencil"></i></a> |
+                            <a asp-action="Details" class="btn btn-info btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-eye-open"></i></a> |
+                            <a asp-action="Delete" class="btn btn-danger btn-xs" asp-route-id="@item.Id"><i class="glyphicon glyphicon-trash"></i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

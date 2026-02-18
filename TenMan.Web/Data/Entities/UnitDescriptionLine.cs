@@ -1,4 +1,6 @@
-﻿using TenMan.Web.Data.Entities;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using TenMan.Web.Data.Entities;
 
 namespace TenMan.Web.Models
 {
@@ -20,7 +22,10 @@ namespace TenMan.Web.Models
         public decimal YourPayment { get; set; }
 
         public decimal NewUnitTotal { get; set; }
+        public IList<CategoryPercent> CategoriesPercents { get; set; }
 
+        [NotMapped]
+        public IList<AmountByPercent> AmountsByPercent { get; set; }
         public int ExpensesId { get; set; }
 
     }

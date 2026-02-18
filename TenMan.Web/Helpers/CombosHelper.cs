@@ -16,7 +16,25 @@ namespace TenMan.Web.Helpers
         {
             _context = context;
         }
-       
+        public IEnumerable<SelectListItem> GetComboAdministrators()
+        {
+            var list = _context.Administrators.Select(adm => new SelectListItem
+            {
+                Text = adm.User.FullName,
+                Value = adm.Id.ToString()
+                //Value = $"{ ten.Id }" // Convierte a string
+            }).OrderBy(adm => adm.Text)
+                .ToList();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Seleccione el administrador",
+                Value = "0"
+            });
+
+            return list;
+        }
+
         public IEnumerable<SelectListItem> GetComboSpecialties()
         {
             var list = _context.Specialties.Select(sp => new SelectListItem

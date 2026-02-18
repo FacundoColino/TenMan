@@ -1,0 +1,53 @@
+﻿@model BalanceIndexViewModel
+
+@{
+    ViewBag.Title = "Balance";
+}
+
+<h2>Balance - @Model.CommitteeName</h2>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Total Deuda del Consorcio
+            </div>
+            <div class="panel-body">
+                <h3>@Model.TotalDebt.ToString("C")</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table table-striped table-bordered table-sm">
+    <thead>
+        <tr>
+            <th>Unidad</th>
+            <th>Propietario</th>
+            <th>Nro Cuenta</th>
+            <th>Saldo Anterior</th>
+            <th>Pagos</th>
+            <th>Pendiente</th>
+            <th>Saldo Actual</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UnitsBalances)
+        {
+            <tr>
+                <td>@item.UnitNumber</td>
+                <td>@item.OwnerName</td>
+                <td>@item.AccountNumber</td>
+                <td>@item.PreviousBalance.ToString("C")</td>
+                <td>@item.YourPayment.ToString("C")</td>
+                <td>@item.PendingBalance.ToString("C")</td>
+                <td>
+                    <strong class="@(item.Balance > 0 ? "text-danger" : "text-success")">
+                        @item.Balance.ToString("C")
+                    </strong>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

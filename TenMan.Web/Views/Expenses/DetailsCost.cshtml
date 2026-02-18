@@ -1,0 +1,82 @@
+﻿@model TenMan.Web.Data.Entities.ExpensesCost
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Expenses</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Field)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Field)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Letra)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Category.Letra)
+        </dd>
+        <dt>
+            Expensa
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Expenses.Date)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+@if (Model.ReceiptImages.Count == 0)
+{
+    <h5>Todavía no se han cargado comprobantes</h5>
+}
+<div class="panel panel-default">
+    <div class="panel-heading tenman-panel-heading2">
+        Gastos
+    </div>
+    <div class="panel-body">
+        <p>
+            <a asp-controller="Expenses" asp-action="AddReceiptImage" class="btn btn-primary" asp-route-id="@Model.Id">Agregar Comprobante</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ReceiptImages.FirstOrDefault().ImageUrl)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ReceiptImages)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

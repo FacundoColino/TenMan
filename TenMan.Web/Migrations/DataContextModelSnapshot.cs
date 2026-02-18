@@ -63,62 +63,6 @@ namespace TenMan.Web.Migrations
                     b.ToTable("AspNetRoleClaims");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -239,11 +183,15 @@ namespace TenMan.Web.Migrations
 
                     b.Property<double?>("Percent");
 
+                    b.Property<int?>("UnitDescriptionLineId");
+
                     b.Property<int?>("UnitId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("UnitDescriptionLineId");
 
                     b.HasIndex("UnitId");
 
@@ -394,9 +342,7 @@ namespace TenMan.Web.Migrations
 
                     b.Property<decimal>("Amount");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 1)));
+                    b.Property<int>("CategoryId");
 
                     b.Property<int?>("CommitteeId");
 
@@ -406,6 +352,8 @@ namespace TenMan.Web.Migrations
                     b.Property<int>("FieldId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CommitteeId");
 
@@ -455,6 +403,29 @@ namespace TenMan.Web.Migrations
                     b.ToTable("Receipts");
                 });
 
+            modelBuilder.Entity("TenMan.Web.Data.Entities.ReceiptImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("ExpenseCostId");
+
+                    b.Property<int?>("ExpensesCostId");
+
+                    b.Property<int?>("FixedCostId");
+
+                    b.Property<string>("ImageUrl");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpensesCostId");
+
+                    b.HasIndex("FixedCostId");
+
+                    b.ToTable("ReceiptImages");
+                });
+
             modelBuilder.Entity("TenMan.Web.Data.Entities.Request", b =>
                 {
                     b.Property<int>("Id")
@@ -501,6 +472,29 @@ namespace TenMan.Web.Migrations
                     b.HasIndex("RequestId");
 
                     b.ToTable("RequestImages");
+                });
+
+            modelBuilder.Entity("TenMan.Web.Data.Entities.Settings.ExpenseSummarySettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CommitteeId");
+
+                    b.Property<int>("HeaderAlignment");
+
+                    b.Property<bool>("ShowPercentages");
+
+                    b.Property<bool>("ShowUnitDetails");
+
+                    b.Property<DateTime>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommitteeId");
+
+                    b.ToTable("ExpenseSummarySettings");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Specialty", b =>
@@ -620,6 +614,71 @@ namespace TenMan.Web.Migrations
                     b.ToTable("Units");
                 });
 
+            modelBuilder.Entity("TenMan.Web.Data.Entities.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Document")
+                        .IsRequired()
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers");
+                });
+
             modelBuilder.Entity("TenMan.Web.Data.Entities.Worker", b =>
                 {
                     b.Property<int>("Id")
@@ -670,30 +729,7 @@ namespace TenMan.Web.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("UnitDescriptionLines");
-                });
-
-            modelBuilder.Entity("TenMan.Web.Data.Entities.User", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("Address");
-
-                    b.Property<string>("Document")
-                        .IsRequired()
-                        .HasMaxLength(30);
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
-                    b.ToTable("User");
-
-                    b.HasDiscriminator().HasValue("User");
+                    b.ToTable("UnitDescriptionLine");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -706,7 +742,7 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("TenMan.Web.Data.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -714,7 +750,7 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("TenMan.Web.Data.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -727,7 +763,7 @@ namespace TenMan.Web.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("TenMan.Web.Data.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -735,7 +771,7 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser")
+                    b.HasOne("TenMan.Web.Data.Entities.User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -760,6 +796,10 @@ namespace TenMan.Web.Migrations
                     b.HasOne("TenMan.Web.Data.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId");
+
+                    b.HasOne("TenMan.Web.Models.UnitDescriptionLine")
+                        .WithMany("CategoriesPercents")
+                        .HasForeignKey("UnitDescriptionLineId");
 
                     b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
                         .WithMany("CategoriesPercents")
@@ -812,6 +852,11 @@ namespace TenMan.Web.Migrations
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.FixedCost", b =>
                 {
+                    b.HasOne("TenMan.Web.Data.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
                         .WithMany("FixedCosts")
                         .HasForeignKey("CommitteeId");
@@ -831,6 +876,17 @@ namespace TenMan.Web.Migrations
                     b.HasOne("TenMan.Web.Data.Entities.Unit", "Unit")
                         .WithMany()
                         .HasForeignKey("UnitId");
+                });
+
+            modelBuilder.Entity("TenMan.Web.Data.Entities.ReceiptImage", b =>
+                {
+                    b.HasOne("TenMan.Web.Data.Entities.ExpensesCost", "ExpensesCost")
+                        .WithMany("ReceiptImages")
+                        .HasForeignKey("ExpensesCostId");
+
+                    b.HasOne("TenMan.Web.Data.Entities.FixedCost", "FixedCost")
+                        .WithMany("ReceiptImages")
+                        .HasForeignKey("FixedCostId");
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Request", b =>
@@ -853,6 +909,14 @@ namespace TenMan.Web.Migrations
                     b.HasOne("TenMan.Web.Data.Entities.Request", "Request")
                         .WithMany("Images")
                         .HasForeignKey("RequestId");
+                });
+
+            modelBuilder.Entity("TenMan.Web.Data.Entities.Settings.ExpenseSummarySettings", b =>
+                {
+                    b.HasOne("TenMan.Web.Data.Entities.Committee", "Committee")
+                        .WithMany()
+                        .HasForeignKey("CommitteeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TenMan.Web.Data.Entities.Status", b =>

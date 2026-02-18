@@ -7,13 +7,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Helpers;
+using TenMan.Web.Services;
+using TenMan.Web.Services.ExpensesServices;
 
 namespace TenMan.Web
 {
@@ -34,6 +38,10 @@ namespace TenMan.Web
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
@@ -49,14 +57,30 @@ namespace TenMan.Web
                 cfg.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = Configuration["Tokens:Issuer"],
+                    ValidAudience = Configuration["Tokens:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                };
+            });
+
             services.AddTransient<SeedDb>();
             services.AddSingleton<MailService>();
             services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<IExpenseCalculator, ExpenseCalculator>();
             services.AddScoped<ICombosHelper, CombosHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IImageHelper, ImageHelper>();
             services.AddScoped<IIFileHelper, FileHelper>();
+            services.AddScoped<IDefaultCategoriesHelper, DefaultCategoriesHelper>();
             services.AddScoped<IDefaultFieldsHelper, DefaultFieldsHelper>();
+            services.AddScoped<IExpenseSummaryBuilder, ExpenseSummaryBuilder>();
+            services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -85,7 +109,7 @@ namespace TenMan.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath,"../Rotativa");
+            Rotativa.AspNetCore.RotativaConfiguration.Setup(env.WebRootPath, "../Rotativa");
         }
     }
 }

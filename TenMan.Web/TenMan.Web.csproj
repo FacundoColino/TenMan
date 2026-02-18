@@ -17,6 +17,34 @@
     <Compile Remove="Migrations\20251016212127_AgregarRelacionesRubroConsorcio2.Designer.cs" />
     <Compile Remove="Migrations\20251016212441_AgregarRelacionesRubroConsorcio.cs" />
     <Compile Remove="Migrations\20251016212441_AgregarRelacionesRubroConsorcio.Designer.cs" />
+    <Compile Remove="Migrations\20251016231819_InicialConCambios.cs" />
+    <Compile Remove="Migrations\20251016231819_InicialConCambios.Designer.cs" />
+    <Compile Remove="Migrations\20251016234105_AddFields.cs" />
+    <Compile Remove="Migrations\20251016234105_AddFields.Designer.cs" />
+    <Compile Remove="Migrations\20251021002312_NuevasEntidades.cs" />
+    <Compile Remove="Migrations\20251021002312_NuevasEntidades.Designer.cs" />
+    <Compile Remove="Migrations\20260105044358_AddCurrentExpense1.cs" />
+    <Compile Remove="Migrations\20260105044358_AddCurrentExpense1.Designer.cs" />
+    <Compile Remove="Migrations\20260111002932_dbUpdate2.cs" />
+    <Compile Remove="Migrations\20260111002932_dbUpdate2.Designer.cs" />
+    <Compile Remove="Migrations\20260113025151_dbUpdate3.cs" />
+    <Compile Remove="Migrations\20260113025151_dbUpdate3.Designer.cs" />
+    <Compile Remove="Migrations\20260116030822_dbUpdate4.cs" />
+    <Compile Remove="Migrations\20260116030822_dbUpdate4.Designer.cs" />
+    <Compile Remove="Migrations\20260118010720_dbUpdate5.cs" />
+    <Compile Remove="Migrations\20260118010720_dbUpdate5.Designer.cs" />
+    <Compile Remove="Migrations\20260118011002_FixCategories.cs" />
+    <Compile Remove="Migrations\20260118011002_FixCategories.Designer.cs" />
+    <Compile Remove="Migrations\20260119040450_FixDatabase.cs" />
+    <Compile Remove="Migrations\20260119040450_FixDatabase.Designer.cs" />
+    <Compile Remove="Migrations\20260122023956_FixSummaryCosts.cs" />
+    <Compile Remove="Migrations\20260122023956_FixSummaryCosts.Designer.cs" />
+    <Compile Remove="Migrations\20260125015718_AddReceipts.cs" />
+    <Compile Remove="Migrations\20260125015718_AddReceipts.Designer.cs" />
+    <Compile Remove="Migrations\20260125174016_AddReceiptsFix.cs" />
+    <Compile Remove="Migrations\20260125174016_AddReceiptsFix.Designer.cs" />
+    <Compile Remove="Migrations\20260126034409_CreateReceiptImages2.cs" />
+    <Compile Remove="Migrations\20260126034409_CreateReceiptImages2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

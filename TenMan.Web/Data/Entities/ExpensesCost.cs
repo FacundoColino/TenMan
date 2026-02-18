@@ -29,6 +29,7 @@ namespace TenMan.Web.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         //[RegularExpression(@"^[a-zA-Z\s]+$",
         //ErrorMessage = "Solo se permiten letras")]
+        public ICollection<ReceiptImage> ReceiptImages { get; set; }
         public Category Category { get; set; }
 
         public Expenses Expenses { get; set; }

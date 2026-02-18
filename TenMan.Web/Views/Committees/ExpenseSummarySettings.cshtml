@@ -1,0 +1,79 @@
+﻿@using TenMan.Web.Models.Settings
+@model ExpenseSummarySettingsViewModel
+
+@{
+    ViewBag.Title = "Configuración del Resumen de Expensas";
+}
+
+<h3>Configuración del Resumen</h3>
+<hr />
+
+@using (Html.BeginForm("SaveSummarySettings", "Committee", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>Posición del encabezado</label>
+        <div class="radio">
+            <label>
+                @Html.RadioButtonFor(m => m.HeaderAlignment, "Left") Izquierda
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                @Html.RadioButtonFor(m => m.HeaderAlignment, "Center") Centro
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                @Html.RadioButtonFor(m => m.HeaderAlignment, "Right") Derecha
+            </label>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="form-group">
+        <label>Opciones de visualización</label>
+
+        <div class="checkbox">
+            @Html.CheckBoxFor(m => m.ShowCategoryTotals, new { @class = "switch" })
+            <span class="slider"></span>
+            Mostrar totales por categoría
+        </div>
+
+        <div class="checkbox" checked data-toggle="switch">
+            @Html.CheckBoxFor(m => m.ShowFieldTotals, new { @class = "switch" })
+            Mostrar totales por campo
+        </div>
+
+        <div class="checkbox">
+            @Html.CheckBoxFor(m => m.ShowUnitDetail, new { @class = "switch" })
+            Mostrar detalle por unidad
+        </div>
+
+        <div class="checkbox">
+            @Html.CheckBoxFor(m => m.ShowFixedCostsDetail, new { @class = "switch" })
+            Mostrar detalle de gastos fijos
+        </div>
+    </div>
+
+    <hr />
+
+    <button type="submit" class="btn btn-primary">
+        Guardar configuración
+    </button>
+}
+@section Scripts {
+<script>
+    $(function () {
+        $('.switch').bootstrapSwitch({
+            size: 'small',
+            onColor: 'primary',
+            offColor: 'default',
+            onText: 'SI',
+            offText: 'NO',
+            handleWidth: 18
+        });
+    });
+</script>
+}
+

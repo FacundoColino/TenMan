@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Threading.Tasks;
 using TenMan.Web.Data;
 using TenMan.Web.Data.Entities;
 using TenMan.Web.Helpers;
@@ -26,8 +28,12 @@ namespace TenMan.Web.Controllers
         // GET: Payments
         public async Task<IActionResult> Index()
         {
+            string adminName = User.Identity.Name;
+
             return View(await _context.Payments
                 .Include(p => p.Unit)
+                .ThenInclude(u => u.Committee)
+                .Where(p => p.Unit.Committee.Administrator.User.UserName == adminName)
                 .ToListAsync());
         }
 
@@ -149,6 +155,9 @@ namespace TenMan.Web.Controllers
                         //payment.Unit.CheckingAccount.PreviousBalance = previousBalance;
 
                         payment.Unit.CheckingAccount.YourPayment += payment.Amount;
+
+                        payment.Unit.CheckingAccount.PendingBalance -= payment.Amount;
+                        payment.Unit.CheckingAccount.Balance -= payment.Amount;
                     }
                     _context.Payments.Update(payment);
                     await _context.SaveChangesAsync();
